@@ -1,0 +1,24 @@
+{
+    "name": "tecnocreaciones/tools-bundle",
+    "description": "Provides basic functionality of a common application",
+    "keywords": ["Basic features"],
+    "homepage": "https://github.com/tecnocreaciones",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Carlos Mendoza",
+            "email": "inhack20@tecnocreaciones.com.ve"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": "*",
+        "doctrine/orm": "*"
+    },
+    "autoload": {
+        "psr-0": { "Tecnocreaciones\\Bundle\\ToolsBundle": "" }
+    },
+    "target-dir": "Tecnocreaciones/Bundle/ToolsBundle"
+}
