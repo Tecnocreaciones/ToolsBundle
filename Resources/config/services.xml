@@ -19,6 +19,14 @@
     -->
     
     <parameters>
+        <parameter key="tecnocreaciones_tools.sequence_generator.class">Tecnocreaciones\Bundle\ToolsBundle\Service\SequenceGenerator</parameter>
         <parameter key="tecnocreaciones_tools.table_prefix_listerner.class">Tecnocreaciones\Bundle\ToolsBundle\EventListener\TablePrefixListerner</parameter>
     </parameters>
+    <services>
+        <service id="tecnocreaciones_tools.sequence_generator" class="%tecnocreaciones_tools.sequence_generator.class%">
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
+    </services>
 </container>
