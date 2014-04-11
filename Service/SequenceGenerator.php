@@ -165,6 +165,6 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
     }
     
     function getAdditionalMasks() {
-        return array('CAT','ZONE');
+        return array('TEST1','TEST2');
     }
 }
