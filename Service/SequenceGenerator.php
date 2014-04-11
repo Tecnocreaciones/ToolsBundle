@@ -22,11 +22,15 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
     
     function generateNext() {
         $doctrine = $this->getDoctrine();
-        
-        $connection = $doctrine->getConnection();
-        
+        $qb = $this->createQueryBuilder('q');
+        $qb->from('Tecnocreaciones\Vzla\EntityBundle\Entity\Country', 'q');
+        $table = 'tabla';
         $field = 'description';
-        $mask = 'SIEMPRE-{yyyy}-{00000}';
+        
+        $mode = 'next';
+        $cat = 'CATEGORIA';
+        $zone = 'ZONA';
+        $mask = 'SIEMPRE-{dd}-{mm}-{yyyy}-{yy}-{000}';
         // Clean parameters
         $date = time(); // We use local year and month of PHP server to search numbers
             
@@ -38,8 +42,8 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         $maskcounter = $reg[1];
         $maskraz = -1;
         $maskoffset = 0;
-        if (strlen($maskcounter) < 3)
-            return 'CounterMustHaveMoreThan3Digits';
+        if (strlen($maskcounter) < 2)
+            return 'CounterMustHaveMoreThan2Digits';
         $maskrefclient_maskcounter = '';
         $maskrefclient = '';
 
@@ -88,7 +92,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
                     $posy = 3;
                     $posm = 2;
                 }
-                if (String::strlen($reg[$posy]) < 2)
+                if (strlen($reg[$posy]) < 2)
                     return 'ErrorCantUseRazWithYearOnOneDigit';
             }
             else {
@@ -108,22 +112,22 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
             if (date("m", $date) < $maskraz) {
                 $yearoffset = -1;
             } // If current month lower that month of return to zero, year is previous year
-            if (String::strlen($reg[$posy]) == 4)
+            if (strlen($reg[$posy]) == 4)
                 $yearcomp = sprintf("%04d", date("Y", $date) + $yearoffset);
-            if (String::strlen($reg[$posy]) == 2)
+            if (strlen($reg[$posy]) == 2)
                 $yearcomp = sprintf("%02d", date("y", $date) + $yearoffset);
-            if (String::strlen($reg[$posy]) == 1)
+            if (strlen($reg[$posy]) == 1)
                 $yearcomp = substr(date("y", $date), 2, 1) + $yearoffset;
             $sqlwhere = '';
-            $sqlwhere.='( (SUBSTRING(' . $field . ', ' . (String::strlen($reg[1]) + 1) . ', ' . String::strlen($reg[2]) . ') >= ' . $yearcomp;
+            $sqlwhere.='( (SUBSTRING(' . $field . ', ' . (strlen($reg[1]) + 1) . ', ' . strlen($reg[2]) . ') >= ' . $yearcomp;
             if ($monthcomp > 1) { // Test useless if monthcomp = 1 (or 0 is same as 1)
-                if (String::strlen($reg[$posy]) == 4)
+                if (strlen($reg[$posy]) == 4)
                     $yearcomp1 = sprintf("%04d", date("Y", $date) + $yearoffset + 1);
-                if (String::strlen($reg[$posy]) == 2)
+                if (strlen($reg[$posy]) == 2)
                     $yearcomp1 = sprintf("%02d", date("y", $date) + $yearoffset + 1);
                 // FIXME If mask is {mm}{yy}, sqlwhere is wrong here
-                $sqlwhere.=' AND SUBSTRING(' . $field . ', ' . (String::strlen($reg[1]) + String::strlen($reg[2]) + 1) . ', ' . String::strlen($reg[3]) . ') >= ' . $monthcomp . ')';
-                $sqlwhere.=' OR SUBSTRING(' . $field . ', ' . (String::strlen($reg[1]) + 1) . ', ' . String::strlen($reg[2]) . ') >= ' . $yearcomp1 . ' )';
+                $sqlwhere.=' AND SUBSTRING(' . $field . ', ' . (strlen($reg[1]) + strlen($reg[2]) + 1) . ', ' . strlen($reg[3]) . ') >= ' . $monthcomp . ')';
+                $sqlwhere.=' OR SUBSTRING(' . $field . ', ' . (strlen($reg[1]) + 1) . ', ' . strlen($reg[2]) . ') >= ' . $yearcomp1 . ' )';
             }
             else {
                 $sqlwhere.=') )';
@@ -137,7 +141,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         $posnumstart = strpos($maskwithnocode, $maskcounter); // Pos of counter in final string (from 0 to ...)
         if ($posnumstart < 0)
             return 'ErrorBadMaskFailedToLocatePosOfSequence';
-        $sqlstring = 'SUBSTRING(' . $field . ', ' . ($posnumstart + 1) . ', ' . strlen($maskcounter) . ')';
+        $sqlstring = 'SUBSTRING(' . 'q.'.$field . ', ' . ($posnumstart + 1) . ', ' . strlen($maskcounter) . ')';
         //print "x".$sqlstring;
         // Define $maskLike
         $maskLike = trim($mask);
@@ -150,77 +154,45 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         $maskLike = preg_replace('/\{y\}/i', '_', $maskLike);
         $maskLike = preg_replace('/\{mm\}/i', '__', $maskLike);
         $maskLike = preg_replace('/\{dd\}/i', '__', $maskLike);
-        $maskLike = str_replace(String::noSpecial('{' . $masktri . '}'), str_pad("", String::strlen($maskcounter), "_"), $maskLike);
+        $maskLike = str_replace($this->dol_string_nospecial('{' . $masktri . '}'), str_pad("", strlen($maskcounter), "_"), $maskLike);
+        var_dump($maskLike);
         if ($maskrefclient)
-            $maskLike = str_replace(String::noSpecial('{' . $maskrefclient . '}'), str_pad("", String::strlen($maskrefclient), "_"), $maskLike);
-        //if ($masktype) $maskLike = str_replace(String::noSpecial('{'.$masktype.'}'),str_pad("",String::strlen($masktype),"_"),$maskLike);
+            $maskLike = str_replace($this->dol_string_nospecial('{' . $maskrefclient . '}'), str_pad("", strlen($maskrefclient), "_"), $maskLike);
+        //if ($masktype) $maskLike = str_replace($this->dol_string_nospecial('{'.$masktype.'}'),str_pad("",strlen($masktype),"_"),$maskLike);
         if ($masktype)
-            $maskLike = str_replace(String::noSpecial('{' . $masktype . '}'), $masktype_value, $maskLike);
+            $maskLike = str_replace($this->dol_string_nospecial('{' . $masktype . '}'), $masktype_value, $maskLike);
 
         // Get counter in database
         $counter = 0;
+        $qb->select('MAX('.$sqlstring.') as v')
+                //->setParameter('1', $sqlstring)
+                ;
+        $qb->where($qb->expr()->like('q.'.$field, "'".$maskLike."'"));
+        $qb->andWhere($qb->expr()->notLike('q.'.$field, "'%PROV%'"));
         $sql = "SELECT MAX(" . $sqlstring . ") as val";
-        $sql.= " FROM " . SiempDb::DB_PREXIF . $table;
+        $sql.= " FROM " . $table;
         //		$sql.= " WHERE ".$field." not like '(%'";
-        $sql.= " WHERE " . Container::getDB()->like($field, '' . $maskLike . '') . "";
-        $sql.= " AND " . Container::getDB()->like($field . ' NOT ', '%PROV%') . "";
-        $sql.= " AND entity = " . Container::getConf()->getEntity();
-        if ($where)
-            $sql.=$where;
-        if (isset($sqlwhere))
-            $sql.=' AND ' . $sqlwhere;
-
-        //print $sql.'<br>'.$cat." ".$zone
-        $resql = Container::getDB()->query($sql);
-        if ($resql) {
-            $obj = Container::getDB()->fetch_object($resql);
-            $counter = $obj->val;
+//        $sql.= " WHERE " . Container::getDB()->like($field, '' . $maskLike . '') . "";
+//        $sql.= " AND " . Container::getDB()->like($field . ' NOT ', '%PROV%') . "";
+//        if (isset($sqlwhere))
+//            $sql.=' AND ' . $sqlwhere;
+        var_dump($sqlstring);
+        var_dump($qb->getQuery()->getSQL());
+        $result = $qb->getQuery()->getOneOrNullResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
+        echo "Result";
+        var_dump($result);
+        if ($result) {
+            $counter = $result['v'];
         }
-        else
-            CommonObject::printError();
         if (empty($counter) || preg_match('/[^0-9]/i', $counter))
             $counter = $maskoffset;
 
         if ($mode == 'last') {
-            $counterpadded = str_pad($counter, String::strlen($maskcounter), "0", STR_PAD_LEFT);
-
-            // Define $maskLike
-            $maskLike = String::noSpecial($mask);
-            $maskLike = str_replace("%", "_", $maskLike);
-            // Replace protected special codes with matching number of _ as wild card caracter
-            $maskLike = preg_replace('/\{yyyy\}/i', '____', $maskLike);
-            $maskLike = preg_replace('/\{CAT\}/i', $cat, $maskLike);
-            $maskLike = preg_replace('/\{ZONE\}/i', $zone, $maskLike);
-            $maskLike = preg_replace('/\{yy\}/i', '__', $maskLike);
-            $maskLike = preg_replace('/\{y\}/i', '_', $maskLike);
-            $maskLike = preg_replace('/\{mm\}/i', '__', $maskLike);
-            $maskLike = preg_replace('/\{dd\}/i', '__', $maskLike);
-            $maskLike = str_replace(String::noSpecial('{' . $masktri . '}'), $counterpadded, $maskLike);
-            if ($maskrefclient)
-                $maskLike = str_replace(String::noSpecial('{' . $maskrefclient . '}'), str_pad("", String::strlen($maskrefclient), "_"), $maskLike);
-            //if ($masktype) $maskLike = str_replace(String::noSpecial('{'.$masktype.'}'),str_pad("",String::strlen($masktype),"_"),$maskLike);
-            if ($masktype)
-                $maskLike = str_replace(String::noSpecial('{' . $masktype . '}'), $masktype_value, $maskLike);
-
-            $ref = '';
-            $sql = "SELECT ref as ref";
-            $sql.= " FROM " . SiempDb::DB_PREXIF . "facture";
-            $sql.= " WHERE " . Container::getDB()->like('ref', $maskLike) . "";
-            $sql.= " AND entity = " . Container::getConf()->getEntity();
-            $resql = Container::getDB()->query($sql);
-            if ($resql) {
-                $obj = Container::getDB()->fetch_object($resql);
-                if ($obj)
-                    $ref = $obj->ref;
-            }
-            else
-                CommonObject::printError();
-
-            $numFinal = $ref;
+            
         }
         else if ($mode == 'next') {
             $counter++;
-
+        }
             // Build numFinal
             $numFinal = $mask;
 
@@ -236,7 +208,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
 
             // Now we replace the counter
             $maskbefore = '{' . $masktri . '}';
-            $maskafter = str_pad($counter, String::strlen($maskcounter), "0", STR_PAD_LEFT);
+            $maskafter = str_pad($counter, strlen($maskcounter), "0", STR_PAD_LEFT);
             //print 'x'.$maskbefore.'-'.$maskafter.'y';
             $numFinal = str_replace($maskbefore, $maskafter, $numFinal);
 
@@ -244,7 +216,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
             if ($maskrefclient) {
                 //print "maskrefclient=".$maskrefclient." maskwithonlyymcode=".$maskwithonlyymcode." maskwithnocode=".$maskwithnocode."\n<br>";
                 $maskrefclient_maskbefore = '{' . $maskrefclient . '}';
-                $maskrefclient_maskafter = $maskrefclient_clientcode . str_pad($maskrefclient_counter, String::strlen($maskrefclient_maskcounter), "0", STR_PAD_LEFT);
+                $maskrefclient_maskafter = $maskrefclient_clientcode . str_pad($maskrefclient_counter, strlen($maskrefclient_maskcounter), "0", STR_PAD_LEFT);
                 $numFinal = str_replace($maskrefclient_maskbefore, $maskrefclient_maskafter, $numFinal);
             }
 
@@ -254,7 +226,6 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
                 $masktype_maskafter = $masktype_value;
                 $numFinal = str_replace($masktype_maskbefore, $masktype_maskafter, $numFinal);
             }
-        }
         return $numFinal;
     }
     
@@ -277,5 +248,23 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) {
          $this->container = $container;
     }
+    
+    /**
+     * 
+     * @param type $alias
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createQueryBuilder($alias) {
+         return $this->getDoctrine()->getManager()->createQueryBuilder($alias);
+    }
+    
+    function dol_string_nospecial($str,$newstr='_',$badchars='')
+    {
+            $forbidden_chars_to_replace=array(" ","'","/","\\",":","*","?","\"","<",">","|","[","]",",",";","=");
+            $forbidden_chars_to_remove=array();
+            if (is_array($badchars)) $forbidden_chars_to_replace=$badchars;
+            //$forbidden_chars_to_remove=array("(",")");
 
+            return str_replace($forbidden_chars_to_replace,$newstr,str_replace($forbidden_chars_to_remove,"",$str));
+    }
 }
