@@ -33,5 +33,12 @@ class TecnocreacionesToolsExtension extends Extension
                     ;
             $container->setDefinition('tecnocreaciones_tools.table_prefix_subscriber', $tablePrefixListerner);
         }
+        if($config['sequence_generator']){
+           if($config['sequence_generator']['options']){
+               $options = $config['sequence_generator']['options'];
+               $sequenceGenerator = $container->getDefinition('tecnocreaciones_tools.sequence_generator');
+               $sequenceGenerator->addArgument($options);
+           }
+        }
     }
 }

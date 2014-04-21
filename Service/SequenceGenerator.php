@@ -12,90 +12,155 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 
 /**
- * Description of SequenceGenerator
+ * Generate sequences from fields entities database with doctrine and a mask
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
 class SequenceGenerator implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
 {
+    /**
+     * Mode generates the next sequence
+     */
     const MODE_NEXT = 0;
+    /**
+     * Mode generates the last sequence
+     */
     const MODE_LAST = 1;
     
-    private $container;
+    /**
+     * Options of sequence generator
+     * @var array
+     */
+    private $options = array();
     
-    function generateLast(\Doctrine\ORM\QueryBuilder $qb,$field) {
-        
+    function __construct(array $options = array()) {
+        $this->setOptions($options);
+    }
+
+    /**
+     * Sets options.
+     *
+     * Available options:
+     *
+     *   * additional_masks:  Additional user defined masks (array empty by default)
+     *   * debug:             Whether to enable debugging or not (false by default)
+     *
+     * @param array $options An array of options
+     *
+     * @throws \InvalidArgumentException When unsupported option is provided
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = array(
+            'additional_masks'  => array(),
+            'debug'             => false,
+        );
+
+        // check option names and live merge, if errors are encountered Exception will be thrown
+        $invalid = array();
+        foreach ($options as $key => $value) {
+            if (array_key_exists($key, $this->options)) {
+                $this->options[$key] = $value;
+            } else {
+                $invalid[] = $key;
+            }
+        }
+
+        if ($invalid) {
+            throw new \InvalidArgumentException(sprintf('The SequenceGenerator does not support the following options: "%s".', implode('", "', $invalid)));
+        }
     }
     
-    function generate(\Doctrine\ORM\QueryBuilder $qb, $mask,$field,$mode = self::MODE_NEXT,$parameters = array()) 
+    /**
+     *
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+    
+    /**
+     * Generated based on the sequence parameters
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param type $mask
+     * @param string $field
+     * @param type $mode
+     * @param type $parameters
+     * @return type
+     * @throws \InvalidArgumentException
+     */
+    protected function generate(\Doctrine\ORM\QueryBuilder $qb, $mask,$field,$mode = self::MODE_NEXT,$parameters = array()) 
     {
         $aliases = $qb->getRootAliases();
         $alias = $aliases[0];
         $field = $alias.'.'.$field;
+        
         if($mode === null){
             $mode = self::MODE_NEXT;
         }
-            
-        // Extract value for mask counter, mask raz and mask offset
-        if (!preg_match('/\{(0+)([@\+][0-9]+)?([@\+][0-9]+)?\}/i', $mask, $reg))
-            return 'ErrorBadMask';
+        
+        if (!preg_match('/\{(0+)([@\+][0-9]+)?([\-][0-9]+)?\}/i', $mask, $reg))
+            throw new \InvalidArgumentException('Incorrect format mask, the counter is required "{00},{00+n},{00-n}"');
+        
         $masktri = (isset($reg[1]) ? $reg[1] : '') . (isset($reg[2]) ? $reg[2] : '') . (isset($reg[3]) ? $reg[3] : '');
         $maskcounter = $reg[1];
-        $maskraz = -1;
-        $maskoffset = 0;
+        $maskOffSetAdd = $maskOffSetSubtract = 0;
         if (strlen($maskcounter) < 2)
-            return 'CounterMustHaveMoreThan3Digits';
+            throw new \InvalidArgumentException('The sequence of the mask must not be less than 2 digits "{00}"');
         
-        $maskrefclient_maskcounter = '';
-        $maskrefclient = '';
 
         $masktype_value = "";
-            $masktype = '';
-
-        $maskwithonlyymcode = $mask;
-        $maskwithonlyymcode = preg_replace('/\{(0+)([@\+][0-9]+)?([@\+][0-9]+)?\}/i', $maskcounter, $maskwithonlyymcode);
-        $maskwithonlyymcode = preg_replace('/\{dd\}/i', 'dd', $maskwithonlyymcode);
-        $maskwithonlyymcode = preg_replace('/\{(c+)(0*)\}/i', $maskrefclient, $maskwithonlyymcode);
-        $maskwithonlyymcode = preg_replace('/\{(t+)\}/i', $masktype_value, $maskwithonlyymcode);
-        $maskwithnocode = $maskwithonlyymcode;
-        $defaultMask = new \Doctrine\Common\Collections\ArrayCollection(array(
-            'yyyy','yy','mm'
-        ));
-        $maskwithnocode = preg_replace('/\{yyyy\}/i', 'yyyy', $maskwithnocode);
-        $maskwithnocode = preg_replace('/\{yy\}/i', 'yy', $maskwithnocode);
-        $maskwithnocode = preg_replace('/\{mm\}/i', 'mm', $maskwithnocode);
-        // If an offset is asked
-        if (!empty($reg[2]) && preg_match('/^\+/', $reg[2]))
-            $maskoffset = preg_replace('/^\+/', '', $reg[2]);
-        if (!empty($reg[3]) && preg_match('/^\+/', $reg[3]))
-            $maskoffset = preg_replace('/^\+/', '', $reg[3]);
+        $maskwithnocode = $mask;
+        foreach ($this->getDefaultMasks() as $key => $value) {
+            $maskwithnocode = preg_replace('/\{'.$key.'\}/i', $key, $maskwithnocode);
+        }
         
+        // If an offset is asked
+        if (!empty($reg[2])){
+            if (preg_match('/^\+/', $reg[2])){
+                $maskOffSetAdd = preg_replace('/^\+/', '', $reg[2]);
+            }
+            if (preg_match('/^\-/', $reg[2])){
+                $maskOffSetSubtract = preg_replace('/^\-/', '', $reg[2]);
+            }
+        }
+        if (!empty($reg[3])){
+            if (preg_match('/^\+/', $reg[3])){
+                $maskOffSetAdd = preg_replace('/^\+/', '', $reg[3]);
+            }
+            if (preg_match('/^\-/', $reg[3])){
+                $maskOffSetSubtract = preg_replace('/^\-/', '', $reg[3]);
+            }
+        }
         $posnumstart = strpos($maskwithnocode, $maskcounter); // Pos of counter in final string (from 0 to ...)
         $sqlstring = 'SUBSTRING(' .$field . ', ' . ($posnumstart + 1) . ', ' . strlen($maskcounter) . ')';
         $maskLike = trim($mask);
         $maskLike = str_replace("%", "_", $maskLike);
         // Replace protected special codes with matching number of _ as wild card caracter
-        $maskLike = preg_replace('/\{yyyy\}/i', '____', $maskLike);
-        $maskLike = preg_replace('/\{yy\}/i', '__', $maskLike);
-        $maskLike = preg_replace('/\{mm\}/i', '__', $maskLike);
-        $maskLike = preg_replace('/\{dd\}/i', '__', $maskLike);
+        foreach ($this->getDefaultMasks() as $key => $value) {
+            $maskLike = preg_replace('/\{'.$key.'\}/i', str_pad('',strlen($key),'_'), $maskLike);
+        }
+        foreach ($this->getAdditionalMasks() as $key => $value) {
+            if(isset($parameters[$value])){
+                $maskLike = preg_replace('/\{'.$value.'\}/i',$parameters[$value], $maskLike);
+            }
+        }
+        
         $maskLike = str_replace($this->dol_string_nospecial('{' . $masktri . '}'), str_pad("", strlen($maskcounter), "_"), $maskLike);
         
         // Get counter in database
         $counter = 0;
         $qb->select('MAX('.$sqlstring.') as v')
                 ;
-        $qb->where($qb->expr()->like($field, "'".$maskLike."'"));
+        $qb->andWhere($qb->expr()->like($field, "'".$maskLike."'"));
         $qb->andWhere($qb->expr()->notLike($field, "'%PROV%'"));
-        
         $result = $qb->getQuery()->getOneOrNullResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
         if ($result) {
             $counter = $result['v'];
         }
         if (empty($counter) || preg_match('/[^0-9]/i', $counter))
-            $counter = $maskoffset;
-        //$counter+=$maskoffset;
-        
+            $counter = $maskOffSetAdd;
+        $counter+=$maskOffSetAdd;
+        $counter-=$maskOffSetSubtract;
         if ($mode == self::MODE_NEXT) {
             $counter++;
         }
@@ -103,10 +168,9 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         $numFinal = $mask;
         $date = new \DateTime();
         // We replace special codes except refclient
-        $numFinal = preg_replace('/\{yyyy\}/i',$date->format("Y"), $numFinal);
-        $numFinal = preg_replace('/\{yy\}/i', $date->format("y"), $numFinal);
-        $numFinal = preg_replace('/\{mm\}/i', $date->format("m"), $numFinal);
-        $numFinal = preg_replace('/\{dd\}/i', $date->format("d"), $numFinal);
+        foreach ($this->getDefaultMasks() as $key => $value) {
+            $numFinal = preg_replace('/\{'.$key.'\}/i',$date->format($value['date_format']), $numFinal);
+        }
         
         foreach ($this->getAdditionalMasks() as $additionalMask) {
             if(isset($parameters[$additionalMask])){
@@ -115,12 +179,36 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         }
         // Now we replace the counter
         $maskbefore = '{' . $masktri . '}';
+        if($counter < 0){
+            throw new \InvalidArgumentException('The sequence can not be negative, please check the rest in the mask. Result of sequence counter is "'.$counter.'"');
+        }
         $maskafter = str_pad($counter, strlen($maskcounter), "0", STR_PAD_LEFT);
-        $numFinal = str_replace($maskbefore, $maskafter, $numFinal);
-        
+        $numFinal = str_replace($maskbefore, $maskafter, $numFinal);        
         return $numFinal;
     }
     
+    /**
+     * Generates the next sequence according to the parameters
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param type $mask Mask sequence to build for example "Example-{dd}-{mm}-{yy}-{yyyy}-{000})"
+     * @param type $field Field to consult the entity
+     * @param type $parameters Values of additional masks array('miMask' => 'Value')
+     * @return type
+     */
+    function generateLast(\Doctrine\ORM\QueryBuilder $qb,$mask,$field,$parameters = array()) {
+        return $this->generate($qb, $mask,$field,self::MODE_LAST,$parameters);
+    }
+    
+    /**
+     * Generates the last sequence according to the parameters
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param type $mask Mask sequence to build for example "Example-{dd}-{mm}-{yy}-{yyyy}-{000})"
+     * @param type $field Field to consult the entity
+     * @param type $parameters Values of additional masks array('miMask' => 'Value')
+     * @return type
+     */
     function generateNext(\Doctrine\ORM\QueryBuilder $qb,$mask,$field,$parameters = array()) {
         return $this->generate($qb, $mask,$field,self::MODE_NEXT,$parameters);
     }
@@ -132,7 +220,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      *
      * @throws \LogicException If DoctrineBundle is not available
      */
-    public function getDoctrine()
+    protected function getDoctrine()
     {
         if (!$this->container->has('doctrine')) {
             throw new \LogicException('The DoctrineBundle is not registered in your application.');
@@ -140,13 +228,14 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
 
         return $this->container->get('doctrine');
     }
-
-    public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) {
+    
+    public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null)
+    {
          $this->container = $container;
     }
     
     /**
-     * 
+     * Returns a doctrine query builder
      * @param type $alias
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -154,17 +243,41 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
          return $this->getDoctrine()->getManager()->createQueryBuilder($alias);
     }
     
-    function dol_string_nospecial($str,$newstr='_',$badchars='')
+    private function dol_string_nospecial($str,$newstr='_',$badchars='')
     {
             $forbidden_chars_to_replace=array(" ","'","/","\\",":","*","?","\"","<",">","|","[","]",",",";","=");
             $forbidden_chars_to_remove=array();
             if (is_array($badchars)) $forbidden_chars_to_replace=$badchars;
-            //$forbidden_chars_to_remove=array("(",")");
-
             return str_replace($forbidden_chars_to_replace,$newstr,str_replace($forbidden_chars_to_remove,"",$str));
     }
     
-    function getAdditionalMasks() {
-        return array('TEST1','TEST2');
+    /**
+     * Returns the masks defined by default
+     * @return array
+     */
+    private function getDefaultMasks() {
+        return array(
+            'yyyy' => array('date_format' => 'Y'),
+            'yy' => array('date_format' => 'y'),
+            'mm' => array('date_format' => 'm'),
+            'dd' => array('date_format' => 'd'),
+        );
+    }
+    
+    /**
+     * Returns additional masks user added
+     * @return array
+     */
+    public final function getAdditionalMasks() {
+        return $this->options['additional_masks'];
+    }
+ 
+    /**
+     * Valid mask
+     * @param type $mask
+     * @return type
+     */
+    public function isValidMask($mask) {
+        return preg_match('/\{(0+)([@\+][0-9]+)?([\-][0-9]+)?\}/i',$mask);
     }
 }
