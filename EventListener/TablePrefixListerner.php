@@ -7,7 +7,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 /**
  * Description of TablePrefixListerner
  *
- * @author Carlos Mendoza <inhack20@tecnocreaciones.com.ve>
+ * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
 class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
     protected $prefix = '';
