@@ -33,7 +33,8 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      */
     private $options = array();
     
-    function __construct(array $options = array()) {
+    function __construct(array $options = array())
+    {
         $this->setOptions($options);
     }
 
@@ -54,6 +55,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         $this->options = array(
             'additional_masks'  => array(),
             'debug'             => false,
+            'temporary_mask'    => 'TEMP',
         );
 
         // check option names and live merge, if errors are encountered Exception will be thrown
@@ -152,7 +154,9 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         $qb->select('MAX('.$sqlstring.') as v')
                 ;
         $qb->andWhere($qb->expr()->like($field, "'".$maskLike."'"));
-        $qb->andWhere($qb->expr()->notLike($field, "'%PROV%'"));
+        if(!preg_match('/'.$this->getTemporaryMask().'/', $maskLike)){
+            $qb->andWhere($qb->expr()->notLike($field, "'%".$this->getTemporaryMask()."%'"));
+        }
         $result = $qb->getQuery()->getOneOrNullResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
         if ($result) {
             $counter = $result['v'];
@@ -201,7 +205,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
     }
     
     /**
-     * Generates the last sequence according to the parameters
+     * Generates the next sequence according to the parameters
      * 
      * @param \Doctrine\ORM\QueryBuilder $qb
      * @param type $mask Mask sequence to build for example "Example-{dd}-{mm}-{yy}-{yyyy}-{000})"
@@ -209,8 +213,22 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      * @param type $parameters Values of additional masks array('miMask' => 'Value')
      * @return type
      */
-    function generateNext(\Doctrine\ORM\QueryBuilder $qb,$mask,$field,$parameters = array()) {
+    function generateNext(\Doctrine\ORM\QueryBuilder $qb,$mask,$field,$parameters = array())
+    {
         return $this->generate($qb, $mask,$field,self::MODE_NEXT,$parameters);
+    }
+    
+    /**
+     * Generates the last sequence temporaly according to the parameters
+     * 
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param type $field Field to consult the entity
+     * @return type
+     */
+    function generateNextTemp(\Doctrine\ORM\QueryBuilder $qb,$field)
+    {
+        $temporaryMask = $this->getTemporaryMask().'-{000}';
+        return $this->generate($qb,$temporaryMask ,$field,self::MODE_NEXT);
     }
     
     /**
@@ -279,5 +297,10 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      */
     public function isValidMask($mask) {
         return preg_match('/\{(0+)([@\+][0-9]+)?([\-][0-9]+)?\}/i',$mask);
+    }
+    
+    public function getTemporaryMask()
+    {
+        return $this->options['temporary_mask'];
     }
 }

@@ -35,6 +35,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->arrayNode('options')
                                 ->children()
+                                    ->scalarNode('temporary_mask')->defaultValue('TEMP')->cannotBeEmpty()->end()
                                     ->arrayNode('additional_masks')
                                         ->prototype('scalar')->end()
                                 ->end()
