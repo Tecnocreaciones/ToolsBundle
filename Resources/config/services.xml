@@ -20,6 +20,7 @@
     
     <parameters>
         <parameter key="tecnocreaciones_tools.sequence_generator.class">Tecnocreaciones\Bundle\ToolsBundle\Service\SequenceGenerator</parameter>
+        <parameter key="tecnocreaciones_tools.unit_converter.class">Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter</parameter>
         <parameter key="tecnocreaciones_tools.table_prefix_listerner.class">Tecnocreaciones\Bundle\ToolsBundle\EventListener\TablePrefixListerner</parameter>
     </parameters>
     <services>
@@ -27,6 +28,24 @@
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
+        </service>
+        <service id="tecnocreaciones_tools.unit_converter.textile_yarns" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\TextileYarnsUnitType">
+            <tag name="tecnocreaciones_tools.unit_converter.unit" />
+        </service>
+        <service id="tecnocreaciones_tools.unit_converter.time" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\TimeUnitType">
+            <tag name="tecnocreaciones_tools.unit_converter.unit" />
+        </service>
+        <service id="tecnocreaciones_tools.unit_converter.length" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\LengthUnitType">
+            <tag name="tecnocreaciones_tools.unit_converter.unit" />
+        </service>
+        <service id="tecnocreaciones_tools.unit_converter.storage" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\StorageUnitType">
+            <tag name="tecnocreaciones_tools.unit_converter.unit" />
+        </service>
+        <service id="tecnocreaciones_tools.unit_converter.capacity" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\CapacityUnitType">
+            <tag name="tecnocreaciones_tools.unit_converter.unit" />
+        </service>
+        <service id="tecnocreaciones_tools.unit_converter.weith" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\WeightUnitType">
+            <tag name="tecnocreaciones_tools.unit_converter.unit" />
         </service>
     </services>
 </container>
