@@ -90,7 +90,7 @@ class UnitConverter
      */
     public function convert($type, $qty, $fromUnit, $toUnit) {
         $this->validUnitType($type);
-        return $this->unitTypes[$type]->convert($type, $qty, $fromUnit, $toUnit);
+        return $this->unitTypes[$type]->convert($qty, $fromUnit, $toUnit);
     }
 
     /**

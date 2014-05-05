@@ -19,9 +19,10 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter;
 abstract class UnitType implements UnitTypeInterface
 {
     private $units;
+    private $unitsAssociated;
     
     public function __construct() {
-        $this->units = array();
+        $this->units = $this->unitsAssociated = array();
         $this->init();
     }
     
@@ -32,13 +33,16 @@ abstract class UnitType implements UnitTypeInterface
      * @param $aliases Alias de la unidad
      * @param $ratio Razón de conversión con la unidad anterior
      */
-    protected function insertUnit($name, $aliases, $ratio,$enable = true) {
-        $this->units[] = array(
+    protected function insertUnit($name, $aliases, $ratio,$enable = true) 
+    {
+        $unit = array(
             'name' => $name,
             'aliases' => explode(',', $aliases),
             'ratio' => $ratio,
-            'enable' => true,
+            'enable' => $enable,
         );
+        $this->units[] = $unit;
+        $this->unitsAssociated[$name] = $unit;
     }
     
     public function getUnits() {
@@ -48,27 +52,32 @@ abstract class UnitType implements UnitTypeInterface
     /**
      * Encuentra un nombre de unidad o un alias
      *
-     * @param $type Tipo de unidad
      * @param $unitName Nombre de la unidad
      * @param $validUnits Unidades que son válidas para nosotros (puede que no queramos convertir a todas las unidades)
      *
      * @return Índice dentro del array donde está la unidad (si se encuentra)
      */
-    private function findUnit($type, $unitName, $validUnits = null) {
-        $units = $this->getUnitsByType($type);
+    protected function findUnit($unitName, $validUnits = null) {
+        $units = $this->getUnits();
         $nunits = count($units);
         for ($i = 0; $i < $nunits; $i++) {
             if (($validUnits != null) && (!array_search($units[$i]['name'], $validUnits) )){
                 continue;
             }
-
             if (($units[$i]['name'] == $unitName) || ($this->aliasMatch($units[$i], $unitName) )){
                 return $i;
             }
         }
-        throw new \InvalidArgumentException(sprintf('Invalid unit "%s" for type "%s"',$unitName,$type));
+        throw new \InvalidArgumentException(sprintf('Invalid unit "%s" for type "%s"',$unitName,  $this->getType()));
     }
     
+    protected function findUnitValue($unit)
+    {
+        $unit = $this->getUnitByName($unit);
+        return $unit['ratio'];
+    }
+
+
     /**
      * Mira en los alias de un tipo de unidad
      *
@@ -87,21 +96,20 @@ abstract class UnitType implements UnitTypeInterface
     /**
      * Convierte unidades
      *
-     * @param $type Tipo de unidad
      * @param $qty Cantidad a convertir
      * @param $fromUnit Unidad de origen
      * @param $toUnit Unidad de destino
      *
      * @return Resultado o falso (si hay error)
      */
-    public function convert($type, $qty, $fromUnit, $toUnit) 
+    public function convert($qty, $fromUnit, $toUnit) 
     {
-        $fromUnitNdx = $this->findUnit($type, $fromUnit);
-        $toUnitNdx = $this->findUnit($type, $toUnit);
+        $fromUnitNdx = $this->findUnit($fromUnit);
+        $toUnitNdx = $this->findUnit($toUnit);
 
         if (($fromUnitNdx === false) || ($toUnitNdx === false))
             return false;
-        $units = $this->getUnitsByType();
+        $units = $this->getUnits();
         /* It wont be ever possible, but maybe it is useful for debugging */
         if (($fromUnitNdx < 0) || ($toUnitNdx >= count($units) ))
             return false;
@@ -118,12 +126,17 @@ abstract class UnitType implements UnitTypeInterface
                 $qty/=$units[$i + 1]['ratio'];
             }
         }
-        return $qty;
+        return $this->formatResult($qty);
     }
     
-    function getUnitsByType() 
+    function formatResult($qty) 
     {
-        return $this->units;
+        return (float)number_format($qty,2,'.',',');
+    }
+    
+    function getUnitByName($unit) 
+    {
+        return $this->unitsAssociated[$unit];
     }
     
     function toArray()
