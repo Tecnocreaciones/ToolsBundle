@@ -51,20 +51,6 @@ class UnitConverter
         $this->setOptions($options);
     }
 
-    /**
-     * Rellena todas las unidades de un tipo de unidad dado
-     *
-     * @param $unitType Tipo de unidad a rellenar
-     */
-    private function fillUnit($unitType) {
-        if($this->units === null){
-            $this->units = $this->getAvailableUnit()->getUnitsTypes();
-        }
-        if ($this->validUnitType($unitType)) {
-            return true;
-        } else
-            return false;
-    }
 
     /**
      * Valida un tipo de unidad
@@ -104,8 +90,6 @@ class UnitConverter
      * @return array(cantidad nueva, unidad nueva)
      */
     public function getMaxUnit($type, $qty, $fromUnit) {
-        if (!$this->fillUnit($type))
-            return false;
         $units = $this->getUnitsByType($type);
         $fromUnitNdx = $this->findUnit($type, $fromUnit);
         $toUnitNdx = count($units);
