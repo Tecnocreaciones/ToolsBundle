@@ -17,6 +17,8 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter;
  */
 interface UnitTypeInterface 
 {
+    public function convert($type, $qty, $fromUnit, $toUnit);
+    
     function getDescription();
     
     function init();

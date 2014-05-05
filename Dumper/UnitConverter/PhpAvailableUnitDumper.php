@@ -96,7 +96,6 @@ EOF;
         $code = '';
         
         foreach ($this->unitTypes as $unitType) {
-            $unitType->init();
             $code .= sprintf("'%s' => %s,",$unitType->getType(),var_export($unitType->toArray(),true));
         }
 

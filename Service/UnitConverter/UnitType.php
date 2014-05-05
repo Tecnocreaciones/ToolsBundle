@@ -22,6 +22,7 @@ abstract class UnitType implements UnitTypeInterface
     
     public function __construct() {
         $this->units = array();
+        $this->init();
     }
     
     /**
@@ -45,6 +46,45 @@ abstract class UnitType implements UnitTypeInterface
     }
     
     /**
+     * Encuentra un nombre de unidad o un alias
+     *
+     * @param $type Tipo de unidad
+     * @param $unitName Nombre de la unidad
+     * @param $validUnits Unidades que son válidas para nosotros (puede que no queramos convertir a todas las unidades)
+     *
+     * @return Índice dentro del array donde está la unidad (si se encuentra)
+     */
+    private function findUnit($type, $unitName, $validUnits = null) {
+        $units = $this->getUnitsByType($type);
+        $nunits = count($units);
+        for ($i = 0; $i < $nunits; $i++) {
+            if (($validUnits != null) && (!array_search($units[$i]['name'], $validUnits) )){
+                continue;
+            }
+
+            if (($units[$i]['name'] == $unitName) || ($this->aliasMatch($units[$i], $unitName) )){
+                return $i;
+            }
+        }
+        throw new \InvalidArgumentException(sprintf('Invalid unit "%s" for type "%s"',$unitName,$type));
+    }
+    
+    /**
+     * Mira en los alias de un tipo de unidad
+     *
+     * @param $unitInfo Array de información sobre la unidad
+     * @param $unitName Nombre de la unidad
+     *
+     * @return true if unitName is in aliases
+     */
+    private function aliasMatch($unitInfo, $unitName) {
+        foreach ($unitInfo['aliases'] as $alias) {
+            if ($unitName == $alias)
+                return true;
+        }
+    }
+    
+    /**
      * Convierte unidades
      *
      * @param $type Tipo de unidad
@@ -54,14 +94,14 @@ abstract class UnitType implements UnitTypeInterface
      *
      * @return Resultado o falso (si hay error)
      */
-    public function convert($type, $qty, $fromUnit, $toUnit) {
-
+    public function convert($type, $qty, $fromUnit, $toUnit) 
+    {
         $fromUnitNdx = $this->findUnit($type, $fromUnit);
         $toUnitNdx = $this->findUnit($type, $toUnit);
 
         if (($fromUnitNdx === false) || ($toUnitNdx === false))
             return false;
-        $units = $this->getUnitsByType($type);
+        $units = $this->getUnitsByType();
         /* It wont be ever possible, but maybe it is useful for debugging */
         if (($fromUnitNdx < 0) || ($toUnitNdx >= count($units) ))
             return false;
@@ -79,6 +119,11 @@ abstract class UnitType implements UnitTypeInterface
             }
         }
         return $qty;
+    }
+    
+    function getUnitsByType() 
+    {
+        return $this->units;
     }
     
     function toArray()

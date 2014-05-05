@@ -20,6 +20,7 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\UnitType;
  */
 class LengthUnitType extends UnitType
 {
+    const UNIT_INCH = 'inch';
     const UNIT_MICROMETRO = 'micrometro';
     const UNIT_MILLIMETER = 'millimeter';
     const UNIT_CENTIMETER = 'centimeter';
@@ -31,7 +32,7 @@ class LengthUnitType extends UnitType
     const UNIT_MEGAMETER = 'megameter';
     
     public function getDescription() {
-        return 'Unidades de longitud';
+        return 'Units long';
     }
 
     public static function getType() {

@@ -73,48 +73,9 @@ class UnitConverter
      */
     private function validUnitType($unitType) {
         if(!isset($this->unitTypes[$unitType])){
-            throw new \InvalidArgumentException(sprintf('The Unit Type "%s" is not register on Unit Converter Service',$unitType));
+            throw new \InvalidArgumentException(sprintf('The Unit Type "%s" is not register on Unit Converter(%s)',$unitType,  implode(array_keys($this->unitTypes),',')));
         }
         return true;
-    }
-
-    /**
-     * Mira en los alias de un tipo de unidad
-     *
-     * @param $unitInfo Array de información sobre la unidad
-     * @param $unitName Nombre de la unidad
-     *
-     * @return true if unitName is in aliases
-     */
-    private function aliasMatch($unitInfo, $unitName) {
-        foreach ($unitInfo['aliases'] as $alias) {
-            if ($unitName == $alias)
-                return true;
-        }
-    }
-
-    /**
-     * Encuentra un nombre de unidad o un alias
-     *
-     * @param $type Tipo de unidad
-     * @param $unitName Nombre de la unidad
-     * @param $validUnits Unidades que son válidas para nosotros (puede que no queramos convertir a todas las unidades)
-     *
-     * @return Índice dentro del array donde está la unidad (si se encuentra)
-     */
-    private function findUnit($type, $unitName, $validUnits = null) {
-        $units = $this->getUnitsByType($type);
-        $nunits = count($units);
-        for ($i = 0; $i < $nunits; $i++) {
-            if (($validUnits != null) && (!array_search($units[$i]['name'], $validUnits) )){
-                continue;
-            }
-
-            if (($units[$i]['name'] == $unitName) || ($this->aliasMatch($units[$i], $unitName) )){
-                return $i;
-            }
-        }
-        throw new \InvalidArgumentException(sprintf('Invalid unit "%s" for type "%s"',$unitName,$type));
     }
 
     /**
@@ -128,9 +89,7 @@ class UnitConverter
      * @return Resultado o falso (si hay error)
      */
     public function convert($type, $qty, $fromUnit, $toUnit) {
-        if (!$this->validUnitType($type))
-            return false;
-
+        $this->validUnitType($type);
         return $this->unitTypes[$type]->convert($type, $qty, $fromUnit, $toUnit);
     }
 
@@ -176,20 +135,6 @@ class UnitConverter
      */
     public function validateUnit($type, $unit, $validUnits = null) {
         return ($this->findUnit($type, $unit, $validUnits) !== false);
-    }
-
-    /**
-     * Obtiene una lista de los tipos de unidad válidos
-     * Útil para depuración
-     *
-     * @return array de tipos de unidades
-     */
-    public function getValidUnitTypes() {
-        $types = array();
-        foreach ($types as $name => $filler) {
-            $types[] = $name;
-        }
-        return $types;
     }
     
     function addUnit(UnitConverter\UnitTypeInterface $unit)
@@ -309,9 +254,5 @@ class UnitConverter
     protected function getAvailableUnitDumperInstance()
     {
         return new $this->options['available_unit_dumper_class']($this->unitTypes);
-    }
-    
-    function getUnitsByType($type) {
-        return $this->units[$type]['units'];
     }
 }
