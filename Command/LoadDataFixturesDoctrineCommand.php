@@ -17,6 +17,8 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Command;
 use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand as BaseLoadDataFixturesDoctrineCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Purger\ORMPurger;
 
 /**
@@ -25,11 +27,11 @@ use Tecnocreaciones\Bundle\ToolsBundle\Purger\ORMPurger;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Jonathan H. Wage <jonwage@gmail.com>
  */
-class LoadDataFixturesDoctrineCommand extends BaseLoadDataFixturesDoctrineCommand implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
+class LoadDataFixturesDoctrineCommand extends BaseLoadDataFixturesDoctrineCommand implements ContainerAwareInterface
 {
     /**
      *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var ContainerInterface
      */
     private $container;
     
@@ -55,7 +57,7 @@ class LoadDataFixturesDoctrineCommand extends BaseLoadDataFixturesDoctrineComman
         parent::execute($input, $output);
     }
     
-    public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null) {
         $this->container = $container;
     }
 }

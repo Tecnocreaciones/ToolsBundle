@@ -1,0 +1,9 @@
+services:
+    tecnocreaciones.doctrine.repository.factory:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Repository\Factory
+        arguments:
+            - []
+            - '@service_container'
+            - '@tecnocreaciones.doctrine.repository.factory.default'
+    tecnocreaciones.doctrine.repository.factory.default:
+        class: Doctrine\ORM\Repository\DefaultRepositoryFactory
