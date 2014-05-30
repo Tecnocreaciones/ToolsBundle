@@ -134,7 +134,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
             }
         }
         $posnumstart = strpos($maskwithnocode, $maskcounter); // Pos of counter in final string (from 0 to ...)
-        $sqlstring = 'SUBSTRING(' .$field . ', ' . ($posnumstart + 1) . ', ' . strlen($maskcounter) . ')';
+        $sqlstring = 'SUBSTRING(' .$field . ', ' . ($posnumstart) . ', ' . strlen($maskcounter) . ')';
         $maskLike = trim($mask);
         $maskLike = str_replace("%", "_", $maskLike);
         // Replace protected special codes with matching number of _ as wild card caracter
@@ -146,7 +146,6 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
                 $maskLike = preg_replace('/\{'.$value.'\}/i',$parameters[$value], $maskLike);
             }
         }
-        
         $maskLike = str_replace($this->dol_string_nospecial('{' . $masktri . '}'), str_pad("", strlen($maskcounter), "_"), $maskLike);
         
         // Get counter in database
@@ -187,7 +186,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
             throw new \InvalidArgumentException('The sequence can not be negative, please check the rest in the mask. Result of sequence counter is "'.$counter.'"');
         }
         $maskafter = str_pad($counter, strlen($maskcounter), "0", STR_PAD_LEFT);
-        $numFinal = str_replace($maskbefore, $maskafter, $numFinal);        
+        $numFinal = str_replace($maskbefore, $maskafter, $numFinal);
         return $numFinal;
     }
     
