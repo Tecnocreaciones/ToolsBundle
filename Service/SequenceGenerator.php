@@ -19,6 +19,12 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 class SequenceGenerator implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
 {
     /**
+     *
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    private $container;
+    
+    /**
      * Mode generates the next sequence
      */
     const MODE_NEXT = 0;
@@ -72,12 +78,6 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
             throw new \InvalidArgumentException(sprintf('The SequenceGenerator does not support the following options: "%s".', implode('", "', $invalid)));
         }
     }
-    
-    /**
-     *
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
     
     /**
      * Generated based on the sequence parameters

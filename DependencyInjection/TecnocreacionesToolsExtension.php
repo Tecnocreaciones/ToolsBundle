@@ -2,10 +2,14 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use InvalidArgumentException;
+use LogicException;
+use ReflectionClass;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -31,7 +35,7 @@ class TecnocreacionesToolsExtension extends Extension
         
         if($config['table_prefix']['use_prefix']){
             $tablePrefix = $config['table_prefix']['prefix'].$config['table_prefix']['prefix_separator'];
-            $tablePrefixListerner = new \Symfony\Component\DependencyInjection\Definition($container->getParameter('tecnocreaciones_tools.table_prefix_listerner.class'));
+            $tablePrefixListerner = new Definition($container->getParameter('tecnocreaciones_tools.table_prefix_listerner.class'));
             $tablePrefixListerner
                     ->addArgument($tablePrefix)
                     ->addTag('doctrine.event_subscriber')
@@ -45,5 +49,33 @@ class TecnocreacionesToolsExtension extends Extension
                $sequenceGenerator->addArgument($options);
            }
         }
+        if($config['configuration']['enable'] === true){
+            if($config['configuration']['configuration_class'] === null){
+                throw new InvalidArgumentException(
+                    'The "configuration_class" option must be set in tecnocreaciones_tools.configuration'
+                );
+            }
+            $configurationClass = $config['configuration']['configuration_class'];
+            $reflectionConfigurationClass = new ReflectionClass($configurationClass);
+            if($reflectionConfigurationClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration') === false){
+                throw new LogicException(
+                    'The "'.$reflectionConfigurationClass->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration'
+                );
+            }
+            if(isset($config['configuration']['debug'])){
+                $debug = $config['configuration']['debug'];
+            }else{
+                $debug = $container->getParameter('kernel.debug');
+            }
+            $configurationManager = new Definition($container->getParameter('tecnocreaciones_tools.configuration.class'));
+            $configurationManager->addArgument(array(
+                'configuration_class' => $configurationClass,
+                'cache_dir' => $container->getParameter('kernel.cache_dir'),
+                'debug' => $debug,
+            ));
+            $configurationManager->addMethodCall('setContainer',array(new \Symfony\Component\DependencyInjection\Reference('service_container')));
+            $container->setDefinition('tecnocreaciones_tools.configuration', $configurationManager);
+        }
+        
     }
 }

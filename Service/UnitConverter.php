@@ -45,7 +45,12 @@ class UnitConverter
     protected $validUnitTypes = array();
     
     protected $unitTypes = array();
-
+    
+    /**
+     * @var array
+     */
+    protected $options = array();
+    
     function __construct(array $options = array())
     {
         $this->setOptions($options);
@@ -128,11 +133,6 @@ class UnitConverter
         }
         $this->unitTypes[$unit->getType()] = $unit;
     }
-    
-    /**
-     * @var array
-     */
-    protected $options = array();
     
     /**
      * Sets options.
