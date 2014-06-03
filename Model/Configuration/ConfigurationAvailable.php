@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Tecnocreaciones\Bundle\ToolsBundle\Model;
+namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration;
 
 /**
  * Configuraciones
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class ConfigurationManager 
+class ConfigurationAvailable
 {
     protected $configurations;
             

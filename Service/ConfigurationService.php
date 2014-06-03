@@ -11,15 +11,16 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 
+use Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup as Group;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Config\ConfigCache;
 
 /**
- * Manejador de configuracion
+ * Servicio manejador de configuracion
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class Configuration implements ContainerAwareInterface
+class ConfigurationService implements ContainerAwareInterface
 {
     /**
      *
@@ -32,6 +33,10 @@ class Configuration implements ContainerAwareInterface
      */
     protected $options = array();
     
+    /**
+     * Configuraciones disponibles
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationAvailable
+     */
     private $availableConfiguration;
             
     /**
@@ -64,8 +69,8 @@ class Configuration implements ContainerAwareInterface
             'cache_dir'              => null,
             'debug'                  => false,
             'configuration_dumper_class' => 'Tecnocreaciones\\Bundle\\ToolsBundle\\Dumper\\Configuration\\PhpConfigurationDumper',
-            'configuration_base_dumper_class' => 'Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\ConfigurationManager',
-            'configuration_cache_class'  => 'ProjectConfiguration',
+            'configuration_base_dumper_class' => 'Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration\\ConfigurationAvailable',
+            'configuration_cache_class'  => 'ProjectConfigurationAvailable',
             'configuration_class'  => null,
         );
 
@@ -121,7 +126,8 @@ class Configuration implements ContainerAwareInterface
     
     /**
      * Gets the Configuration Value instance associated with this Confurations.
-     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\ConfigurationManager
+     * 
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationAvailable
      */
     public function getAvailableConfiguration()
     {
@@ -146,6 +152,7 @@ class Configuration implements ContainerAwareInterface
     }
     
     /**
+     * Retorna la clase que maneja la cache
      * 
      * @return \Symfony\Component\Config\ConfigCache
      */
@@ -154,33 +161,67 @@ class Configuration implements ContainerAwareInterface
         $class = $this->options['configuration_cache_class'];
         return new ConfigCache($this->options['cache_dir'].'/tecnocreaciones_tools/'.$class.'.php', $this->options['debug']);
     }
-            
+    
+    /**
+     * Retorna el valor de la configuracion de la base de datos
+     * 
+     * @param string $key Indice de la configuracion
+     * @param mixed $default Valor que se retornara en caso de que no exista el indice
+     * @return mixed
+     */
     function get($key,$default = null) {
         return $this->getAvailableConfiguration()->get($key,$default);
     }
     
-    function set($key,$value = null,$andFlush = false)
+    /**
+     * Establece el valor de una configuracion
+     * 
+     * @param string $key indice de la configuracion
+     * @param mixed $value valor de la configuracion
+     * @param string|null $description Descripcion de la configuracion|null para actualizar solo el key
+     */
+    function set($key,$value = null,$description = null,Group $group = null)
     {
         $id = $this->getAvailableConfiguration()->getIdByKey($key);
         $entity = $this->getConfiguration($id);
         if($entity === null){
             $entity = $this->createNew();
         }
-        $entity->setKey($key);
-        $entity->setValue($value);
+        $entity->setKey($key)
+               ->setValue($value);
+        if($description != null){
+            $entity->setDescription($description);
+        }
+        if($group != null){
+            $entity->setGroup($group);
+        }
         $em = $this->getManager();
         $em->persist($entity);
-        if($andFlush){
-            $em->flush();
+    }
+    
+    /**
+     * Guarda los cambios en la base de datos
+     */
+    function flush($andClearCache = true)
+    {
+        $em = $this->getManager();
+        $em->flush();
+        if($andClearCache){
             $this->clearCache();
         }
     }
     
+    /**
+     * Crea la cache
+     */
     function warmUp()
     {
         $this->getAvailableConfiguration();
     }
     
+    /**
+     * Limpia la cache
+     */
     function clearCache()
     {
         $this->availableConfiguration = null;
@@ -230,9 +271,9 @@ class Configuration implements ContainerAwareInterface
     }
     
     /**
-     * 
+     * Retorna la entidad de la base de datos de la configuracion
      * @param type $id
-     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration 
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration
      */
     protected function getConfiguration($id)
     {
@@ -246,8 +287,9 @@ class Configuration implements ContainerAwareInterface
     }
     
     /**
+     * Configuraciones actuales en la base de datos
      * 
-     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration 
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration
      */
     protected function getConfigurations()
     {

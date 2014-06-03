@@ -1,0 +1,22 @@
+services:
+    sonata.admin.configuration:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\ConfigurationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "%sonata.user.admin.groupname%",label_catalogue: "admin", label: "admin.configuration" }
+        arguments:
+            - ~
+            - "%tecnocreaciones_tools.configuration_class.class%"
+            - ~
+        calls:
+            - [ setTranslationDomain, [admin]]
+            - [ setContainer, [@service_container]]
+    sonata.admin.configuration_group:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\GroupAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "%sonata.user.admin.groupname%",label_catalogue: "admin", label: "admin.configuration_group" }
+        arguments:
+            - ~
+            - "%tecnocreaciones_tools.configuration_group_class.class%"
+            - ~
+        calls:
+            - [ setTranslationDomain, [admin]]

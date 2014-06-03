@@ -28,8 +28,8 @@ class PhpConfigurationDumper implements DumperInterface
     
     public function dump(array $options = array()) {
         $options = array_replace(array(
-            'class'      => 'ProjectConfiguration',
-            'base_class'      => 'Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\ConfigurationManager',
+            'class'      => 'ProjectConfigurationAvailable',
+            'base_class'      => 'Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration\\ConfigurationAvailable',
         ), $options);
 
         return <<<EOF

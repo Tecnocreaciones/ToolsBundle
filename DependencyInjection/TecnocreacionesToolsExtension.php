@@ -55,11 +55,13 @@ class TecnocreacionesToolsExtension extends Extension
                     'The "configuration_class" option must be set in tecnocreaciones_tools.configuration'
                 );
             }
+            
             $configurationClass = $config['configuration']['configuration_class'];
+            $configurationGroupClass = $config['configuration']['configuration_group_class'];
             $reflectionConfigurationClass = new ReflectionClass($configurationClass);
-            if($reflectionConfigurationClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration') === false){
+            if($reflectionConfigurationClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration') === false){
                 throw new LogicException(
-                    'The "'.$reflectionConfigurationClass->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration'
+                    'The "'.$reflectionConfigurationClass->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration\\Configuration'
                 );
             }
             if(isset($config['configuration']['debug'])){
@@ -67,14 +69,19 @@ class TecnocreacionesToolsExtension extends Extension
             }else{
                 $debug = $container->getParameter('kernel.debug');
             }
-            $configurationManager = new Definition($container->getParameter('tecnocreaciones_tools.configuration.class'));
+            $configurationManager = new Definition($container->getParameter('tecnocreaciones_tools.configuration_service.class'));
             $configurationManager->addArgument(array(
                 'configuration_class' => $configurationClass,
                 'cache_dir' => $container->getParameter('kernel.cache_dir'),
                 'debug' => $debug,
             ));
             $configurationManager->addMethodCall('setContainer',array(new \Symfony\Component\DependencyInjection\Reference('service_container')));
-            $container->setDefinition('tecnocreaciones_tools.configuration', $configurationManager);
+            $container->setDefinition('tecnocreaciones_tools.configuration_service', $configurationManager);
+            
+            $container->setParameter('tecnocreaciones_tools.configuration_class.class', $configurationClass);
+            $container->setParameter('tecnocreaciones_tools.configuration_group_class.class', $configurationGroupClass);
+            
+            $loaderYml->load('admin.yml');
         }
         
     }

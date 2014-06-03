@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tecnocreaciones\Bundle\ToolsBundle\Model;
+namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -23,9 +23,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 abstract class Configuration 
 {
-    
-    protected $id;
-    
     /**
      * Indice de configuracion
      * 
@@ -41,6 +38,22 @@ abstract class Configuration
      * @ORM\Column(name="value", type="string",length=200)
      */
     protected $value;
+    
+    /**
+     * Descripcion de la configuracion
+     * 
+     * @var string
+     * @ORM\Column(name="description", type="string",length=200)
+     */
+    protected $description;
+    
+    /**
+     * Grupo de la configuracion
+     * 
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup
+     * @ORM\ManyToOne(targetEntity="Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup")
+     */
+    protected $group;
     
     /**
      * Valor de configuracion
@@ -76,10 +89,14 @@ abstract class Configuration
 
     public function setKey($key) {
         $this->key = $key;
+        
+        return $this;
     }
 
     public function setValue($value) {
         $this->value = $value;
+        
+        return $this;
     }
     
     public function getActive() {
@@ -96,6 +113,8 @@ abstract class Configuration
 
     public function setActive($active) {
         $this->active = $active;
+        
+        return $this;
     }
     
     /**
@@ -106,6 +125,8 @@ abstract class Configuration
     public function setCreatedAt()
     {
         $this->createdAt = new \DateTime();
+        
+        return $this;
     }
     
     /**
@@ -116,6 +137,8 @@ abstract class Configuration
     public function setUpdatedAt()
     {
         $this->updatedAt = new \DateTime();
+        
+        return $this;
     }
 
     abstract function getId();
@@ -123,5 +146,24 @@ abstract class Configuration
     function setId($id)
     {
         $this->id = $id;
+    }
+    
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
+        return $this;
+    }
+    
+    public function getGroup() {
+        return $this->group;
+    }
+
+    public function setGroup(\Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup $group)
+    {
+        $this->group = $group;
+        return $this;
     }
 }

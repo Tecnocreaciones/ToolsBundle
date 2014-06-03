@@ -1,0 +1,8 @@
+admin:
+    configuration: Configuration
+    configuration_group: Groups Configuration
+    
+Group: Group
+Value: Value
+"Configuration List": Configurations
+"Base Group List": Groups Configuration
