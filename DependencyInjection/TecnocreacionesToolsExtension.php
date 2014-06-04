@@ -9,6 +9,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -75,9 +76,16 @@ class TecnocreacionesToolsExtension extends Extension
                 'cache_dir' => $container->getParameter('kernel.cache_dir'),
                 'debug' => $debug,
             ));
-            $configurationManager->addMethodCall('setContainer',array(new \Symfony\Component\DependencyInjection\Reference('service_container')));
+            $configurationManager->addMethodCall('setContainer',array(new Reference('service_container')));
             $container->setDefinition('tecnocreaciones_tools.configuration_service', $configurationManager);
             
+            $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\GlobalConfExtension');
+            $extensionToolsDefinition
+                    ->addMethodCall('setContainer',array(new Reference('service_container')))
+                    ->addTag('twig.extension')
+                    ;
+            $container->setDefinition('tecnocreaciones_tools.global_config_extension', $extensionToolsDefinition);
+                    
             $container->setParameter('tecnocreaciones_tools.configuration_class.class', $configurationClass);
             $container->setParameter('tecnocreaciones_tools.configuration_group_class.class', $configurationGroupClass);
             
