@@ -118,12 +118,12 @@ abstract class UnitType implements UnitTypeInterface
         if ($fromUnitNdx > $toUnitNdx) {
             /* Convert Down */
             for ($i = $fromUnitNdx; $i > $toUnitNdx; $i--){
-                $qty*=$units[$i]['ratio'];
+                $qty*= (float) $units[$i]['ratio'];
             }
         } else {
             /* Convert up */
             for ($i = $fromUnitNdx; $i < $toUnitNdx; $i++){
-                $qty/=$units[$i + 1]['ratio'];
+                $qty/= (float)$units[$i + 1]['ratio'];
             }
         }
         return $this->formatResult($qty);
@@ -131,7 +131,7 @@ abstract class UnitType implements UnitTypeInterface
     
     function formatResult($qty) 
     {
-        return (float)number_format($qty,2,'.',',');
+        return (float)number_format($qty,18,'.',',');
     }
     
     function getUnitByName($unit) 

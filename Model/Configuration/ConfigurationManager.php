@@ -41,7 +41,7 @@ abstract class ConfigurationManager implements ContainerAwareInterface
      * @param type $description
      * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager
      */
-    function set($key,$value = null,$description = null,\Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup $group = null)
+    protected function set($key,$value = null,$description = null,\Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup $group = null)
     {
         $this->getConfigurationManager()->set($key, $value, $description,$group);
         
@@ -55,7 +55,7 @@ abstract class ConfigurationManager implements ContainerAwareInterface
      * @param type $default
      * @return type
      */
-    function get($key,$default = null)
+    protected function get($key,$default = null)
     {
         return $this->getConfigurationManager()->get($key, $default);
     }
@@ -67,7 +67,7 @@ abstract class ConfigurationManager implements ContainerAwareInterface
     /**
      * Guarda los cambios en la base de datos y regenera la cache
      */
-    function flush()
+    public function flush()
     {
         $this->getConfigurationManager()->flush();
     }
@@ -76,7 +76,7 @@ abstract class ConfigurationManager implements ContainerAwareInterface
      * Retorna el servicio que maneja la configuracion del sistema
      * @return \Tecnocreaciones\Bundle\ToolsBundle\Service\ConfigurationService
      */
-    public function getConfigurationManager() {
+    protected function getConfigurationManager() {
         return $this->container->get('tecnocreaciones_tools.configuration_service');
     }
 }

@@ -32,7 +32,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 use Symfony\Component\Config\ConfigCache;
 
 /**
- * Description of UnitConverter
+ * Convertidor de unidades
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
