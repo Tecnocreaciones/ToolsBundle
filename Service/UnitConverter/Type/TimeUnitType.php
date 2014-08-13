@@ -30,7 +30,7 @@ class TimeUnitType extends UnitType
 
 
     public function getDescription() {
-        return 'Unidades de tiempo';
+        return 'Tiempo';
     }
 
     public static function getType() {

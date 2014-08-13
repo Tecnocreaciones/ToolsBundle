@@ -114,11 +114,12 @@ abstract class UnitType implements UnitTypeInterface
         if (($fromUnitNdx < 0) || ($toUnitNdx >= count($units) ))
             return false;
 
-        /* if ($fromUnitNdx==$toUnitNdx) */
-        if ($fromUnitNdx > $toUnitNdx) {
+        if ($fromUnitNdx == $toUnitNdx){
+            //$qty = $qty;
+        }elseif ($fromUnitNdx > $toUnitNdx) {
             /* Convert Down */
             for ($i = $fromUnitNdx; $i > $toUnitNdx; $i--){
-                $qty*= (float) $units[$i]['ratio'];
+                $qty*= (float)$units[$i]['ratio'];
             }
         } else {
             /* Convert up */
@@ -126,12 +127,7 @@ abstract class UnitType implements UnitTypeInterface
                 $qty/= (float)$units[$i + 1]['ratio'];
             }
         }
-        return $this->formatResult($qty);
-    }
-    
-    function formatResult($qty) 
-    {
-        return (float)number_format($qty,18,'.',',');
+        return $qty;
     }
     
     function getUnitByName($unit) 
@@ -144,6 +140,7 @@ abstract class UnitType implements UnitTypeInterface
         return array(
             'description' => $this->getDescription(),
             'units' => $this->getUnits(),
+            'key' => $this->getType(),
         );
     }
 }

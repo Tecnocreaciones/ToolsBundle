@@ -27,7 +27,7 @@ class TextileYarnsUnitType extends UnitType
     const UNIT_DECITEX = 'decitex';
     
     public function getDescription() {
-        return 'Unidades de textil hilos';
+        return 'Textil hilos';
     }
     
     function init()

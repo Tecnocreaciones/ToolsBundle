@@ -79,11 +79,15 @@ class UnitConverter
      *
      * @return Resultado o falso (si hay error)
      */
-    public function convert($type, $qty, $fromUnit, $toUnit) {
+    public function convert($type, $qty, $fromUnit, $toUnit,$decimal=18) {
         $this->validUnitType($type);
-        return $this->unitTypes[$type]->convert($qty, $fromUnit, $toUnit);
+        return $this->formatResult($this->unitTypes[$type]->convert($qty, $fromUnit, $toUnit), $decimal);
     }
 
+    function formatResult($qty,$decimal) 
+    {
+        return number_format($qty,$decimal,'.',',');
+    }
     /**
      * Obtiene la cantidad expresada en la unidad $fromUnit en la unidad más grande
      * ej: 86400 segundos = 1 day (y no 0.03 months)

@@ -30,7 +30,7 @@ class WeightUnitType extends UnitType
     const UNIT_TONELADA = 'tonelada';
     
     public function getDescription() {
-        return 'Weight units';
+        return 'Peso';
     }
 
     public function init() {

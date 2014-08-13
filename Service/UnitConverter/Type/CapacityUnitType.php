@@ -29,7 +29,7 @@ class CapacityUnitType extends UnitType
     const UNIT_KILOLITRO = 'kilolitro';
     
     public function getDescription() {
-        return 'Capacity units';
+        return 'Capacidad';
     }
 
     public function init() 

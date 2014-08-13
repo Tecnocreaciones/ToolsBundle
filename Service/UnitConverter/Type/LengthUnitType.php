@@ -32,11 +32,11 @@ class LengthUnitType extends UnitType
     const UNIT_MEGAMETER = 'megameter';
     
     public function getDescription() {
-        return 'Units long';
+        return 'Longitud';
     }
 
     public static function getType() {
-        return 'length';
+        return 'length_type';
     }
 
     public function init() {
