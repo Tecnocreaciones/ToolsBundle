@@ -67,7 +67,6 @@ abstract class Configuration
      * @var \DateTime
      *
      * @ORM\Column(name="createdAt", type="datetime")
-     * @Gedmo\Timestampable(on="create")
      */
     protected $createdAt;
 
@@ -75,7 +74,6 @@ abstract class Configuration
      * @var \DateTime
      *
      * @ORM\Column(name="updatedAt", type="datetime")
-     * @Gedmo\Timestampable(on="update")
      */
     protected $updatedAt;
     
@@ -132,7 +130,7 @@ abstract class Configuration
     /**
      * 
      * @param \DateTime $createdAt
-     * @ORM\PrePersist
+     * @ORM\PreUpdate
      */
     public function setUpdatedAt()
     {
