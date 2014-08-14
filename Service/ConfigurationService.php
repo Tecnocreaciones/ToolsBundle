@@ -186,6 +186,8 @@ class ConfigurationService implements ContainerAwareInterface
         $entity = $this->getConfiguration($id);
         if($entity === null){
             $entity = $this->createNew();
+        }else{
+            $entity->setUpdatedAt();
         }
         $entity->setKey($key)
                ->setValue($value);
@@ -258,7 +260,9 @@ class ConfigurationService implements ContainerAwareInterface
      */
     protected function createNew()
     {
-        return new $this->options['configuration_class'];
+        $entity = new $this->options['configuration_class'];
+        $entity->setCreatedAt();
+        return $entity;
     }
     
     /**

@@ -19,7 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks()
  */
 abstract class Configuration 
 {
@@ -73,7 +73,7 @@ abstract class Configuration
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updatedAt", type="datetime")
+     * @ORM\Column(name="updatedAt", type="datetime",nullable=true)
      */
     protected $updatedAt;
     
