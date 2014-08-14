@@ -7,7 +7,7 @@ tecnocreaciones_tools.unit_converter
 
 tecnocreaciones_tools:
     table_prefix:
-        use_prefix: true
+        use_prefix: false
         prefix: %app.db.prefix%
     sequence_generator:
         options:
@@ -29,3 +29,12 @@ sonata_admin:
                     items:
                         - sonata.admin.configuration
                         - sonata.admin.configuration_group
+
+
+Agrega repositorios como servicios a las clases
+<service id="repository.plant" class="Coramer\Sigtec\CompanyBundle\Repository\PlantRepository">
+    <call method="setContainer">
+        <argument type="service" id="service_container" />
+    </call>
+    <tag name="app.repository" class="Coramer\Sigtec\CompanyBundle\Entity\Plant" />
+</service>
