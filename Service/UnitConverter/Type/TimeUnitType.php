@@ -20,13 +20,13 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\UnitType;
  */
 class TimeUnitType extends UnitType
 {
-    const UNIT_SECONDS = 'seconds';
-    const UNIT_MINUTES = 'minutes';
-    const UNIT_HOURS = 'hours';
-    const UNIT_DAYS = 'days';
-    const UNIT_WEEKS = 'weeks';
-    const UNIT_MONTHS = 'months';
-    const UNIT_YEARS = 'years';
+    const UNIT_SECONDS = 'segundos';
+    const UNIT_MINUTES = 'minutos';
+    const UNIT_HOURS = 'horas';
+    const UNIT_DAYS = 'dias';
+    const UNIT_WEEKS = 'semanas';
+    const UNIT_MONTHS = 'mes';
+    const UNIT_YEARS = 'años';
 
 
     public function getDescription() {
@@ -38,12 +38,12 @@ class TimeUnitType extends UnitType
     }
 
     public function init() {
-        $this->insertUnit(self::UNIT_SECONDS, _('seconds,second,sec,secs,s'), 0);
-        $this->insertUnit(self::UNIT_MINUTES, _('minutes,minute,min,mins,m'), 60);
-        $this->insertUnit(self::UNIT_HOURS, _('hours,hour,hr,hrs,h'), 60);
-        $this->insertUnit(self::UNIT_DAYS, _('days,day,d'), 24);
-        $this->insertUnit(self::UNIT_WEEKS, _('weeks,week,w'), 7);
-        $this->insertUnit(self::UNIT_MONTHS, _('months,month,mth,M'), 30);
-        $this->insertUnit(self::UNIT_YEARS, _('years,year,yrs,y'), 365);
+        $this->insertUnit(self::UNIT_SECONDS, _(self::UNIT_SECONDS.',second,sec,secs,s'), 0);
+        $this->insertUnit(self::UNIT_MINUTES, _(self::UNIT_MINUTES.',minute,min,mins,m'), 60);
+        $this->insertUnit(self::UNIT_HOURS, _(self::UNIT_HOURS.',hour,hr,hrs,h'), 60);
+        $this->insertUnit(self::UNIT_DAYS, _(self::UNIT_DAYS.',day,d'), 24);
+        $this->insertUnit(self::UNIT_WEEKS, _(self::UNIT_WEEKS.',week,w'), 7);
+        $this->insertUnit(self::UNIT_MONTHS, _(self::UNIT_MONTHS.',month,mth,M'), 30);
+        $this->insertUnit(self::UNIT_YEARS, _(self::UNIT_YEARS.',year,yrs,y'), 365);
     }
 }
