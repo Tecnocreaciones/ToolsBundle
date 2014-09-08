@@ -20,7 +20,7 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\UnitType;
  */
 class LengthUnitType extends UnitType
 {
-    const UNIT_INCH = 'inch';
+    const UNIT_INCH = 'pulgada';
     const UNIT_MICROMETRO = 'micrometro';
     const UNIT_MILLIMETER = 'millimetro';
     const UNIT_CENTIMETER = 'centimetro';
