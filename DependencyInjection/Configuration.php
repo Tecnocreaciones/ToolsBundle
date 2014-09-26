@@ -50,6 +50,8 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('debug')->end()
                             ->scalarNode('configuration_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration')->cannotBeEmpty()->end()
                             ->scalarNode('configuration_group_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup')->cannotBeEmpty()->end()
+                            ->scalarNode('configuration_manager_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager')->cannotBeEmpty()->end()
+                            ->scalarNode('configuration_name_service')->defaultValue('tec.configuration')->cannotBeEmpty()->end()
                         ->end()
                     ->end()
                 ->end()
