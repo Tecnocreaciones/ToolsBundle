@@ -84,7 +84,7 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
             ->addIdentifier('description')
             ->add('value')
             ->add('group')
-            ->add('active')
+            ->add('active',null,array('editable' => true))
         ;
     }
     

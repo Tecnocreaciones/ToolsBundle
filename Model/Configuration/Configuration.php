@@ -164,4 +164,8 @@ abstract class Configuration
         $this->group = $group;
         return $this;
     }
+    
+    public function __toString() {
+        return $this->getDescription()?: '-';
+    }
 }

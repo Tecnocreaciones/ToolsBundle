@@ -51,7 +51,7 @@ class GroupAdmin extends Admin
         $listMapper
             ->addIdentifier('name')
             ->add('description')
-            ->add('active')
+            ->add('active',null,array('editable' => true))
         ;
     }
 }
