@@ -133,6 +133,13 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
                 $maskOffSetSubtract = preg_replace('/^\-/', '', $reg[3]);
             }
         }
+        //Se remplaza el valor de las mascaras adicionales para obtener la longitud correcta
+        foreach ($this->getAdditionalMasks() as $key => $value) {
+            if(isset($parameters[$value])){
+                $maskwithnocode = preg_replace('/\{'.$value.'\}/i',$parameters[$value], $maskwithnocode);
+            }
+        }
+        
         $posnumstart = strpos($maskwithnocode, $maskcounter); // Pos of counter in final string (from 0 to ...)
         $sqlstring = 'SUBSTRING(' .$field . ', ' . ($posnumstart) . ', ' . strlen($maskcounter) . ')';
         $maskLike = trim($mask);
