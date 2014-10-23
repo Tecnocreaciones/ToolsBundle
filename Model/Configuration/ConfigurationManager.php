@@ -79,4 +79,20 @@ abstract class ConfigurationManager implements ContainerAwareInterface
     protected function getConfigurationManager() {
         return $this->container->get('tecnocreaciones_tools.configuration_service');
     }
+    
+    /**
+     * Shortcut to return the Doctrine Registry service.
+     *
+     * @return \Doctrine\Bundle\DoctrineBundle\Registry
+     *
+     * @throws \LogicException If DoctrineBundle is not available
+     */
+    public function getDoctrine()
+    {
+        if (!$this->container->has('doctrine')) {
+            throw new \LogicException('The DoctrineBundle is not registered in your application.');
+        }
+
+        return $this->container->get('doctrine');
+    }
 }
