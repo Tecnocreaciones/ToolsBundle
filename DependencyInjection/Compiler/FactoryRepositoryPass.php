@@ -55,6 +55,6 @@ class FactoryRepositoryPass implements CompilerPassInterface
         }
         $factory->replaceArgument(0, $repositories);
  
-        $container->findDefinition('doctrine.orm.default_configuration')->addMethodCall('setRepositoryFactory', [$factory]);
+        $container->findDefinition('doctrine.orm.default_configuration')->addMethodCall('setRepositoryFactory', array($factory));
     }
 }
