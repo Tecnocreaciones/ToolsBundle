@@ -38,3 +38,12 @@ Agrega repositorios como servicios a las clases
     </call>
     <tag name="app.repository" class="Coramer\Sigtec\CompanyBundle\Entity\Plant" />
 </service>
+
+
+Agrega el voter para evaluar seguridad con herencia
+
+<service id="app.security.access.role_pattern_voter" class="Pequiven\SEIPBundle\Security\Authorization\Voter\RolePatternVoter" public="false">
+    <argument type="service" id="security.role_hierarchy" />
+    <argument>ROLE_SEIP_</argument>
+    <tag name="security.voter" priority="245" />
+</service>
