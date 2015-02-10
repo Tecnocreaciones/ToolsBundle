@@ -42,7 +42,7 @@ Agrega repositorios como servicios a las clases
 
 Agrega el voter para evaluar seguridad con herencia
 
-<service id="app.security.access.role_pattern_voter" class="Pequiven\SEIPBundle\Security\Authorization\Voter\RolePatternVoter" public="false">
+<service id="app.security.access.role_pattern_voter" class="Tecnocreaciones\Bundle\ToolsBundle\Security\Authorization\Voter\RolePatternVoter" public="false">
     <argument type="service" id="security.role_hierarchy" />
     <argument>ROLE_APP_</argument>
     <tag name="security.voter" priority="245" />
