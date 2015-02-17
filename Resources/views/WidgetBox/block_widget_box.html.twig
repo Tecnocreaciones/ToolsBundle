@@ -1,0 +1,40 @@
+<li id="cms-block-{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}">
+    <div class="widget-box {% if settings.collapseWidget and settings.isCollapsed %}collapsed{% endif %}">
+        {% block block %}
+
+            <div class="widget-header">
+                <h5 class="widget-title">{% block title '' %}</h5>
+
+                <div class="widget-toolbar">
+                    {% if settings.fullscreenWidget %}
+                        <a href="#" data-action="fullscreen" class="orange2">
+                            <i class="ace-icon fa fa-expand"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.reloadWidget %}
+                        <a href="#" data-action="reload">
+                            <i class="ace-icon fa fa-refresh"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.collapseWidget %}
+                        <a href="#" data-action="collapse">
+                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %}"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.closeWidget %}
+                        <a href="#" data-action="close">
+                            <i class="ace-icon fa fa-times"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="widget-main">
+                    {% block content %}
+                        EMPTY CONTENT
+                    {% endblock content %}
+                </div>
+            </div>
+        {% endblock block %}
+    </div>
+</li>
