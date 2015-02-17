@@ -3,7 +3,11 @@
         {% block block %}
 
             <div class="widget-header">
-                <h5 class="widget-title">{% block title '' %}</h5>
+                <h5 class="widget-title">
+                {% block title %}
+                    {{ settings.title|trans|raw }}
+                {% endblock title %}
+                </h5>
 
                 <div class="widget-toolbar">
                     {% if settings.fullscreenWidget %}

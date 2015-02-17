@@ -18,6 +18,20 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Block;
  */
 abstract class BaseBlockGridService extends BaseBlockService 
 {
+    public function buildEditForm(\Sonata\AdminBundle\Form\FormMapper $form, \Sonata\BlockBundle\Model\BlockInterface $block) {
+        
+    }
+    
+    public function execute(\Sonata\BlockBundle\Block\BlockContextInterface $blockContext, \Symfony\Component\HttpFoundation\Response $response = null) {
+        // merge settings
+        $settings = $blockContext->getSettings();
+        
+        return $this->renderResponse($blockContext->getTemplate(),array(
+            'block'     => $blockContext->getBlock(),
+            'settings'  => $settings,
+        ),$response);
+    }
+    
     public function setDefaultSettings(\Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
