@@ -117,5 +117,14 @@
 /* Uncomment this if you set helper : "clone" in draggable options */
 /*.gridster .player {
   opacity:0;
+}*/
+
+.gridster .player {
+  opacity: 0.4;
+  filter: alpha(opacity=40); /* For IE8 and earlier */
 }
-*/
+
+.gridster .preview-holder {
+    border: dotted red!important;
+/*    background: red!important;*/
+}
