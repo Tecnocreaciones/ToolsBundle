@@ -1,0 +1,17 @@
+widget_box:
+    templates: Plantillas <b>(%quantity%)</b>
+    events: Vistas <b>(%quantity%)</b>
+    header: Widgets disponibles
+    widgets: (<b>%quantity%</b> Widgets)
+    buttons:
+        add: Añadir
+    actions:
+        add: Añadir
+    widget: Widget
+    form:
+        name: Nombre
+        template: Plantilla
+        event: Vista
+    flashes:
+        success: El widget se agrego correctamente.
+default: Predeterminada

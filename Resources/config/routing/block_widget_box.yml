@@ -1,0 +1,27 @@
+block_widget_box_index:
+    pattern: /
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:index
+        _format: html
+    requirements: { _method: GET }
+    
+block_widget_box_create:
+    pattern: /create
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:create
+        _format: html
+    requirements: { _method: GET|POST }
+    
+block_widget_box_delete:
+    pattern: /{id}/delete
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:delete
+        _format: html
+    requirements: { _method: GET }
+    
+block_widget_box_update_position:
+    pattern: /update-position
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:updatePosition
+        _format: html
+    requirements: { _method: POST }

@@ -54,6 +54,15 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('configuration_name_service')->defaultValue('tec.configuration')->cannotBeEmpty()->end()
                         ->end()
                     ->end()
+                    ->arrayNode('block_grid')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
+                            ->booleanNode('debug')->defaultFalse()->end()
+                            ->scalarNode('block_grid_class')->defaultNull()->cannotBeEmpty()->end()
+                            ->scalarNode('widget_box_manager')->defaultValue('tecnocreaciones_tools.service.orm.widget_box_manager')->cannotBeEmpty()->end()
+                        ->end()
+                    ->end()
                 ->end()
         ;
         

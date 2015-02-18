@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% trans_default_domain 'widgetBox' %}
+
+{% block body %}
+    
+    <hgroup id="main-title" class="thin breadcrumb">
+        <h1>{{ 'widget_box.widget'|trans }}
+            <span class="icon-forward"></span><span class="thin">{{ 'widget_box.actions.add'|trans }}</span></h1>
+    </hgroup>
+    
+    {{ form(form) }}
+    
+{% endblock %}

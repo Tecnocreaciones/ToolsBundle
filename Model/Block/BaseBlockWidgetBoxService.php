@@ -11,18 +11,19 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Block;
 
+use Sonata\BlockBundle\Block\BlockContextInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+
 /**
  * Base de un bloque en un widget box
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-abstract class BaseBlockGridService extends BaseBlockService 
+abstract class BaseBlockWidgetBoxService extends BaseBlockService implements DefinitionBlockWidgetBoxInterface
 {
-    public function buildEditForm(\Sonata\AdminBundle\Form\FormMapper $form, \Sonata\BlockBundle\Model\BlockInterface $block) {
-        
-    }
-    
-    public function execute(\Sonata\BlockBundle\Block\BlockContextInterface $blockContext, \Symfony\Component\HttpFoundation\Response $response = null) {
+    public function execute(BlockContextInterface $blockContext, Response $response = null) {
         // merge settings
         $settings = $blockContext->getSettings();
         
@@ -32,7 +33,7 @@ abstract class BaseBlockGridService extends BaseBlockService
         ),$response);
     }
     
-    public function setDefaultSettings(\Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver)
+    public function setDefaultSettings(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
             'url'      => false,
@@ -49,5 +50,13 @@ abstract class BaseBlockGridService extends BaseBlockService
             'closeWidget' => true,
             'isCollapsed' => false,
         ));
+    }
+    
+    public function getTranslationDomain() {
+        return 'widgetBox';
+    }
+    
+    public function hasPermission() {
+        return true;
     }
 }

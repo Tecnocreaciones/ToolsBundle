@@ -107,6 +107,37 @@ class TecnocreacionesToolsExtension extends Extension
             
             $loaderYml->load('admin.yml');
         }
-        
+        if($config['block_grid']['enable'] === true){
+           $blockGridConfig = $config['block_grid']; 
+           $blockGridClass = $blockGridConfig['block_grid_class'];
+           $widgetBoxManager = $blockGridConfig['widget_box_manager'];
+           
+           if(empty($blockGridClass)){
+                throw new LogicException(
+                    'The "tecnocreaciones_tools.block_grid.block_grid_class" in config.yml must defined'
+                );
+           }
+
+           $reflectionBlockWidgetBox = new ReflectionClass($blockGridClass);
+           
+           if($reflectionBlockWidgetBox->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox') === false){
+                throw new LogicException(
+                    'The "'.$reflectionBlockWidgetBox->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Block\\BlockWidgetBox'
+                );
+            }
+            $widgetBoxManagerDefinition = $container->getDefinition($widgetBoxManager);
+            $reflectionWidgetBoxManager = new ReflectionClass($widgetBoxManagerDefinition->getClass());
+            
+            if($reflectionWidgetBoxManager->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManager') === false){
+                throw new LogicException(
+                    'The "'.$reflectionWidgetBoxManager->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Block\\Manager\\BlockWidgetBoxManager'
+                );
+            }
+            
+            $container->setParameter('tecnocreaciones_tools.block_grid.block_grid_class', $blockGridClass);
+            $container->setParameter('tecnocreaciones_tools.block_grid.debug', $blockGridConfig['debug']);
+            $container->setParameter('tecnocreaciones_tools.block_grid.enable', $blockGridConfig['enable']);
+            $container->setParameter('tecnocreaciones_tools.block_grid.widget_box_manager', $widgetBoxManager);
+        }
     }
 }

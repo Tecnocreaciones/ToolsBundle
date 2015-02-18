@@ -1,4 +1,4 @@
-<li id="cms-block-{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}">
+<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}">
     <div class="widget-box {% if settings.collapseWidget and settings.isCollapsed %}collapsed{% endif %}">
         {% block block %}
 
@@ -26,7 +26,7 @@
                         </a>
                     {% endif %}
                     {% if settings.closeWidget %}
-                        <a href="#" data-action="close">
+                        <a href="#" data-action="close" class="box-close" path="{{ path('block_widget_box_delete',{id:block.id}) }}">
                             <i class="ace-icon fa fa-times"></i>
                         </a>
                     {% endif %}

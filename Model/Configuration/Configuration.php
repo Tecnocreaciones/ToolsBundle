@@ -18,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Modelo de configuracion
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
- * @ORM\MappedSuperclass
+ * @ORM\MappedSuperclass()
  * @ORM\HasLifecycleCallbacks()
  */
 abstract class Configuration 

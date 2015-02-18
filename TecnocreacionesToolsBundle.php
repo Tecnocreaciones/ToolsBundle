@@ -9,5 +9,6 @@ class TecnocreacionesToolsBundle extends Bundle
     public function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container) {
         $container->addCompilerPass(new DependencyInjection\Compiler\UnitTypePass());
         $container->addCompilerPass(new DependencyInjection\Compiler\FactoryRepositoryPass());
+        $container->addCompilerPass(new DependencyInjection\Compiler\WidgetBoxPass());
     }
 }

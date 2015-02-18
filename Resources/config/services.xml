@@ -34,5 +34,17 @@
         <service id="tecnocreaciones_tools.unit_converter.weith" class="Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\Type\WeightUnitType">
             <tag name="tecnocreaciones_tools.unit_converter.unit" />
         </service>
+        
+        <service id="tecnocreaciones_tools.service.grid_widget_box" class="Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService">
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
+        <service id="tecnocreaciones_tools.service.orm.widget_box_manager" class="Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManagerORM">
+            <argument>%tecnocreaciones_tools.block_grid.block_grid_class%</argument>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
     </services>
 </container>

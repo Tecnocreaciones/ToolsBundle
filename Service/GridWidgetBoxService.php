@@ -11,12 +11,18 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 
+use Sonata\BlockBundle\Event\BlockEvent;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox;
+use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+
 /**
- * Servicio para construir un grid ordenado
+ * Servicio para construir un grid ordenado (tecnocreaciones_tools.service.grid_widget_box)
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class GridWidgetBoxService 
+class GridWidgetBoxService implements ContainerAwareInterface
 {
     /**
      * Limite de columas en en grid
@@ -28,21 +34,35 @@ class GridWidgetBoxService
     
     private $blocks;
     
+    private $definitionsBlockGrid;
+
     /**
      *
-     * @var \Sonata\BlockBundle\Event\BlockEvent
+     * @var BlockEvent
      */
     private $event;
     
+    /**
+     *
+     * @var ContainerAwareInterface
+     */
+    private $container;
+
+
     public function __construct() 
     {
         $this->blocks = array();
+        $this->definitionsBlockGrid = array();
     }
     
-    public function addBlock(\Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockGrid $block) 
+    public function addBlock(BlockWidgetBox $block) 
     {
-        $block->setSetting('positionX',$this->currentRow);
-        $block->setSetting('positionY',$this->quantityBlock);
+        if($block->getSetting('positionX') === null){
+            $block->setSetting('positionX',$this->currentRow);
+        }
+        if($block->getSetting('positionY') === null){
+            $block->setSetting('positionY',$this->quantityBlock);
+        }
         $this->blocks[] = $block;
         $this->event->addBlock($block);
         
@@ -65,10 +85,60 @@ class GridWidgetBoxService
         $this->limitCol = $limitCol;
     }
 
-    function setEvent(\Sonata\BlockBundle\Event\BlockEvent &$event) 
+    function setEvent(BlockEvent &$event) 
     {
         $this->event = $event;
     }
+    
+    public function addAllPublishedByEvent(BlockEvent &$event, $eventName)
+    {
+        $this->setEvent($event);
+        $widgetsBox = $this->getWidgetBoxManager()->findAllPublishedByEvent($eventName);
+        foreach ($widgetsBox as $widgetBox) {
+            $widgetBox->setSetting('name',$widgetBox->getName());
+            $this->addBlock($widgetBox);
+        }
+    }
+    
+    function addDefinitionsBlockGrid(DefinitionBlockWidgetBoxInterface $definitionsBlockGrid) 
+    {
+        $this->definitionsBlockGrid[$definitionsBlockGrid->getType()] = $definitionsBlockGrid;
+        
+    }  
+    
+    /**
+     * 
+     * @param type $type
+     * @return DefinitionBlockWidgetBoxInterface
+     */
+    function getDefinitionBlockGrid($type)
+    {
+        if(isset($this->definitionsBlockGrid[$type])){
+            
+        }
+        return $this->definitionsBlockGrid[$type];
+    }
 
 
+    /**
+     * 
+     * @return DefinitionBlockWidgetBoxInterface
+     */
+    function getDefinitionsBlockGrid() 
+    {
+        return $this->definitionsBlockGrid;
+    }
+        
+    /**
+     * 
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManagerInterface
+     */
+    private function getWidgetBoxManager()
+    {
+        return $this->container->get($this->container->getParameter('tecnocreaciones_tools.block_grid.widget_box_manager'));
+    }
+    
+    public function setContainer(ContainerInterface $container = null) {
+        $this->container = $container;
+    }
 }

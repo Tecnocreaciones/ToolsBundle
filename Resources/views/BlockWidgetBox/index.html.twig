@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% trans_default_domain 'widgetBox' %}
+
+{% block body %}
+    
+    <hgroup id="main-title" class="thin">
+        <h1>{{ 'widget_box.header'|trans }}</h1>
+    </hgroup>
+    
+    {% for definitionBlockGrid in definitionsBlockGrid %}
+        <details class="details margin-bottom" open="">
+            <summary role="button" aria-expanded="true">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;{{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.names|length) })|raw }}</summary>
+            <div class="with-padding">
+                <table border="1" class="table table-bordered" style="width: 100%;">
+                    <tr>
+                        <th colspan="2">
+                            <h4 class="green underline">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;({{ definitionBlockGrid.description|trans({},definitionBlockGrid.translationDomain) }})</h4>
+                        </th>
+
+                    <tr>
+                        <td style="width: 60%" rowspan="2">
+
+                            <ul class="list">
+                                {% for key,name in definitionBlockGrid.names %}
+                                    <li>{{ key + 1 }}.&nbsp;{{ name|trans({},definitionBlockGrid.translationDomain) }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <div class="with-padding">
+                                <table class="boxed left-border">
+                                    <tr>
+                                        <td>
+                                            <div>{{ 'widget_box.templates'|trans({'%quantity%': (definitionBlockGrid.templates|length) })|raw }}:</div>
+                                            {% for template,label in definitionBlockGrid.templates %}
+                                                {{ label|trans({},definitionBlockGrid.translationDomain) }}{% if loop.last %}.{% else %},{% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div>{{ 'widget_box.events'|trans({'%quantity%': (definitionBlockGrid.events|length) })|raw }}:</div>
+                                            {% for key,event in definitionBlockGrid.events %}
+                                                {{ event|trans({},definitionBlockGrid.translationDomain) }}{% if loop.last %}.{% else %},{% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p class="button-height align-right float-right">
+                                <a href="{{ path('block_widget_box_create',{type: definitionBlockGrid.type}) }}" class="button">
+                                    <span class="button-icon"><span class="icon-star"></span></span>
+                                    {{ 'widget_box.buttons.add'|trans }}
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </details>
+        
+        <div>&nbsp;</div>
+    {% endfor %}
+{% endblock body %}
