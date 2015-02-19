@@ -128,3 +128,6 @@
     border: dotted red!important;
 /*    background: red!important;*/
 }
+.gridster .widget-header,.gridster .widget-title {
+    cursor: pointer;
+}

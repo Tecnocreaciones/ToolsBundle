@@ -143,6 +143,56 @@ class BlockWidgetBoxController extends Controller
         ));
     }
     
+    public function minimizeAction(Request $request) 
+    {
+        $id = $request->get('id');
+        $data = $request->get('data');
+        
+        $widgetBoxManager = $this->getWidgetBoxManager();
+        
+        $widgetBox = $widgetBoxManager->find($id);
+        $widgetBox->setSetting('isCollapsed',true);
+        $widgetBox->setSetting('oldSizeY',$data[0]['size_y']);
+        
+        $widgetBoxManager->save($widgetBox,true);
+        
+        return new \Symfony\Component\HttpFoundation\JsonResponse(array(
+            'success' => true
+        ));
+    }
+    
+    public function maximizeAction(Request $request) 
+    {
+        $id = $request->get('id');
+        $widgetBoxManager = $this->getWidgetBoxManager();
+        
+        $widgetBox = $widgetBoxManager->find($id);
+        $widgetBox->setSetting('isCollapsed',false);
+        
+        $widgetBoxManager->save($widgetBox,true);
+        
+        return new \Symfony\Component\HttpFoundation\JsonResponse(array(
+            'success' => true
+        ));
+    }
+    
+    public function refreshAction(Request $request) 
+    {
+        $id = $request->get('id');
+        $widgetBoxManager = $this->getWidgetBoxManager();
+        
+        $widgetBox = $widgetBoxManager->find($id);
+        
+        $blockHelper = $this->getBlockHelper();
+        $widgetBox->setSetting('name',$widgetBox->getName());
+        $widgetBox->setSetting('blockBase','TecnocreacionesToolsBundle:WidgetBox:block_widget_box_empty.html.twig');
+        
+        $blockContent = $blockHelper->render(array(
+            'type' => $widgetBox->getType()
+        ), $widgetBox->getSettings());
+        return new \Symfony\Component\HttpFoundation\Response($blockContent);
+    }
+    
     private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  DefinitionBlockWidgetBoxInterface $definitionBlockGrid) 
     {
         $emptyValue = '';
@@ -168,6 +218,15 @@ class BlockWidgetBoxController extends Controller
             ->add('send','submit')
             ->add('cancel','button')
             ;
+    }
+
+    /**
+     * 
+     * @return \Sonata\BlockBundle\Templating\Helper\BlockHelper
+     */
+    private function getBlockHelper()
+    {
+        return $this->get('sonata.block.templating.helper');
     }
 
 

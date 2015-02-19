@@ -330,7 +330,7 @@ if ("undefined" == typeof jQuery)
                         var h, i = e.hasClass("collapsed") ? "show" : "hide";
                         if (e.trigger(h = a.Event(i + ".ace.widget")), h.isDefaultPrevented())
                             return;
-                        f.toggle(i, c)
+                        f.toggle(i, c);
                     } else if ("close" == g) {
                         var h;
                         if (e.trigger(h = a.Event("close.ace.widget")), h.isDefaultPrevented())
@@ -361,6 +361,6 @@ if ("undefined" == typeof jQuery)
             })
         }(window.jQuery);
 
-$('.widget-box').on('reload.ace.widget', function (e) {
-    //this = the widget-box
-});
+//$('.widget-box').on('reload.ace.widget', function (e) {
+//    //this = the widget-box
+//});

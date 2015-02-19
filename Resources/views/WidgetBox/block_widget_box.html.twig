@@ -1,5 +1,5 @@
-<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}">
-    <div class="widget-box {% if settings.collapseWidget and settings.isCollapsed %}collapsed{% endif %}">
+<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}" data-sizey-old="{{ settings.oldSizeY }}">
+    <div id="widget-box-{{ block.id }}" class="widget-box {% if settings.collapseWidget and settings.isCollapsed %}collapsed{% endif %}">
         {% block block %}
 
             <div class="widget-header">
@@ -16,13 +16,13 @@
                         </a>
                     {% endif %}
                     {% if settings.reloadWidget %}
-                        <a href="#" data-action="reload">
+                        <a href="#" data-action="reload" class="box-reload" path="{{ path('block_widget_box_refresh',{id:block.id}) }}">
                             <i class="ace-icon fa fa-refresh"></i>
                         </a>
                     {% endif %}
                     {% if settings.collapseWidget %}
                         <a href="#" data-action="collapse">
-                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %}"></i>
+                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %} collapse" minimize="{{ path('block_widget_box_minimize',{id:block.id}) }}" maximize="{{ path('block_widget_box_maximize',{id:block.id}) }}" ></i>
                         </a>
                     {% endif %}
                     {% if settings.closeWidget %}

@@ -5,6 +5,13 @@ block_widget_box_index:
         _format: html
     requirements: { _method: GET }
     
+block_widget_box_refresh:
+    pattern: /{id}/refresh
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:refresh
+        _format: html
+    requirements: { _method: GET }
+    
 block_widget_box_create:
     pattern: /create
     defaults:
@@ -16,6 +23,20 @@ block_widget_box_delete:
     pattern: /{id}/delete
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:delete
+        _format: html
+    requirements: { _method: GET }
+    
+block_widget_box_minimize:
+    pattern: /{id}/minimize
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:minimize
+        _format: html
+    requirements: { _method: POST }
+    
+block_widget_box_maximize:
+    pattern: /{id}/maximize
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:maximize
         _format: html
     requirements: { _method: GET }
     
