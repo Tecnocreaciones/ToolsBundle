@@ -46,11 +46,12 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
             'sizeX' => 4,
             'sizeY' => 4,
             'oldSizeY' => 4,
-            'fullscreenWidget' => true,
-            'reloadWidget' => true,
-            'collapseWidget' => true,
-            'closeWidget' => true,
-            'isCollapsed' => false,
+            'isMaximizable' => true,
+            'isReloadble' => true,
+            'isCollapsible' => true,
+            'isClosable' => true,
+            'isCollapsed' => false,//Esta minimizada
+            'isLoadedData' => true,//Esta cargada la data
         ));
     }
     

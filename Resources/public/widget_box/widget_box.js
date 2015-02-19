@@ -353,12 +353,12 @@ if ("undefined" == typeof jQuery)
             })
         }(window.jQuery),
         function (a) {
-            a(document).on("reload.ace.widget", ".widget-box", function () {
-                var b = a(this);
-                setTimeout(function () {
-                    b.trigger("reloaded.ace.widget")
-                }, parseInt(1e3 * Math.random() + 1e3))
-            })
+//            a(document).on("reload.ace.widget", ".widget-box", function () {
+//                var b = a(this);
+//                setTimeout(function () {
+//                    b.trigger("reloaded.ace.widget")
+//                }, parseInt(1e3 * Math.random() + 1e3))
+//            })
         }(window.jQuery);
 
 //$('.widget-box').on('reload.ace.widget', function (e) {

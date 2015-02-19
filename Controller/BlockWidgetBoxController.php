@@ -113,7 +113,7 @@ class BlockWidgetBoxController extends Controller
         return $response;
     }
     
-    public function updatePositionAction(Request $request) 
+    public function updateAction(Request $request) 
     {
         $widgetBoxManager = $this->getWidgetBoxManager();
         $data = $request->get('data');
@@ -185,6 +185,7 @@ class BlockWidgetBoxController extends Controller
         
         $blockHelper = $this->getBlockHelper();
         $widgetBox->setSetting('name',$widgetBox->getName());
+        $widgetBox->setSetting('isCollapsed',false);
         $widgetBox->setSetting('blockBase','TecnocreacionesToolsBundle:WidgetBox:block_widget_box_empty.html.twig');
         
         $blockContent = $blockHelper->render(array(

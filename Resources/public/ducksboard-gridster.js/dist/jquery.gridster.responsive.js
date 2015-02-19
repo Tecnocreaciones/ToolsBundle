@@ -55,8 +55,15 @@ function fnCreateGridster(page, colors, states, titles) {
             enabled: true,
             min_size: [2, 2],
             stop: function (event, ui, widget) {
+                
                 var positions = JSON.stringify(this.serialize());
                 localStorage.setItem(page, positions);
+                var urlUpdateWidget = listWidgets.attr('url-update-widget');
+                $.ajax({
+                    type: 'POST',
+                    url: urlUpdateWidget,
+                    data: { data: this.serialize(widget) }
+                });
             }
         },
         serialize_params: function ($w, wgd)
@@ -86,10 +93,10 @@ function fnCreateGridster(page, colors, states, titles) {
                         dataSerialize = gridster.serialize($widget);
                         initPostSerialize = true;
                     }
-                    var urlUpdatePosition = listWidgets.attr('url-update-widget');
+                    var urlUpdateWidget = listWidgets.attr('url-update-widget');
                     $.ajax({
                         type: 'POST',
-                        url: urlUpdatePosition,
+                        url: urlUpdateWidget,
                         data: { data: dataSerialize }
                     });
                 }
@@ -133,9 +140,14 @@ function fnCreateGridster(page, colors, states, titles) {
     });
     /* register the maximize button */
     $('.widget-box').on('show.ace.widget', function (e) {
-        var panel = $(this).parent().attr("id");
+        var widget = $(this);
+        var panel = widget.parent().attr("id");
         _state_maxamize(panel);
-        
+        var dataLoad = widget.attr('data-load');
+        if(dataLoad == 'false'){
+            widget.find('.box-reload').click();
+            widget.attr('data-load','true');
+        }
         var url = $(this).find('.collapse').attr('maximize');
         $.ajax(url);
     });
@@ -149,8 +161,8 @@ function fnCreateGridster(page, colors, states, titles) {
             $.ajax(url);
         });
    });
+   
     /* register the close button */
-    
     $('.widget-box').on('reload.ace.widget', function(e) {
         //this = the widget-box
         var widgetBox = $(this);
