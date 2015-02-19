@@ -53,7 +53,7 @@ function fnCreateGridster(page, colors, states, titles) {
         widget_base_dimensions: [base_size, widget_base_y],
         resize: {
             enabled: true,
-            min_size: [2, 3],
+            min_size: [2, 2],
             stop: function (event, ui, widget) {
                 var positions = JSON.stringify(this.serialize());
                 localStorage.setItem(page, positions);
@@ -216,8 +216,7 @@ function fnCreateGridster(page, colors, states, titles) {
 
     /* give it a bit to fully load then fade in */
     setTimeout(function () {
-//        $('.gridster').fadeIn('fast');
-        $('.gridster').fadeIn('slow');
-    }, 1000);
+        $('.gridster').fadeIn('fast');
+    }, 400);
 
 }
