@@ -1,9 +1,12 @@
-<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}" data-sizey-old="{{ settings.oldSizeY }}">
-    <div id="widget-box-{{ block.id }}" class="widget-box {% if settings.isCollapsible and settings.isCollapsed %}collapsed{% endif %}" data-load="{% if settings.isLoadedData %}true{% else %}false{% endif %}" >
+<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
+    <div id="widget-box-{{ block.id }}" class="widget-box {% if settings.isTransparent %}transparent{% endif %} {% if settings.isCollapsible and settings.isCollapsed %}collapsed{% endif %} {% if settings.widgetColor != '' %}{{ settings.widgetColor }}{% endif %}" data-load="{% if settings.isLoadedData %}true{% else %}false{% endif %}" >
         {% block block %}
 
             <div class="widget-header">
                 <h5 class="widget-title">
+                {% if settings.icon != null %}
+                    {{ settings.icon|trans|raw }}
+                {% endif %}
                 {% block title %}
                     {{ settings.title|trans|raw }}
                 {% endblock title %}
@@ -11,9 +14,28 @@
 
                 <div class="widget-toolbar">
                     {% if settings.isMaximizable %}
-                        <a href="#" data-action="fullscreen" class="orange2">
+                        <a href="#" data-action="fullscreen" class="orange2">   
                             <i class="ace-icon fa fa-expand"></i>
                         </a>
+                    {% endif %}
+                    {% if settings.isColorable %}
+                        <select class="hide simple-colorpicker-1">
+                                <option selected="" data-class="blue" value="#307ECC">#307ECC</option>
+                                <option data-class="blue2" value="#5090C1">#5090C1</option>
+                                <option data-class="blue3" value="#6379AA">#6379AA</option>
+                                <option data-class="green" value="#82AF6F">#82AF6F</option>
+                                <option data-class="green2" value="#2E8965">#2E8965</option>
+                                <option data-class="green3" value="#5FBC47">#5FBC47</option>
+                                <option data-class="red" value="#E2755F">#E2755F</option>
+                                <option data-class="red2" value="#E04141">#E04141</option>
+                                <option data-class="red3" value="#D15B47">#D15B47</option>
+                                <option data-class="orange" value="#FFC657">#FFC657</option>
+                                <option data-class="purple" value="#7E6EB0">#7E6EB0</option>
+                                <option data-class="pink" value="#CE6F9E">#CE6F9E</option>
+                                <option data-class="dark" value="#404040">#404040</option>
+                                <option data-class="grey" value="#848484">#848484</option>
+                                <option data-class="default" value="#EEE">#EEE</option>
+                        </select>
                     {% endif %}
                     {% if settings.isReloadble %}
                         <a href="#" data-action="reload" class="box-reload" path="{{ path('block_widget_box_refresh',{id:block.id}) }}">
@@ -22,7 +44,7 @@
                     {% endif %}
                     {% if settings.isCollapsible %}
                         <a href="#" data-action="collapse">
-                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %} collapse" minimize="{{ path('block_widget_box_minimize',{id:block.id}) }}" maximize="{{ path('block_widget_box_maximize',{id:block.id}) }}" ></i>
+                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %} box-collapse" minimize="{{ path('block_widget_box_minimize',{id:block.id}) }}" maximize="{{ path('block_widget_box_maximize',{id:block.id}) }}" ></i>
                         </a>
                     {% endif %}
                     {% if settings.isClosable %}
@@ -31,6 +53,7 @@
                         </a>
                     {% endif %}
                 </div>
+                
             </div>
             <div class="widget-body">
                 <div class="widget-main">

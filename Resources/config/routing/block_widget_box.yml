@@ -19,6 +19,13 @@ block_widget_box_create:
         _format: html
     requirements: { _method: GET|POST }
     
+block_widget_box_add_all:
+    pattern: /add-all
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:addAll
+        _format: html
+    requirements: { _method: GET }
+    
 block_widget_box_delete:
     pattern: /{id}/delete
     defaults:

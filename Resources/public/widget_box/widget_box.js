@@ -229,6 +229,55 @@ if ("undefined" == typeof jQuery)
                 updatePos: !0
             }
         }(window.jQuery),
+        function(a, b) {
+            var c = function(b, c) {
+                var d = a.extend({}, a.fn.ace_colorpicker.defaults, c),
+                    e = a(b),
+                    f = "",
+                    g = "",
+                    h = null,
+                    i = [];
+                e.addClass("hide").find("option").each(function() {
+                    var a = "colorpick-btn",
+                        b = this.value.replace(/[^\w\s,#\(\)\.]/g, "");
+                    this.value != b && (this.value = b), this.selected && (a += " selected", g = b), i.push(b), f += '<li><a class="' + a + '" href="#" style="background-color:' + b + ';" data-color="' + b + '"></a></li>'
+                }).end().on("change.color", function() {
+                    e.next().find(".btn-colorpicker").css("background-color", this.value)
+                }).after('<div class="dropdown dropdown-colorpicker "><a data-toggle="dropdown" class="dropdown-toggle" ' + (d.auto_pos ? 'data-position="auto"' : "") + ' href="#"><span class="ace-icon-a btn-colorpicker-action fa fa-th-large" ></span></a><ul class="dropdown-menu' + (d.caret ? " dropdown-caret" : "") + (d.pull_right ? " dropdown-menu-right" : "") + '">' + f + "</ul></div>");
+                var j = e.next().find(".dropdown-menu");
+                j.on(ace.click_event, function(b) {
+                    var c = a(b.target);
+                    if (!c.is(".colorpick-btn")) return !1;
+                    h && h.removeClass("selected"), h = c, h.addClass("selected");
+                    var d = h.data("color");
+                    return e.val(d).trigger("change"), b.preventDefault(), !0
+                }), h = e.next().find("a.selected"), this.pick = function(c, d) {
+                    if ("number" == typeof c) {
+                        if (c >= i.length) return;
+                        b.selectedIndex = c, j.find("a:eq(" + c + ")").trigger(ace.click_event)
+                    } else if ("string" == typeof c) {
+                        var f = c.replace(/[^\w\s,#\(\)\.]/g, "");
+                        if (c = i.indexOf(f), -1 == c && d === !0 && (i.push(f), a("<option />").appendTo(e).val(f), a('<li><a class="colorpick-btn" href="#"></a></li>').appendTo(j).find("a").css("background-color", f).data("color", f), c = i.length - 1), -1 == c) return;
+                        j.find("a:eq(" + c + ")").trigger(ace.click_event)
+                    }
+                }, this.destroy = function() {
+                    e.removeClass("hide").off("change.color").next().remove(), i = []
+                }
+            };
+            a.fn.ace_colorpicker = function(d, e) {
+                var f, g = this.each(function() {
+                    var b = a(this),
+                        g = b.data("ace_colorpicker"),
+                        h = "object" == typeof d && d;
+                    g || b.data("ace_colorpicker", g = new c(this, h)), "string" == typeof d && (f = g[d](e))
+                });
+                return f === b ? g : f
+            }, a.fn.ace_colorpicker.defaults = {
+                pull_right: !1,
+                caret: !0,
+                auto_pos: !0
+            }
+        }(window.jQuery),
         function (a, b) {
             function c(b, c) {
                 var d = b.find(".widget-main");

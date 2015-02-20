@@ -5,6 +5,7 @@ widget_box:
     widgets: (<b>%quantity%</b> Widgets)
     buttons:
         add: Añadir
+        add_all: Añadir todos
     actions:
         add: Añadir
     widget: Widget
@@ -14,4 +15,5 @@ widget_box:
         event: Vista
     flashes:
         success: El widget se agrego correctamente.
+        success_all: Se han agregado %num% widget(s) correctamente.
 default: Predeterminada

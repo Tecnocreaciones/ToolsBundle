@@ -55,7 +55,9 @@ class BlockWidgetBoxController extends Controller
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
         
         $definitionBlockGrid = $gridWidgetBoxService->getDefinitionBlockGrid($type);
-        
+        if($definitionBlockGrid->hasPermission() == false){
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
         $formBuilderWidget = $this->createFormBuilder(array(),array(
             'csrf_protection' => true,
             'translation_domain' => $definitionBlockGrid->getTranslationDomain(),
@@ -97,6 +99,40 @@ class BlockWidgetBoxController extends Controller
         );
     }
     
+    function addAllAction(Request $request) 
+    {
+        $type = $request->get('type');
+        $gridWidgetBoxService = $this->getGridWidgetBoxService();
+        
+        $definitionBlockGrid = $gridWidgetBoxService->getDefinitionBlockGrid($type);
+        if($definitionBlockGrid->hasPermission() == false){
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+        $events = $definitionBlockGrid->getEvents();
+        $names = $definitionBlockGrid->getNames();
+        $templates = $definitionBlockGrid->getTemplates();
+        
+        $templatesKeys = array_keys($templates);
+        $widgetBoxManager = $this->getWidgetBoxManager();
+        $i = 0;
+        foreach ($names as $name) {
+            $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
+            $blockWidgetBox->setType($type);
+            $blockWidgetBox->setName($name);
+            $blockWidgetBox->setSetting('template',$templatesKeys[0]);
+            $blockWidgetBox->setEvent($events[0]);
+            $blockWidgetBox->setCreatedAt(new \DateTime());
+            $blockWidgetBox->setEnabled(true);
+            $widgetBoxManager->save($blockWidgetBox);
+            $i++;
+        }
+        $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all',array(
+            '%num%' => $i,
+        )));
+
+        return $this->redirect($this->generateUrl('block_widget_box_index'));
+    }
+    
     public function deleteAction(Request $request)
     {
         $widgetBoxManager = $this->getWidgetBoxManager();
@@ -133,6 +169,7 @@ class BlockWidgetBoxController extends Controller
             $widgetBox->setSetting('positionY',$dataWidget['col']);
             $widgetBox->setSetting('sizeX',$dataWidget['size_x']);
             $widgetBox->setSetting('sizeY',$dataWidget['size_y']);
+            $widgetBox->setSetting('widgetColor',$dataWidget['widget_color']);
             
             $widgetBoxManager->save($widgetBox,false);
         }

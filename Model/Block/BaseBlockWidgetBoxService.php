@@ -46,12 +46,16 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
             'sizeX' => 4,
             'sizeY' => 4,
             'oldSizeY' => 4,
+            'icon' => '<i class="fa fa-sort"></i>',
             'isMaximizable' => true,
             'isReloadble' => true,
             'isCollapsible' => true,
             'isClosable' => true,
             'isCollapsed' => false,//Esta minimizada
             'isLoadedData' => true,//Esta cargada la data
+            'isTransparent' => false,//Transparente
+            'isColorable' => true,//Se puede cambiar el color del wiget
+            'widgetColor' => null,//Color del widget
         ));
     }
     
