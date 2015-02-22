@@ -1,37 +1,49 @@
 
-function fnCreateGridster(page, colors, states, titles) {
-
-    /* load saved position and sizes */
-    if (localdata_position) {
-        $.each(localdata_position, function (i, value) {
-            $('#' + value.id).attr({"data-col": value.col, "data-row": value.row, "data-sizex": value.size_x, "data-sizey": value.size_y});
-        });
-    }
-
-    /* load titles */
-    if (localdata_titles) {
-        $.each(localdata_titles, function (i, value) {
-            if (value) {
-                if (value.title)
-                    $('#' + value.panel + ' .panel-title-text').html(value.title);
-            }
-        });
-    }
-
+function fnCreateGridster(isMobile)
+{
+    var saveAjax = !isMobile;
     var minCols = 1;
-    /* force 1 column on mobile screen sizes */
-    if ($(window).width() <= 480 || $(window).width() == 640) {
-        var cols = 1;
-        var offset = 40;
-    } else {
-        var cols = 12;
-        var offset = 40;
-        minCols = 12;
-    }
-
-
+    var offset = 40;
+    var cols = 12;
+    var windowWidth = $(window).width();
+    var base_size = 0;
+    var evaluateResponsiveValues = function(){
+        windowWidth = $(window).width();
+        /* force 1 column on mobile screen sizes */
+        if (windowWidth <= 480) {
+            cols = 4;
+            offset = 20;
+            minCols = 4;
+            saveAjax = false;
+        } else if(windowWidth <= 660){
+            cols = 6;
+            minCols = 6;
+            offset = 15;
+            saveAjax = false;
+        } else if(windowWidth <= 768){
+            cols = 10;
+            minCols = 10;
+            offset = 15;
+            saveAjax = false;
+        } else if(windowWidth <= 992){
+            cols = 12;
+            minCols = 12;
+            offset = 14;
+            saveAjax = false;
+        } else {
+            cols = 12;
+            offset = 34;
+            minCols = 12;
+        }
+        base_size = (windowWidth / cols);
+//        console.log("windowWidth= "+windowWidth);
+//        console.log("cols= "+cols);
+//        console.log("base_size= "+base_size);
+    };
+    evaluateResponsiveValues();
     /* get the default size for the ratio */
-    var base_size = ($(window).width() / cols) - offset;
+    base_size = (windowWidth / cols) - offset;
+    
     var widget_base_x = base_size;
     var widget_base_y = 60;
 //    console.log(base_size);
@@ -55,15 +67,14 @@ function fnCreateGridster(page, colors, states, titles) {
             enabled: true,
             min_size: [1, 2],
             stop: function (event, ui, widget) {
-                
-                var positions = JSON.stringify(this.serialize());
-                localStorage.setItem(page, positions);
-                var urlUpdateWidget = listWidgets.attr('url-update-widget');
-                $.ajax({
-                    type: 'POST',
-                    url: urlUpdateWidget,
-                    data: { data: this.serialize(widget) }
-                });
+                if(saveAjax == true){
+                    var urlUpdateWidget = listWidgets.attr('url-update-widget');
+                    $.ajax({
+                        type: 'POST',
+                        url: urlUpdateWidget,
+                        data: { data: this.serialize(widget) }
+                    });
+                }
             }
         },
         serialize_params: function ($w, wgd)
@@ -75,19 +86,21 @@ function fnCreateGridster(page, colors, states, titles) {
                 //                    handle: '.panel-heading, .panel-handel',
                 handle: '.widget-header, .widget-title',
                 stop: function (event, ui,$widget) {
-                    var dataSerialize;
-                    if(initPostSerialize){
-                        dataSerialize = gridster.serialize_changed();
-                    }else{
-                        dataSerialize = gridster.serialize($widget);
-                        initPostSerialize = true;
+                    if(saveAjax == true){
+                        var dataSerialize;
+                        if(initPostSerialize){
+                            dataSerialize = gridster.serialize_changed();
+                        }else{
+                            dataSerialize = gridster.serialize($widget);
+                            initPostSerialize = true;
+                        }
+                        var urlUpdateWidget = listWidgets.attr('url-update-widget');
+                        $.ajax({
+                            type: 'POST',
+                            url: urlUpdateWidget,
+                            data: { data: dataSerialize }
+                        });
                     }
-                    var urlUpdateWidget = listWidgets.attr('url-update-widget');
-                    $.ajax({
-                        type: 'POST',
-                        url: urlUpdateWidget,
-                        data: { data: dataSerialize }
-                    });
                 }
             }
     }).data('gridster');
@@ -114,6 +127,7 @@ function fnCreateGridster(page, colors, states, titles) {
                 url: url,
                 data: { data: dataSerialize }
             });
+            
         }
     });
     /* register the maximize button */
@@ -147,13 +161,15 @@ function fnCreateGridster(page, colors, states, titles) {
     });
     
     var saveData = function(widget){
-        var urlUpdateWidget = listWidgets.attr('url-update-widget');
-        var dataSerialize = gridster.serialize(widget);
-        $.ajax({
-            type: 'POST',
-            url: urlUpdateWidget,
-            data: { data: dataSerialize }
-        });
+        if(saveAjax == true){ 
+            var urlUpdateWidget = listWidgets.attr('url-update-widget');
+            var dataSerialize = gridster.serialize(widget);
+            $.ajax({
+                type: 'POST',
+                url: urlUpdateWidget,
+                data: { data: dataSerialize }
+            });
+        }
     };
     var reloadWidget = function(widgetBox,callback){
         var url = widgetBox.find('.box-reload').attr('path');
@@ -278,8 +294,11 @@ function fnCreateGridster(page, colors, states, titles) {
     }
 
     function _resize_gridster() {
+        evaluateResponsiveValues();
+        var rz_base_size = (((base_size * (windowWidth / base_size)) / cols) - offset);
+//        console.log('rz_base_size= '+rz_base_size);
         gridster.resize_widget_dimensions({
-            widget_base_dimensions: [(((base_size * ($(window).width() / base_size)) / cols) - offset), widget_base_y],
+            widget_base_dimensions: [rz_base_size, widget_base_y],
             widget_margins: [5, 5],
         });
     }
