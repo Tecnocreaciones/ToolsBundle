@@ -1,7 +1,15 @@
 
-function fnCreateGridster(isMobile)
+function fnCreateGridster(isMobile,page)
 {
     var saveAjax = !isMobile;
+    if(saveAjax == false){
+        /* load saved position and sizes */
+        if(localdata_position){
+            $.each(localdata_position, function(i,value){
+                $('#'+value.id_li).attr({"data-col":value.col, "data-row":value.row, "data-sizex":value.size_x, "data-sizey":value.size_y});
+            });
+        }
+    }
     var minCols = 1;
     var offset = 40;
     var cols = 12;
@@ -74,12 +82,15 @@ function fnCreateGridster(isMobile)
                         url: urlUpdateWidget,
                         data: { data: this.serialize(widget) }
                     });
+                }else{
+                    var positions = JSON.stringify(this.serialize());
+                    localStorage.setItem(page, positions);
                 }
             }
         },
         serialize_params: function ($w, wgd)
         {
-            return {id: $w.attr('id-block'), col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y, widget_color: $w.attr('widget-color')};
+            return {id: $w.attr('id-block'), col: wgd.col, row: wgd.row, size_x: wgd.size_x, size_y: wgd.size_y, widget_color: $w.attr('widget-color'),id_li: $w.attr('id')};
         },
         draggable:
             {
@@ -100,19 +111,23 @@ function fnCreateGridster(isMobile)
                             url: urlUpdateWidget,
                             data: { data: dataSerialize }
                         });
+                    }else{
+                        var _positions=this.serialize();
+                        $.each(_positions, function(i,value){
+                                _state=$('#'+ value.id).attr('data-state');
+                                if(_state=='min'){
+                                        value.size_y=$('#'+ value.id).attr('data-sizey-old')
+                                        _positions[i]=value;
+                                }
+
+                        });
+                        var positions = JSON.stringify(_positions);
+                        localStorage.setItem(page, positions);
                     }
                 }
             }
     }).data('gridster');
 
-
-    /* load title colors */
-    if (localdata_colors) {
-        $.each(localdata_colors, function (i, value) {
-            if (value)
-                $('#' + value.panel + ' .panel-heading, #' + value.panel + ' .btn-colorselector').css("background-color", value.color);
-        });
-    }
 
     /* register the minimize button */
     $('.widget-box').on('hide.ace.widget', function (e) {
