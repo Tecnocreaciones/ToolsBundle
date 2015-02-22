@@ -116,6 +116,35 @@ function fnCreateGridster(page, colors, states, titles) {
             });
         }
     });
+    /* register the maximize button */
+    $('.widget-box').on('fullscreen.ace.widget', function (e) {
+        var panel = $(this).parent();
+        if(panel.hasClass("fullscreen")){
+            panel.removeClass("fullscreen");
+            panel.addClass("gs-w");
+        }else{
+            panel.removeClass("gs-w");
+            panel.addClass("fullscreen");
+        }
+        var $this = $(this);
+        if(panel.css('position') === 'fixed'){ 
+            $this.animate({width: $this.attr('data-width'),height:$this.attr('data-height')},300);
+        } else {
+            $this.attr({
+                'data-width': $this.width(),
+                'data-height': $this.height(),
+            });
+            $this.animate({
+                margin: '0',
+                top: '0',
+                left: '0',
+                bottom: '0',
+                right: '0',
+                width: '100%', 
+                height : '100%'
+            },300);
+        }
+    });
     
     var saveData = function(widget){
         var urlUpdateWidget = listWidgets.attr('url-update-widget');
