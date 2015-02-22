@@ -30,12 +30,13 @@ class BlockWidgetBoxController extends Controller
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
         $definitionsBlockGrid = $gridWidgetBoxService->getDefinitionsBlockGrid();
         
-        
+        $definitionsBlockGridFilter = array();
         foreach ($definitionsBlockGrid as $definitionBlockGrid)
         {
-            if($definitionBlockGrid->hasPermission() === true){
-                
+            if($definitionBlockGrid->hasPermission() === false){
+                continue;
             }
+            $definitionsBlockGridFilter[] = $definitionBlockGrid;
         }
         
         return $this->render(
@@ -75,15 +76,17 @@ class BlockWidgetBoxController extends Controller
                 
                 $data = $form->getData();
                 $events = $definitionBlockGrid->getEvents();
-                $names = $definitionBlockGrid->getNames();
+                $name = $data['name'];
+                if($definitionBlockGrid->hasPermission($name) === false){
+                    throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+                }
                 
                 $blockWidgetBox->setType($data['type']);
-                $blockWidgetBox->setName($names[$data['name']]);
+                $blockWidgetBox->setName($name);
                 $blockWidgetBox->setSetting('template',$data['template']);
                 $blockWidgetBox->setEvent($events[$data['event']]);
                 $blockWidgetBox->setCreatedAt(new \DateTime());
                 $blockWidgetBox->setEnabled(true);
-                
                 $widgetBoxManager->save($blockWidgetBox);
                 
                 $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success'));
@@ -102,6 +105,7 @@ class BlockWidgetBoxController extends Controller
     function addAllAction(Request $request) 
     {
         $type = $request->get('type');
+        $name = $request->get('name');
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
         
         $definitionBlockGrid = $gridWidgetBoxService->getDefinitionBlockGrid($type);
@@ -109,13 +113,22 @@ class BlockWidgetBoxController extends Controller
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
         $events = $definitionBlockGrid->getEvents();
-        $names = $definitionBlockGrid->getNames();
+        $names = array();
+        if($name != null){
+            $names[$name] = $name;
+        }else{
+            $names = $definitionBlockGrid->getNames();
+        }
+        
         $templates = $definitionBlockGrid->getTemplates();
         
         $templatesKeys = array_keys($templates);
         $widgetBoxManager = $this->getWidgetBoxManager();
         $i = 0;
-        foreach ($names as $name) {
+        foreach ($names as $name => $value) {
+            if($definitionBlockGrid->hasPermission($name) === false){
+                continue;
+            }
             $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
             $blockWidgetBox->setType($type);
             $blockWidgetBox->setName($name);
@@ -233,6 +246,14 @@ class BlockWidgetBoxController extends Controller
     
     private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  DefinitionBlockWidgetBoxInterface $definitionBlockGrid) 
     {
+        $names = $definitionBlockGrid->getNames();
+        $namesFilter = array();
+        foreach ($names as $name => $parameters) {
+            if($definitionBlockGrid->hasPermission($name) === false){
+                continue;
+            }
+            $namesFilter[$name] = $name;
+        }
         $emptyValue = '';
         $formBuilderWidget
             ->add('type','hidden',array(
@@ -240,7 +261,7 @@ class BlockWidgetBoxController extends Controller
             ))
             ->add('name','choice',array(
                 'label' => 'widget_box.form.name',
-                'choices' => $definitionBlockGrid->getNames(),
+                'choices' => $namesFilter,
                 'empty_value' => $emptyValue,
             ))
             ->add('template','choice',array(

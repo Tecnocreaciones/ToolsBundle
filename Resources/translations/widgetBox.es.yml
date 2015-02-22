@@ -15,5 +15,5 @@ widget_box:
         event: Vista
     flashes:
         success: El widget se agrego correctamente.
-        success_all: Se han agregado %num% widget(s) correctamente.
+        success_all: Se agrego %num% widget(s) correctamente.
 default: Predeterminada

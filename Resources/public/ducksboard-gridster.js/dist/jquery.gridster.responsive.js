@@ -68,7 +68,7 @@ function fnCreateGridster(isMobile,page)
         extra_cols: 1,
         autogrow_cols: true,
         min_cols: minCols,
-        max_cols: cols,
+//        max_cols: cols,
         widget_margins: [5, 5],
         widget_base_dimensions: [base_size, widget_base_y],
         resize: {

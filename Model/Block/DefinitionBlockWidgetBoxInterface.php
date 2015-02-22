@@ -45,7 +45,7 @@ interface DefinitionBlockWidgetBoxInterface
     /**
      * Renderiza el widget solo si el usuario tiene permiso de verlo
      */
-    function hasPermission();
+    function hasPermission($name = null);
     
     /**
      * Eventos que escucha el widget para renderizarse

@@ -63,7 +63,15 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
         return 'widgetBox';
     }
     
-    public function hasPermission() {
-        return true;
+    public function hasPermission($name = null) 
+    {
+        $isGranted = true;
+        if($name != null){
+            $names = $this->getNames();
+            if(isset($names[$name]['rol'])){
+                $isGranted = $this->isGranted($names[$name]['rol']);
+            }
+        }
+        return $isGranted;
     }
 }
