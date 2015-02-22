@@ -1,4 +1,5 @@
 widget_box:
+    widgets_label: Widgets
     templates: Plantillas <b>(%quantity%)</b>
     events: Vistas <b>(%quantity%)</b>
     header: Widgets disponibles

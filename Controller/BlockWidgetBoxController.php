@@ -97,6 +97,7 @@ class BlockWidgetBoxController extends Controller
         
         return $this->render(
             'TecnocreacionesToolsBundle:BlockWidgetBox:create.html.twig',array(
+                'definitionBlockGrid' => $definitionBlockGrid,
                 'form' => $form->createView(),
             )
         );
@@ -246,7 +247,23 @@ class BlockWidgetBoxController extends Controller
     
     private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  DefinitionBlockWidgetBoxInterface $definitionBlockGrid) 
     {
+        $templatesData = $eventsData = $nameData = null;
         $names = $definitionBlockGrid->getNames();
+        $events = $definitionBlockGrid->getEvents();
+        $templates = $definitionBlockGrid->getTemplates();
+        
+        if(count($names) == 1){
+            $namesKeys = array_keys($names);
+            $nameData = $namesKeys[0];
+        }
+        if(count($templates) == 1){
+            $templatesKeys = array_keys($templates);
+            $templatesData = $templatesKeys[0];
+        }
+        if(count($templates) == 1){
+            $eventsKeys = array_keys($events);
+            $eventsData = $eventsKeys[0];
+        }
         $namesFilter = array();
         foreach ($names as $name => $parameters) {
             if($definitionBlockGrid->hasPermission($name) === false){
@@ -263,19 +280,22 @@ class BlockWidgetBoxController extends Controller
                 'label' => 'widget_box.form.name',
                 'choices' => $namesFilter,
                 'empty_value' => $emptyValue,
+                'data' => $nameData
             ))
             ->add('template','choice',array(
                 'label' => 'widget_box.form.template',
-                'choices' => $definitionBlockGrid->getTemplates(),
+                'choices' => $templates,
                 'empty_value' => $emptyValue,
+                'data' => $templatesData,
             ))
             ->add('event','choice',array(
                 'label' => 'widget_box.form.event',
-                'choices' => $definitionBlockGrid->getEvents(),
+                'choices' => $events,
                 'empty_value' => $emptyValue,
+                'data' => $eventsData,
             ))
-            ->add('send','submit')
-            ->add('cancel','button')
+//            ->add('send','submit')
+//            ->add('cancel','button')
             ;
     }
 
