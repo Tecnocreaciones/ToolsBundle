@@ -4,14 +4,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     
-<!--    <parameters>
-        <parameter key="tecnocreaciones_tools.block_grid.block_grid_class">Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox</parameter>
+    <parameters>
+        <parameter key="tecnocreaciones_tools.sequence_generator.class">Tecnocreaciones\Bundle\ToolsBundle\Service\SequenceGenerator</parameter>
     </parameters>
     <services>
-        <service id="tecnocreaciones_tools.service.grid_widget_box" class="Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService">
+        <service id="tecnocreaciones_tools.sequence_generator" class="%tecnocreaciones_tools.sequence_generator.class%">
             <call method="setContainer">
                 <argument type="service" id="service_container" />
             </call>
         </service>
-    </services>-->
+    </services>
 </container>

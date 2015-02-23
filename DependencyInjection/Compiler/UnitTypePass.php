@@ -28,6 +28,8 @@ class UnitTypePass implements \Symfony\Component\DependencyInjection\Compiler\Co
         foreach ($tags as $id => $attributes) {
             $unitConverterDefinition->addMethodCall('addUnit',array(new \Symfony\Component\DependencyInjection\Reference($id)));
         }
-        $container->setDefinition('tecnocreaciones_tools.unit_converter',$unitConverterDefinition);
+        
+        $serviceName = $container->getParameter('tecnocreaciones_tools.unit_converter.service_name');
+        $container->setDefinition($serviceName,$unitConverterDefinition);
     }
 }

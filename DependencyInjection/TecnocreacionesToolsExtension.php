@@ -29,46 +29,61 @@ class TecnocreacionesToolsExtension extends Extension
         
         $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new Loader\XmlFileLoader($container, $locator);
-        $loader->load('services.xml');
+//        $loader->load('services.xml');
         
         $loaderYml = new Loader\YamlFileLoader($container, $locator);
         $loaderYml->load('services.yml');
         
-        if($config['table_prefix']['use_prefix']){
+        if($config['table_prefix']['enable'] === true )
+        {
             $tablePrefix = $config['table_prefix']['prefix'].$config['table_prefix']['prefix_separator'];
-            $tablePrefixListerner = new Definition($container->getParameter('tecnocreaciones_tools.table_prefix_listerner.class'));
+            $tablePrefixListerner = new Definition($config['table_prefix']['listerner_class']);
             $tablePrefixListerner
                     ->addArgument($tablePrefix)
                     ->addTag('doctrine.event_subscriber')
                     ;
             $container->setDefinition('tecnocreaciones_tools.table_prefix_subscriber', $tablePrefixListerner);
         }
-        if($config['sequence_generator']){
+        
+        if($config['sequence_generator']['enable'] === true){
+           $loader->load('services/sequence_generator.xml');
+           
            if($config['sequence_generator']['options']){
                $options = $config['sequence_generator']['options'];
                $sequenceGenerator = $container->getDefinition('tecnocreaciones_tools.sequence_generator');
                $sequenceGenerator->addArgument($options);
            }
         }
-        if($config['configuration']['enable'] === true){
-            if($config['configuration']['configuration_class'] === null){
+        
+        if($config['unit_converter']['enable'] === true)
+        {
+            $loader->load('services/unit_converter.xml');
+            $container->setParameter('tecnocreaciones_tools.unit_converter.service_name',$config['unit_converter']['service_name']);
+            
+            $container->addCompilerPass(new Compiler\UnitTypePass());
+        }
+        
+        if($config['configuration_manager']['enable'] === true){
+            $loaderYml->load('services/configuration_manager.yml');
+            
+            if($config['configuration_manager']['configuration_class'] === null){
                 throw new InvalidArgumentException(
-                    'The "configuration_class" option must be set in tecnocreaciones_tools.configuration'
+                    'The "configuration_class" option must be set in tecnocreaciones_tools.configuration_manager'
                 );
             }
             
-            $configurationClass = $config['configuration']['configuration_class'];
-            $configurationManagerClass = $config['configuration']['configuration_manager_class'];
-            $configurationManagerNameService = $config['configuration']['configuration_name_service'];
-            $configurationGroupClass = $config['configuration']['configuration_group_class'];
+            $configurationClass = $config['configuration_manager']['configuration_class'];
+            $configurationManagerClass = $config['configuration_manager']['configuration_manager_class'];
+            $configurationManagerNameService = $config['configuration_manager']['configuration_name_service'];
+            $configurationGroupClass = $config['configuration_manager']['configuration_group_class'];
             $reflectionConfigurationClass = new ReflectionClass($configurationClass);
             if($reflectionConfigurationClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration') === false){
                 throw new LogicException(
                     'The "'.$reflectionConfigurationClass->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration\\Configuration'
                 );
             }
-            if(isset($config['configuration']['debug'])){
-                $debug = $config['configuration']['debug'];
+            if(isset($config['configuration_manager']['debug'])){
+                $debug = $config['configuration_manager']['debug'];
             }else{
                 $debug = $container->getParameter('kernel.debug');
             }
@@ -104,17 +119,19 @@ class TecnocreacionesToolsExtension extends Extension
                     
             $container->setParameter('tecnocreaciones_tools.configuration_class.class', $configurationClass);
             $container->setParameter('tecnocreaciones_tools.configuration_group_class.class', $configurationGroupClass);
-            
-            $loaderYml->load('admin.yml');
         }
-        if($config['block_grid']['enable'] === true){
-           $blockGridConfig = $config['block_grid']; 
-           $blockGridClass = $blockGridConfig['block_grid_class'];
+        
+        if($config['widget_block_grid']['enable'] === true)
+        {
+           $loader->load('services/widget_block_grid.xml');
+            
+           $blockGridConfig = $config['widget_block_grid']; 
+           $blockGridClass = $blockGridConfig['widget_block_grid_class'];
            $widgetBoxManager = $blockGridConfig['widget_box_manager'];
            
            if(empty($blockGridClass)){
                 throw new LogicException(
-                    'The "tecnocreaciones_tools.block_grid.block_grid_class" in config.yml must defined'
+                    'The "tecnocreaciones_tools.widget_block_grid.widget_block_grid_class" in config.yml must defined'
                 );
            }
 
@@ -134,10 +151,18 @@ class TecnocreacionesToolsExtension extends Extension
                 );
             }
             
-            $container->setParameter('tecnocreaciones_tools.block_grid.block_grid_class', $blockGridClass);
-            $container->setParameter('tecnocreaciones_tools.block_grid.debug', $blockGridConfig['debug']);
-            $container->setParameter('tecnocreaciones_tools.block_grid.enable', $blockGridConfig['enable']);
-            $container->setParameter('tecnocreaciones_tools.block_grid.widget_box_manager', $widgetBoxManager);
+            $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_block_grid_class', $blockGridClass);
+            $container->setParameter('tecnocreaciones_tools.widget_block_grid.debug', $blockGridConfig['debug']);
+            $container->setParameter('tecnocreaciones_tools.widget_block_grid.enable', $blockGridConfig['enable']);
+            $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager', $widgetBoxManager);
+            
+            $container->addCompilerPass(new Compiler\WidgetBoxPass());
         }
+        
+        $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.configuration_manager.enable', $config['configuration_manager']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.widget_block_grid', $config['widget_block_grid']['enable']);
     }
 }

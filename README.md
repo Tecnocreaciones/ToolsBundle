@@ -1,27 +1,32 @@
 ToolsBundle
 ===========
-
-Servicio convertirdor de unidades:
-tecnocreaciones_tools.unit_converter
-
+Provee servicios basicos y comunes en aplicaciones web, prefijos en tablas, conversor de unidades, generador de secuencia con Doctrine2,
+manejador de configuracion guardandola en la base de datos asociados a clave=valor, generador de widgets y definir repositorios como servicios
+de forma muy facil, un Role Voter para evaluar expresiones regulares en los roles del usuario.
 
 tecnocreaciones_tools:
     table_prefix:
-        use_prefix: false
-        prefix: %app.db.prefix%
+        enable: false
+        prefix: abc
+        prefix_separator: _
+        listerner_class: Tecnocreaciones\Bundle\ToolsBundle\EventListener\TablePrefixListerner
+    unit_converter:
+        enable: false
+        service_name: tecnocreaciones_tools.unit_converter
     sequence_generator:
         options:
             additional_masks:
                 - mask1
                 - mask2
-    configuration:
+    configuration_manager:
         enable: true
         configuration_class: Coramer\Sigtec\CoreBundle\Entity\Configuration
         debug: false
-    block_grid:
+    widget_block_grid:
         enable: false
         debug: false
         block_grid_class: null
+        widget_box_manager: tecnocreaciones_tools.service.orm.widget_box_manager
 
 sonata_admin:
     dashboard:

@@ -1,3 +1,5 @@
+parameters:
+    tecnocreaciones_tools.configuration_service.class: Tecnocreaciones\Bundle\ToolsBundle\Service\ConfigurationService
 services:
     sonata.admin.configuration:
         class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\ConfigurationAdmin
