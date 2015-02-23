@@ -60,7 +60,8 @@ class TecnocreacionesToolsExtension extends Extension
             $loader->load('services/unit_converter.xml');
             $container->setParameter('tecnocreaciones_tools.unit_converter.service_name',$config['unit_converter']['service_name']);
             
-            $container->addCompilerPass(new Compiler\UnitTypePass());
+            var_dump('cc');
+//            die;
         }
         
         if($config['configuration_manager']['enable'] === true){
@@ -155,14 +156,12 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.debug', $blockGridConfig['debug']);
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.enable', $blockGridConfig['enable']);
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager', $widgetBoxManager);
-            
-            $container->addCompilerPass(new Compiler\WidgetBoxPass());
         }
         
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.configuration_manager.enable', $config['configuration_manager']['enable']);
-        $container->setParameter('tecnocreaciones_tools.service.widget_block_grid', $config['widget_block_grid']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.widget_block_grid.enable', $config['widget_block_grid']['enable']);
     }
 }

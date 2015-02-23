@@ -18,12 +18,16 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\DependencyInjection\Compiler;
  */
 class UnitTypePass implements \Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface
 {
-    public function process(\Symfony\Component\DependencyInjection\ContainerBuilder $container) {
+    public function process(\Symfony\Component\DependencyInjection\ContainerBuilder $container) 
+    {
+        if($container->getParameter('tecnocreaciones_tools.service.unit_converter.enable') === false){
+            return;
+        }
+        
         $unitConverterDefinition = new \Symfony\Component\DependencyInjection\Definition($container->getParameter('tecnocreaciones_tools.unit_converter.class'));
         $cache_dir = $container->getParameter('kernel.cache_dir') . DIRECTORY_SEPARATOR .'tecnocreaciones_tools';
         $optionsUnitConverter = array('cache_dir' => $cache_dir);
         $unitConverterDefinition->addArgument($optionsUnitConverter);
-        
         $tags = $container->findTaggedServiceIds('tecnocreaciones_tools.unit_converter.unit');
         foreach ($tags as $id => $attributes) {
             $unitConverterDefinition->addMethodCall('addUnit',array(new \Symfony\Component\DependencyInjection\Reference($id)));

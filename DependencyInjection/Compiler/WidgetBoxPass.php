@@ -25,6 +25,9 @@ class WidgetBoxPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        if($container->getParameter('tecnocreaciones_tools.service.widget_block_grid.enable') === false){
+            return;
+        }
         $definitionGridWidgetBox = $container->getDefinition('tecnocreaciones_tools.service.grid_widget_box');
         $tags = $container->findTaggedServiceIds('sonata.block');
         foreach ($tags as $id => $attributes) {
