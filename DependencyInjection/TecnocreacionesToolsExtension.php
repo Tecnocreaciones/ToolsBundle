@@ -59,9 +59,6 @@ class TecnocreacionesToolsExtension extends Extension
         {
             $loader->load('services/unit_converter.xml');
             $container->setParameter('tecnocreaciones_tools.unit_converter.service_name',$config['unit_converter']['service_name']);
-            
-            var_dump('cc');
-//            die;
         }
         
         if($config['configuration_manager']['enable'] === true){
