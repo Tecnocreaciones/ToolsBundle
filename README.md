@@ -20,8 +20,11 @@ tecnocreaciones_tools:
                 - mask2
     configuration_manager:
         enable: true
-        configuration_class: Coramer\Sigtec\CoreBundle\Entity\Configuration
         debug: false
+        configuration_class: Coramer\Sigtec\CoreBundle\Entity\Configuration
+        configuration_group_class: Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup
+        configuration_manager_class: Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager
+        configuration_name_service: tec.configuration
     widget_block_grid:
         enable: false
         debug: false
