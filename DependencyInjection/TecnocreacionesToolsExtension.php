@@ -32,7 +32,6 @@ class TecnocreacionesToolsExtension extends Extension
 //        $loader->load('services.xml');
         
         $loaderYml = new Loader\YamlFileLoader($container, $locator);
-        $loaderYml->load('services.yml');
         
         if($config['table_prefix']['enable'] === true )
         {
@@ -155,10 +154,25 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager', $widgetBoxManager);
         }
         
+        if($config['repository_as_service']['enable'] === true)
+        {
+            $loaderYml->load('services/repository_as_service.yml');
+            $container->setParameter('tecnocreaciones_tools.repository_as_service.tag_service', $config['repository_as_service']['tag_service']);
+        }
+        
+        if($config['role_pattern_voter']['enable'] === true)
+        {
+            $loader->load('services/role_pattern_voter.xml');
+            $container->setParameter('tecnocreaciones_tools.role_pattern_voter.voter_class', $config['role_pattern_voter']['role_pattern_voter_class']);
+            $container->setParameter('tecnocreaciones_tools.role_pattern_voter.voter_prefix', $config['role_pattern_voter']['role_pattern_voter_prefix']);
+            
+        }
+        
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.configuration_manager.enable', $config['configuration_manager']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.widget_block_grid.enable', $config['widget_block_grid']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.repository_as_service.enable', $config['repository_as_service']['enable']);
     }
 }

@@ -29,11 +29,16 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class FactoryRepositoryPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container) {
+    public function process(ContainerBuilder $container) 
+    {
+        if($container->getParameter('tecnocreaciones_tools.service.repository_as_service.enable') === false){
+            return;
+        }
+        $tag = $container->getParameter('tecnocreaciones_tools.repository_as_service.tag_service');
         $factory = $container->findDefinition('tecnocreaciones.doctrine.repository.factory');
  
         $repositories = array();
-        foreach ($container->findTaggedServiceIds('app.repository') as $id => $params) {
+        foreach ($container->findTaggedServiceIds($tag) as $id => $params) {
             foreach ($params as $param) {
                 $class = $param['class'];
                 $repositories[$class] = $id;

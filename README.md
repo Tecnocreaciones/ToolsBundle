@@ -30,6 +30,14 @@ tecnocreaciones_tools:
         debug: false
         block_grid_class: null
         widget_box_manager: tecnocreaciones_tools.service.orm.widget_box_manager
+    repository_as_service:
+        enable: false
+        tag_service: app.repository
+    role_pattern_voter:
+        enable: false
+        role_pattern_voter_class: Tecnocreaciones\Bundle\ToolsBundle\Security\Authorization\Voter\RolePatternVoter
+        role_pattern_voter_prefix:
+
 
 sonata_admin:
     dashboard:
@@ -45,21 +53,8 @@ sonata_admin:
 
 Agrega repositorios como servicios a las clases
 <service id="repository.plant" class="Coramer\Sigtec\CompanyBundle\Repository\PlantRepository">
-    <call method="setContainer">
-        <argument type="service" id="service_container" />
-    </call>
     <tag name="app.repository" class="Coramer\Sigtec\CompanyBundle\Entity\Plant" />
 </service>
-
-
-Agrega el voter para evaluar seguridad con herencia
-
-<service id="app.security.access.role_pattern_voter" class="Tecnocreaciones\Bundle\ToolsBundle\Security\Authorization\Voter\RolePatternVoter" public="false">
-    <argument type="service" id="security.role_hierarchy" />
-    <argument>ROLE_APP_</argument>
-    <tag name="security.voter" priority="245" />
-</service>
-
 
 
 Si usas block_wiget Importar en routing.yml
