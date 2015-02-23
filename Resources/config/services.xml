@@ -9,6 +9,7 @@
         <parameter key="tecnocreaciones_tools.unit_converter.class">Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter</parameter>
         <parameter key="tecnocreaciones_tools.configuration_service.class">Tecnocreaciones\Bundle\ToolsBundle\Service\ConfigurationService</parameter>
         <parameter key="tecnocreaciones_tools.table_prefix_listerner.class">Tecnocreaciones\Bundle\ToolsBundle\EventListener\TablePrefixListerner</parameter>
+        <parameter key="tecnocreaciones_tools.block_grid.block_grid_class">Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox</parameter>
     </parameters>
     <services>
         <service id="tecnocreaciones_tools.sequence_generator" class="%tecnocreaciones_tools.sequence_generator.class%">
