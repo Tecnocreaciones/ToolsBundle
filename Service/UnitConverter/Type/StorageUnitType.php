@@ -39,11 +39,11 @@ class StorageUnitType extends UnitType
         $this->insertUnit(self::UNIT_BIT, _('bit,bits'), 0);
         $this->insertUnit(self::UNIT_NIBBLE, _('nibble'), 4);
         $this->insertUnit(self::UNIT_BYTE, _('byte'), 2);
-        $this->insertUnit(self::UNIT_KILOBYTE, _('kiloByte,Kb'), 1024);
-        $this->insertUnit(self::UNIT_MEGABYTE, _('megaByte,Mb'), 1024);
-        $this->insertUnit(self::UNIT_GIGABYTE, _('gigaByte,Gb'), 1024);
-        $this->insertUnit(self::UNIT_TERABYTE, _('teraByte,Tb'), 1024);
-        $this->insertUnit(self::UNIT_PETABYTE, _('petaByte,Pb'), 1024);
+        $this->insertUnit(self::UNIT_KILOBYTE, _('Kb,kiloByte'), 1024);
+        $this->insertUnit(self::UNIT_MEGABYTE, _('Mb,megaByte'), 1024);
+        $this->insertUnit(self::UNIT_GIGABYTE, _('Gb,gigaByte'), 1024);
+        $this->insertUnit(self::UNIT_TERABYTE, _('Tb,teraByte'), 1024);
+        $this->insertUnit(self::UNIT_PETABYTE, _('Pb,petaByte'), 1024);
     }
 
     public static function getType()

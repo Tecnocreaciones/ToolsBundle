@@ -40,16 +40,16 @@ class LengthUnitType extends UnitType
     }
 
     public function init() {
-        $this->insertUnit(self::UNIT_INCH, _(self::UNIT_INCH.',in'), 0.0254);
-        $this->insertUnit(self::UNIT_MICROMETRO, _(self::UNIT_MICROMETRO.',µm'), 0.000001);
-        $this->insertUnit(self::UNIT_MILLIMETER, _(self::UNIT_MILLIMETER.',mm'), 0.001);
-        $this->insertUnit(self::UNIT_CENTIMETER, _(self::UNIT_CENTIMETER.',cm'), 0.01);
-        $this->insertUnit(self::UNIT_DECIMETER, _(self::UNIT_DECIMETER.',dm'), 0.1);
-        $this->insertUnit(self::UNIT_METER, _(self::UNIT_METER.',m'), 1);
-        $this->insertUnit(self::UNIT_DECAMETER, _(self::UNIT_DECAMETER.',dm'), 10);
-        $this->insertUnit(self::UNIT_HECTOMETER, _(self::UNIT_HECTOMETER.',hmM'), 100);
-        $this->insertUnit(self::UNIT_KILOMETER, _(self::UNIT_KILOMETER.',km'), 1000);
-        $this->insertUnit(self::UNIT_MEGAMETER, _(self::UNIT_MEGAMETER.',MM'), 1000000);
+        $this->insertUnit(self::UNIT_INCH, _('in,'.self::UNIT_INCH), 0.0254);
+        $this->insertUnit(self::UNIT_MICROMETRO, _('µm,'.self::UNIT_MICROMETRO), 0.000001);
+        $this->insertUnit(self::UNIT_MILLIMETER, _('mm,'.self::UNIT_MILLIMETER), 0.001);
+        $this->insertUnit(self::UNIT_CENTIMETER, _('cm,'.self::UNIT_CENTIMETER), 0.01);
+        $this->insertUnit(self::UNIT_DECIMETER, _('dm,'.self::UNIT_DECIMETER), 0.1);
+        $this->insertUnit(self::UNIT_METER, _('m,'.self::UNIT_METER), 1);
+        $this->insertUnit(self::UNIT_DECAMETER, _('dm,'.self::UNIT_DECAMETER), 10);
+        $this->insertUnit(self::UNIT_HECTOMETER, _('hmM,'.self::UNIT_HECTOMETER), 100);
+        $this->insertUnit(self::UNIT_KILOMETER, _('km,'.self::UNIT_KILOMETER), 1000);
+        $this->insertUnit(self::UNIT_MEGAMETER, _('MM,'.self::UNIT_MEGAMETER), 1000000);
     }
     
     public function convert($qty, $fromUnit, $toUnit)

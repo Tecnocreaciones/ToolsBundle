@@ -38,12 +38,12 @@ class TimeUnitType extends UnitType
     }
 
     public function init() {
-        $this->insertUnit(self::UNIT_SECONDS, _(self::UNIT_SECONDS.',second,sec,secs,s'), 0);
-        $this->insertUnit(self::UNIT_MINUTES, _(self::UNIT_MINUTES.',minute,min,mins,m'), 60);
-        $this->insertUnit(self::UNIT_HOURS, _(self::UNIT_HOURS.',hour,hr,hrs,h'), 60);
-        $this->insertUnit(self::UNIT_DAYS, _(self::UNIT_DAYS.',day,d'), 24);
-        $this->insertUnit(self::UNIT_WEEKS, _(self::UNIT_WEEKS.',week,w'), 7);
-        $this->insertUnit(self::UNIT_MONTHS, _(self::UNIT_MONTHS.',month,mth,M'), 30);
-        $this->insertUnit(self::UNIT_YEARS, _(self::UNIT_YEARS.',year,yrs,y'), 365);
+        $this->insertUnit(self::UNIT_SECONDS, _('s,second,sec,secs'), 0);
+        $this->insertUnit(self::UNIT_MINUTES, _('m,minute,min,mins'), 60);
+        $this->insertUnit(self::UNIT_HOURS, _('h,hour,hr,hrs'), 60);
+        $this->insertUnit(self::UNIT_DAYS, _('d,day'), 24);
+        $this->insertUnit(self::UNIT_WEEKS, _('w,week'), 7);
+        $this->insertUnit(self::UNIT_MONTHS, _('M,month,mth'), 30);
+        $this->insertUnit(self::UNIT_YEARS, _('y,year,yrs'), 365);
     }
 }
