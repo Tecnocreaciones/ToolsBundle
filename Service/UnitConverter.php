@@ -235,6 +235,21 @@ class UnitConverter
 
         return $this->availableUnit = new $class();
     }
+
+    /**
+     * 
+     * @param type $type
+     * @return UnitConverter\UnitType
+     * @throws \InvalidArgumentException
+     */
+    public function getUnitType($type)
+    {
+        $unitsTypes = $this->unitTypes;
+        if(!isset($unitsTypes[$type])){
+            throw new \InvalidArgumentException(sprintf('The unit type "%s" is no available',$type));
+        }
+        return $unitsTypes[$type];
+    }
     
     /**
      * @return MatcherDumperInterface

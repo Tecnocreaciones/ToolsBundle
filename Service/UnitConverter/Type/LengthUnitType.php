@@ -40,7 +40,7 @@ class LengthUnitType extends UnitType
     }
 
     public function init() {
-        $this->insertUnit(self::UNIT_INCH, _('in,'.self::UNIT_INCH), 0.0254);
+        $this->insertUnit(self::UNIT_INCH, _(self::UNIT_INCH.',in'), 0.0254);
         $this->insertUnit(self::UNIT_MICROMETRO, _('µm,'.self::UNIT_MICROMETRO), 0.000001);
         $this->insertUnit(self::UNIT_MILLIMETER, _('mm,'.self::UNIT_MILLIMETER), 0.001);
         $this->insertUnit(self::UNIT_CENTIMETER, _('cm,'.self::UNIT_CENTIMETER), 0.01);
