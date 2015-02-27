@@ -14,12 +14,13 @@ tecnocreaciones_tools:
         enable: false
         service_name: tecnocreaciones_tools.unit_converter
     sequence_generator:
+        enable: false
         options:
             additional_masks:
                 - mask1
                 - mask2
     configuration_manager:
-        enable: true
+        enable: false
         debug: false
         configuration_class: Coramer\Sigtec\CoreBundle\Entity\Configuration
         configuration_group_class: Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup
@@ -28,7 +29,7 @@ tecnocreaciones_tools:
     widget_block_grid:
         enable: false
         debug: false
-        block_grid_class: null
+        widget_block_grid_class: null
         widget_box_manager: tecnocreaciones_tools.service.orm.widget_box_manager
     repository_as_service:
         enable: false
