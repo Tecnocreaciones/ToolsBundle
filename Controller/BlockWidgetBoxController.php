@@ -324,7 +324,7 @@ class BlockWidgetBoxController extends Controller
      */
     private function getWidgetBoxManager()
     {
-        return $this->get($this->container->getParameter('tecnocreaciones_tools.block_grid.widget_box_manager'));
+        return $this->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager'));
     }
     
     protected function trans($id, array $parameters = array(), $domain = 'widgetBox') {

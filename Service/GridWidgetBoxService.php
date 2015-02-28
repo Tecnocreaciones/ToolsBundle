@@ -135,7 +135,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
      */
     private function getWidgetBoxManager()
     {
-        return $this->container->get($this->container->getParameter('tecnocreaciones_tools.block_grid.widget_box_manager'));
+        return $this->container->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager'));
     }
     
     public function setContainer(ContainerInterface $container = null) {
