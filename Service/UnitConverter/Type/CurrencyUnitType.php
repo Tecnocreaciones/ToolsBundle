@@ -20,20 +20,22 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\UnitType;
  */
 class CurrencyUnitType extends UnitType
 {
-    const UNIT_BOLIVAR = 'bolivar';
-    const UNIT_DOLLAR = 'dollar';
+    const UNIT_BOLIVAR = 'bs';
+    const UNIT_DOLLAR = '$';
     
     public function getDescription()
     {
         return 'Moneda';
     }
     
-    public function init() {
-        $this->insertUnit(self::UNIT_BOLIVAR, 'bs', 6.30);
-        $this->insertUnit(self::UNIT_DOLLAR, '$', 6.30);
+    public function init() 
+    {
+        $this->insertUnit(self::UNIT_BOLIVAR, 'bolivar', 6.30);
+        $this->insertUnit(self::UNIT_DOLLAR, 'dollar', 6.30);
     }
     
-    public static function getType() {
+    public static function getType() 
+    {
         return 'currency';
     }
 }
