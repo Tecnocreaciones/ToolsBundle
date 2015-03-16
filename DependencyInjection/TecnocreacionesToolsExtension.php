@@ -165,7 +165,20 @@ class TecnocreacionesToolsExtension extends Extension
             $loader->load('services/role_pattern_voter.xml');
             $container->setParameter('tecnocreaciones_tools.role_pattern_voter.voter_class', $config['role_pattern_voter']['role_pattern_voter_class']);
             $container->setParameter('tecnocreaciones_tools.role_pattern_voter.voter_prefix', $config['role_pattern_voter']['role_pattern_voter_prefix']);
-            
+        }
+        
+        if($config['twig'] != ''){
+            if($config['twig']['breadcrumb'] === true || $config['twig']['page_header'] === true){
+                $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\TemplateUtilsExtension');
+                $extensionToolsDefinition
+                        ->addMethodCall('setContainer',array(new Reference('service_container')))
+                        ->addTag('twig.extension')
+                        ;
+                $container->setDefinition('tecnocreaciones_tools.template_utils_extension', $extensionToolsDefinition);
+
+                $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.template', $config['twig']['breadcrumb_template']);
+                $container->setParameter('tecnocreaciones_tools.twig.page_header.template', $config['twig']['page_header_template']);
+            }
         }
         
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
@@ -174,5 +187,8 @@ class TecnocreacionesToolsExtension extends Extension
         $container->setParameter('tecnocreaciones_tools.service.configuration_manager.enable', $config['configuration_manager']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.widget_block_grid.enable', $config['widget_block_grid']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.repository_as_service.enable', $config['repository_as_service']['enable']);
+        
+        $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.enable', $config['twig']['breadcrumb']);
+        $container->setParameter('tecnocreaciones_tools.twig.page_header.enable', $config['twig']['page_header']);
     }
 }

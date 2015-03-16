@@ -16,7 +16,8 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\DependencyInjection\ContainerAwareInterface {
+class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\DependencyInjection\ContainerAwareInterface 
+{
 
     private $container;
 
@@ -24,10 +25,11 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
         return array('appConfiguration' => $this->container->get($this->container->getParameter('tecnocreaciones_tools.configuration_service.name')));
     }
 
-    public function getName() {
+    public function getName() 
+    {
         return 'tecnocreaciones_tools_global_conf_extension';
     }
-
+    
     public function getFilters()
     {
         return array(
@@ -87,7 +89,7 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
 
         return $string;
     }
-
+    
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) {
         $this->container = $container;
     }

@@ -38,7 +38,9 @@ tecnocreaciones_tools:
         enable: false
         role_pattern_voter_class: Tecnocreaciones\Bundle\ToolsBundle\Security\Authorization\Voter\RolePatternVoter
         role_pattern_voter_prefix:
-
+    twig:
+        breadcrumb: true
+        page_header: true
 
 sonata_admin:
     dashboard:
