@@ -154,6 +154,14 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager', $widgetBoxManager);
         }
         
+//        if($config['install']['enable'] === true){
+        //Comandos para instalar la aplicacion
+            $container->setParameter('tecnocreaciones_tools.credentials.username', $config['install']['credentials']['username']);
+            $container->setParameter('tecnocreaciones_tools.credentials.password', $config['install']['credentials']['password']);
+            $container->setParameter('tecnocreaciones_tools.credentials.email', $config['install']['credentials']['email']);
+            $container->setParameter('tecnocreaciones_tools.credentials.role', $config['install']['credentials']['role']);
+//        }
+        
         if($config['repository_as_service']['enable'] === true)
         {
             $loaderYml->load('services/repository_as_service.yml');
