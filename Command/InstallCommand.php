@@ -91,7 +91,6 @@ class InstallCommand extends ContainerAwareCommand
             ->runCommand('doctrine:database:create', $input, $output)
             ->runCommand('doctrine:schema:create', $input, $output)
             ->runCommand('assetic:dump', $input, $output)
-            ->runCommand('assets:install', $input, $output)
         ;
         
         if($this->hasCommand('doctrine:fixtures:load')){
@@ -132,7 +131,10 @@ class InstallCommand extends ContainerAwareCommand
         $userManager->updateUser($user,true);
 
         $output->writeln('');
+        
+        $this->runCommand('assets:install', $input, $output);
 
+        $output->writeln('');
         return $this;
     }
 
