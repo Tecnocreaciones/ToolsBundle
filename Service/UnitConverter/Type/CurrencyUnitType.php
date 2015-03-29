@@ -21,7 +21,11 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\UnitConverter\UnitType;
 class CurrencyUnitType extends UnitType
 {
     const UNIT_BOLIVAR = 'bs';
-    const UNIT_DOLLAR = '$';
+    const UNIT_M_BOLIVAR = 'mbs';
+    const UNIT_MM_BOLIVAR = 'mmbs';
+    const UNIT_DOLLAR = 'usd';
+    const UNIT_M_DOLLAR = 'musd';
+    const UNIT_MM_DOLLAR = 'mmusd';
     
     public function getDescription()
     {
@@ -31,7 +35,11 @@ class CurrencyUnitType extends UnitType
     public function init() 
     {
         $this->insertUnit(self::UNIT_BOLIVAR, 'bolivar', 6.30);
+        $this->insertUnit(self::UNIT_M_BOLIVAR, 'mbolivar', 6.30);
+        $this->insertUnit(self::UNIT_MM_BOLIVAR, 'mmbolivar', 6.30);
         $this->insertUnit(self::UNIT_DOLLAR, 'dollar', 6.30);
+        $this->insertUnit(self::UNIT_M_DOLLAR, 'mdollar', 6.30);
+        $this->insertUnit(self::UNIT_MM_DOLLAR, 'mdollar', 6.30);
     }
     
     public static function getType() 

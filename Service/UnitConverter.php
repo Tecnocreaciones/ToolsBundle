@@ -258,4 +258,23 @@ class UnitConverter
     {
         return new $this->options['available_unit_dumper_class']($this->unitTypes);
     }
+    
+    public function toArray()
+    {
+        $unitsTypes = $this->getAvailableUnit()->getUnitsTypes();
+        $selectUnits = array();
+        foreach ($unitsTypes as $type => $data) {
+            $dataUnits = array();
+            $unitDescription = $data['description'];
+            foreach ($data['units'] as $unit)
+            {
+                $dataUnits[json_encode(array('unitType' => $type,'unit' => $unit['name']))] = sprintf('%s (%s)',$unit['name'],$unit['aliases'][0]);
+            }
+            $selectUnits [] = array(
+                $unitDescription => $dataUnits,
+            );
+        }
+        
+        return $selectUnits;
+    }
 }
