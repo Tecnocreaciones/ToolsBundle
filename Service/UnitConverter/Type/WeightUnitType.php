@@ -27,8 +27,10 @@ class WeightUnitType extends UnitType
     const UNIT_DECAGRAMO = 'decagramo';
     const UNIT_HECTOGRAMO = 'hectogramo';
     const UNIT_KILOGRAMO = 'kilogramo';
-    const UNIT_TONELADA = 'tonelada';
     const UNIT_KILONEWTON = 'kilonewton';
+    const UNIT_TONELADA = 'tonelada';
+    const UNIT_TONELADA_METRICA = 'tm';
+    const UNIT_MTONELADA_METRICA = 'mtm';
     
     public function getDescription() {
         return 'Peso';
@@ -44,6 +46,8 @@ class WeightUnitType extends UnitType
         $this->insertUnit(self::UNIT_KILOGRAMO, 'kg', 10);
         $this->insertUnit(self::UNIT_KILONEWTON, 'kN', 100);
         $this->insertUnit(self::UNIT_TONELADA, 't', 1000);
+        $this->insertUnit(self::UNIT_TONELADA_METRICA, 'tm', 1000);
+        $this->insertUnit(self::UNIT_MTONELADA_METRICA, 'mtm', 1000);
     }
 
     public static function getType() {
