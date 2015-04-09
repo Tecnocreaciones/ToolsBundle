@@ -41,7 +41,19 @@ tecnocreaciones_tools:
     twig:
         breadcrumb: true
         page_header: true
+    extra_form_types:
+        enable: false
+        autocomplete_entities:
+            users:
+                class: AcmeDemoBundle:User
+                role: ROLE_ADMIN
+                property: email
 
+            products:
+                class: AcmeDemoBundle:Product
+                role: ROLE_ADMIN
+                search: contains
+    # extra Inspired in ShtumiUsefulBundle
 sonata_admin:
     dashboard:
             groups:
@@ -62,9 +74,13 @@ Agrega repositorios como servicios a las clases
 
 Si usas block_wiget Importar en routing.yml
 
-TecnocreacionesToolsBundle:
+TecnocreacionesToolsBundleWidgetBox:
     resource: "@TecnocreacionesToolsBundle/Resources/config/routing/block_widget_box.yml"
     prefix: /widget-box
+
+TecnocreacionesToolsBundleExtraFormTypes:
+    resource: "@TecnocreacionesToolsBundle/Resources/config/routing/extra_form_types.xml"
+    prefix: /extra-form-types
 
 Carge los css
 
