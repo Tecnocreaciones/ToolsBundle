@@ -189,6 +189,12 @@ class TecnocreacionesToolsExtension extends Extension
             }
         }
         
+        
+        if($config['extra_form_types']['enable'] === true)
+        {
+            $loader->load('services/extra_form_types.xml');
+            $container->setParameter('tecnocreaciones.extra_form_types.autocomplete_entities', $config['extra_form_types']['autocomplete_entities']);
+        }
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
@@ -198,5 +204,6 @@ class TecnocreacionesToolsExtension extends Extension
         
         $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.enable', $config['twig']['breadcrumb']);
         $container->setParameter('tecnocreaciones_tools.twig.page_header.enable', $config['twig']['page_header']);
+        $container->setParameter('tecnocreaciones_tools.twig.extra_form_types.enable', $config['extra_form_types']['enable']);
     }
 }
