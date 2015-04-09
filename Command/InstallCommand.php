@@ -92,6 +92,9 @@ class InstallCommand extends ContainerAwareCommand
             ->runCommand('doctrine:schema:create', $input, $output)
             ->runCommand('assetic:dump', $input, $output)
         ;
+        $this->runCommand('assets:install', $input, $output);
+
+        $output->writeln('');
         
         if($this->hasCommand('doctrine:fixtures:load')){
             if ($dialog->askConfirmation($output, '<question>Load fixtures (Y/N)?</question>', false)) {
@@ -129,10 +132,6 @@ class InstallCommand extends ContainerAwareCommand
         
         $user->setRoles($roles);
         $userManager->updateUser($user,true);
-
-        $output->writeln('');
-        
-        $this->runCommand('assets:install', $input, $output);
 
         $output->writeln('');
         return $this;
