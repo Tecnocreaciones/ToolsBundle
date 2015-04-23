@@ -33,6 +33,7 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
         return array(
             new \Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html'))),
         );
     }
     
@@ -102,6 +103,28 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
                 'page_header' => $parameters,
             )
         );
+    }
+    
+    function printError($error,array $parameters = array(),$translationDomain = 'messages') {
+        $errorTrans = $this->trans($error,$parameters,$translationDomain);
+        $base = '<div class="alert alert-danger fade in radius-bordered alert-shadowed">
+                        <button class="close" data-dismiss="alert">
+                            ×
+                        </button>
+                        <i class="fa-fw fa fa-times"></i>
+                        <strong>Error!</strong> '.$errorTrans.'.
+                    </div>';
+        return $base;
+    }
+    
+    private function generateAsset($path,$packageName = null){
+        return $this->container->get('templating.helper.assets')
+               ->getUrl($path, $packageName);
+    }
+
+    private function trans($id,array $parameters = array(), $domain = 'messages')
+    {
+        return $this->container->get('translator')->trans($id, $parameters, $domain);
     }
     
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) 
