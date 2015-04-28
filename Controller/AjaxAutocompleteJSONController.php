@@ -20,11 +20,11 @@ class AjaxAutocompleteJSONController extends Controller
         
         $entity_alias = $request->get('entity_alias');
         $entityInf = $entities[$entity_alias];
-        
         $formTest = $this->createForm($entityInf['form']);
+        $field = $entityInf["field"];
         
         
-        $child = $formTest->get("products");
+        $child = $formTest->get($field);
         
         $className = $entityInf['class'];
         
@@ -33,7 +33,7 @@ class AjaxAutocompleteJSONController extends Controller
         $property = $attributes['property'];
         
         $repository = $em->getRepository($className);
-        $queryBuilder = null;
+        $queryBuilder = $repository->createQueryBuilder("a");
         
         $callback = null;
         if(isset($attributes['data_collector/passed_options'])){
@@ -110,6 +110,7 @@ class AjaxAutocompleteJSONController extends Controller
             ;
         
         $results = $queryBuilder->getQuery()->getResult();
+        
 //            print_r($queryBuilder->getQuery()->getSQL());
 //        $results = $em->createQuery(
 //            'SELECT e.' . $property . '

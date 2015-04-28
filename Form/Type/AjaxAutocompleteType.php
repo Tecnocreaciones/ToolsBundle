@@ -93,7 +93,7 @@ class AjaxAutocompleteType extends AbstractType
         }
 
         $options['class'] = $entities[$options['entity_alias']]['class'];
-        $options['property'] = $entities[$options['entity_alias']]['property'];
+//        $options['property'] = $entities[$options['entity_alias']]['property'];
 
 
         $builder->addViewTransformer(new ModelToIdPropertyTransformer(
