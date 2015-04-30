@@ -71,6 +71,11 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
         );
     }
     
+    /**
+     * Renderiza un encabezado de pagina
+     * @return type
+     * @throws \LogicException
+     */
     public function pageHeader()
     {
         $parameters = array();
@@ -97,10 +102,10 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
             $parameters[] = $item;
         }
         
-        $emplate = $this->container->getParameter('tecnocreaciones_tools.twig.page_header.template');
-        return $this->container->get('templating')->render($emplate, 
+        $template = $this->container->getParameter('tecnocreaciones_tools.twig.page_header.template');
+        return $this->container->get('templating')->render($template, 
             array(
-                'page_header' => $parameters,
+                'page_headers' => $parameters,
             )
         );
     }

@@ -1,5 +1,14 @@
-Página en blanco
-<small>
-    <i class="fa fa-angle-right"></i>
-    Hola!
-</small>
+{% for page_header in page_headers %}
+    {% if loop.first %}
+        {%  if page_header.link is not null %}<a href="{{ page_header.link }}">{% endif %}
+            {{ page_header.label }}
+        {%  if page_header.link is not null %}</a>{% endif %}
+    {% else %}
+        <small>
+            <i class="fa fa-angle-right"></i>
+            {%  if page_header.link is not null %}<a href="{{ page_header.link }}">{% endif %}
+                {{ page_header.label }}
+            {%  if page_header.link is not null %}</a>{% endif %}
+        </small>
+    {% endif %}
+{% endfor %}
