@@ -90,9 +90,9 @@ class InstallCommand extends ContainerAwareCommand
         $this
             ->runCommand('doctrine:database:create', $input, $output)
             ->runCommand('doctrine:schema:create', $input, $output)
+            ->runCommand('assets:install', $input, $output)
             ->runCommand('assetic:dump', $input, $output)
         ;
-        $this->runCommand('assets:install', $input, $output);
 
         $output->writeln('');
         
