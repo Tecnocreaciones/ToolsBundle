@@ -21,7 +21,7 @@ class AjaxAutocompleteJSONController extends Controller
         $entity_alias = $request->get('entity_alias');
         $entityInf = $entities[$entity_alias];
         $formTest = $this->createForm($entityInf['form']);
-        $field = $entityInf["field"];
+        $field = $request->get("field");
         
         
         $child = $formTest->get($field);
