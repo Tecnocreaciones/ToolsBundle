@@ -4,7 +4,6 @@
             {%- if disabled %} disabled="disabled"{% endif -%}
             {%- if required %} required="required"{% endif %}
         />
-
         <div id="{{ id }}_hidden_inputs_wrap">
             {% if multiple -%}
                 {%- for idx, val in value if idx~'' != '_labels' -%}
@@ -20,7 +19,6 @@
             $(document).ready(function(){
                 
                 var autocompleteInput = $('#{{ id }}_autocomplete_input');
-                console.log(autocompleteInput);
                 autocompleteInput.select2(
                 {
                     {%- set allowClearPlaceholder = (not multiple and not required) ? ' ' : '' -%}
