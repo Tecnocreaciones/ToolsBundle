@@ -23,9 +23,9 @@ class TimeUnitType extends UnitType
     const UNIT_SECONDS = 'segundos';
     const UNIT_MINUTES = 'minutos';
     const UNIT_HOURS = 'horas';
-    const UNIT_DAYS = 'dias';
+    const UNIT_DAYS = 'días';
     const UNIT_WEEKS = 'semanas';
-    const UNIT_MONTHS = 'mes';
+    const UNIT_MONTHS = 'meses';
     const UNIT_YEARS = 'años';
 
 

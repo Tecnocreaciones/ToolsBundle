@@ -31,7 +31,7 @@ class StorageUnitType extends UnitType
     
     public function getDescription()
     {
-        return 'Almacenamiento';
+        return 'Almacenamiento de datos';
     }
 
     public function init() 

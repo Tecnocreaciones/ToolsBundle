@@ -86,7 +86,7 @@ class UnitConverter
 
     function formatResult($qty,$decimal) 
     {
-        return number_format($qty,$decimal,'.',',');
+        return number_format($qty,$decimal,',','.');
     }
     /**
      * Obtiene la cantidad expresada en la unidad $fromUnit en la unidad más grande

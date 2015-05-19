@@ -33,7 +33,7 @@ class WeightUnitType extends UnitType
     const UNIT_MTONELADA_METRICA = 'mtm';
     
     public function getDescription() {
-        return 'Peso';
+        return 'Masa';
     }
 
     public function init() {
