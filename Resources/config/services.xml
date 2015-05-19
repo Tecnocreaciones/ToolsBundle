@@ -14,4 +14,13 @@
             </call>
         </service>
     </services>-->
+    <services>
+        <!-- Validator password not equals -->
+        <service id="tecno.validator.user_password_not_equals" class="Tecnocreaciones\Bundle\ToolsBundle\Validator\Constraints\UserPasswordValidator">
+            <tag name="validator.constraint_validator" alias="tecno.validator.user_password_not_equals" />
+            <argument type="service" id="security.context" />
+            <argument type="service" id="security.encoder_factory" />
+        </service>
+        
+    </services>
 </container>
