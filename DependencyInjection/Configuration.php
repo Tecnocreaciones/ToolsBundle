@@ -79,6 +79,7 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('debug')->defaultFalse()->end()
                             ->booleanNode('interactive')->defaultFalse()->end()
                             ->booleanNode('create_admin')->defaultTrue()->end()
+                            ->scalarNode('app_name')->defaultValue('App')->cannotBeEmpty()->end()
                             ->arrayNode('credentials')
                                 ->addDefaultsIfNotSet()
                                 ->children()

@@ -163,6 +163,7 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setParameter('tecnocreaciones_tools.credentials.interactive', $config['install']['interactive']);
             $container->setParameter('tecnocreaciones_tools.commands', $config['install']['commands']);
             $container->setParameter('tecnocreaciones_tools.create_admin', $config['install']['create_admin']);
+            $container->setParameter('tecnocreaciones_tools.app_name', $config['install']['app_name']);
 //            var_dump($config['install']);
 //            die;
 //        }

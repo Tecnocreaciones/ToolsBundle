@@ -32,8 +32,9 @@ class UninstallCommand extends ContainerAwareCommand
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $appName = $this->getContainer()->getParameter('tecnocreaciones_tools.app_name');
         $env = $input->getOption('env');
-        $output->writeln(sprintf('<info>Uninstalling App in environment "%s".</info>',$env));
+        $output->writeln(sprintf('<info>Uninstalling <comment>%s</comment> in environment <comment>"%s"</comment>.</info>',$appName,$env));
         $output->writeln('');
 
         $this
@@ -41,7 +42,7 @@ class UninstallCommand extends ContainerAwareCommand
             ->setupStep($input, $output)
         ;
 
-        $output->writeln('<info>App has been successfully uninstalled.</info>');
+        $output->writeln(sprintf('<info><comment>%s</comment> has been successfully uninstalled.</info>',$appName));
     }
 
     protected function setupStep(InputInterface $input, OutputInterface $output)

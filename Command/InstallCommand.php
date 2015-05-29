@@ -23,6 +23,7 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $appName = $this->getContainer()->getParameter('tecnocreaciones_tools.app_name');
         $input->setInteractive((boolean)$this->getContainer()->getParameter('tecnocreaciones_tools.credentials.interactive'));
         
         $env = $input->getOption('env');
@@ -44,7 +45,7 @@ class InstallCommand extends ContainerAwareCommand
         if($input->isInteractive() === false){
             $text .= '<comment>(No interactive mode)</comment>';
         }
-        $output->writeln(sprintf('<info>Installing App in environment <comment>"%s"</comment>.</info> %s',$env,$text));
+        $output->writeln(sprintf('<info>Installing <comment>%s</comment> in environment <comment>"%s"</comment>.</info> %s',$appName,$env,$text));
         $output->writeln('');
 
         $this
@@ -52,7 +53,8 @@ class InstallCommand extends ContainerAwareCommand
             ->setupStep($argvInput, $output)
         ;
 
-        $output->writeln('<info>App has been successfully installed.</info>');
+        $output->writeln(sprintf('<info><comment>%s</comment> has been successfully installed.</info>',$appName));
+        $output->writeln('');
     }
 
     protected function checkStep(InputInterface $input, OutputInterface $output)
@@ -95,10 +97,16 @@ class InstallCommand extends ContainerAwareCommand
         $dialog = $this->getHelperSet()->get('dialog');
 
         $commands = $this->getContainer()->getParameter('tecnocreaciones_tools.commands');
+        $commandsCount = count($commands);
+        $i = 1;
         foreach ($commands as $command) {
-            $output->writeln(sprintf('<info>Running command</info> <comment>"%s"</comment>',$command));
+            $output->writeln(sprintf('<comment>*********</comment> Step (%s/%s) - <info>Running command</info> <comment>"%s"</comment> <comment>*********</comment>',$i,$commandsCount,$command));
+            $output->writeln('');
             $this->runCommand($command, $input, $output);
             $output->writeln('');
+            $output->writeln(sprintf('<comment>*********</comment> <info>Finish command</info> <comment>"%s"</comment> <comment>*********</comment>',$command));
+            $output->writeln('');
+            $i++;
         }
         
         $createAdmin = (boolean)$this->getContainer()->getParameter('tecnocreaciones_tools.create_admin');
