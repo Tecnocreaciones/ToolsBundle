@@ -77,6 +77,8 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
                             ->booleanNode('debug')->defaultFalse()->end()
+                            ->booleanNode('interactive')->defaultFalse()->end()
+                            ->booleanNode('create_admin')->defaultTrue()->end()
                             ->arrayNode('credentials')
                                 ->addDefaultsIfNotSet()
                                 ->children()
@@ -84,6 +86,17 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('password')->defaultValue('12345')->cannotBeEmpty()->end()
                                     ->scalarNode('email')->defaultValue('admin@example.local')->cannotBeEmpty()->end()
                                     ->scalarNode('role')->defaultValue('ROLE_SUPER_ADMIN')->cannotBeEmpty()->end()
+                                ->end()
+                            ->end()
+                            ->arrayNode('commands')
+                                ->defaultValue(array(
+                                    'doctrine:database:create',
+                                    'doctrine:schema:create',
+                                    'assets:install',
+                                    'assetic:dump',
+                                    'doctrine:fixtures:load',
+                                ))
+                                ->prototype('scalar')
                                 ->end()
                             ->end()
                         ->end()

@@ -160,6 +160,11 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setParameter('tecnocreaciones_tools.credentials.password', $config['install']['credentials']['password']);
             $container->setParameter('tecnocreaciones_tools.credentials.email', $config['install']['credentials']['email']);
             $container->setParameter('tecnocreaciones_tools.credentials.role', $config['install']['credentials']['role']);
+            $container->setParameter('tecnocreaciones_tools.credentials.interactive', $config['install']['interactive']);
+            $container->setParameter('tecnocreaciones_tools.commands', $config['install']['commands']);
+            $container->setParameter('tecnocreaciones_tools.create_admin', $config['install']['create_admin']);
+//            var_dump($config['install']);
+//            die;
 //        }
         
         if($config['repository_as_service']['enable'] === true)

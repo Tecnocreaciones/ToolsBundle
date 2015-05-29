@@ -23,6 +23,8 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $input->setInteractive((boolean)$this->getContainer()->getParameter('tecnocreaciones_tools.credentials.interactive'));
+        
         $env = $input->getOption('env');
         $reinstall = $input->getOption('reinstall');
         $parameters = array();
@@ -37,7 +39,12 @@ class InstallCommand extends ContainerAwareCommand
         if($reinstall){
             $this->runCommand('tec:uninstall', $argvInput, $output);
         }
-        $output->writeln(sprintf('<info>Installing App in environment "%s".</info>',$env));
+        $text = "";
+        $argvInput->setInteractive($input->isInteractive());
+        if($input->isInteractive() === false){
+            $text .= '<comment>(No interactive mode)</comment>';
+        }
+        $output->writeln(sprintf('<info>Installing App in environment <comment>"%s"</comment>.</info> %s',$env,$text));
         $output->writeln('');
 
         $this
@@ -87,53 +94,57 @@ class InstallCommand extends ContainerAwareCommand
 
         $dialog = $this->getHelperSet()->get('dialog');
 
-        $this
-            ->runCommand('doctrine:database:create', $input, $output)
-            ->runCommand('doctrine:schema:create', $input, $output)
-            ->runCommand('assets:install', $input, $output)
-            ->runCommand('assetic:dump', $input, $output)
-        ;
-
-        $output->writeln('');
+        $commands = $this->getContainer()->getParameter('tecnocreaciones_tools.commands');
+        foreach ($commands as $command) {
+            $output->writeln(sprintf('<info>Running command</info> <comment>"%s"</comment>',$command));
+            $this->runCommand($command, $input, $output);
+            $output->writeln('');
+        }
         
-        if($this->hasCommand('doctrine:fixtures:load')){
-            if ($dialog->askConfirmation($output, '<question>Load fixtures (Y/N)?</question>', false)) {
-                $this->runCommand('doctrine:fixtures:load', $input, $output);
+        $createAdmin = (boolean)$this->getContainer()->getParameter('tecnocreaciones_tools.create_admin');
+        if($createAdmin === true){
+            $output->writeln('<info>Administration setup.</info>');
+
+            $userManager = $this->getContainer()->get('fos_user.user_manager');
+            $user = $userManager->createUser();
+
+            $username = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.username');
+            $password = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.password');
+            $email = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.email');
+            $role = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.role');
+
+            $roles = array();
+            $roles['role'] = $role;
+            if($this->getApplication()->getKernel()->isClassInActiveBundle('Sonata\AdminBundle\SonataAdminBundle')){
+                $roles[]= 'ROLE_SONATA_ADMIN';//Rol para acceder al administrador
+                $roles[]= 'ROLE_ALLOWED_TO_SWITCH';//Rol para porder probar usuarios
             }
-        }
+            
+            if($input->isInteractive() === true){
+                $username = $dialog->ask($output, sprintf('<question>Username[%s]:</question>',$username),$username);
+                $password = $dialog->ask($output, sprintf('<question>Password[%s]:</question>',$password),$password);
+                $email = $dialog->ask($output, sprintf('<question>Email[%s]:</question>',$email),$email);
+                $role = $dialog->ask($output, sprintf('<question>Role[%s]:</question>',implode(',',$roles)),$role);
+                $roles['role'] = $role;
+            }else{
+                $output->writeln(sprintf('<info>Username:</info> <comment>%s</comment>',$username));
+                $output->writeln(sprintf('<info>Password:</info> <comment>%s</comment>',$password));
+                $output->writeln(sprintf('<info>Email:</info> <comment>%s</comment>',$email));
+                $output->writeln(sprintf('<info>Roles:</info> <comment>[%s]</comment>',implode(',',$roles)));
+            }
 
-        $output->writeln('');
-        $output->writeln('<info>Administration setup.</info>');
-        
-        $userManager = $this->getContainer()->get('fos_user.user_manager');
-        $user = $userManager->createUser();
-        
-        $username = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.username');
-        $password = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.password');
-        $email = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.email');
-        $role = $this->getContainer()->getParameter('tecnocreaciones_tools.credentials.role');
-         
-        $roles = array();
-        $roles['role'] = $role;
-        if($this->getApplication()->getKernel()->isClassInActiveBundle('Sonata\AdminBundle\SonataAdminBundle')){
-            $roles[]= 'ROLE_SONATA_ADMIN';//Rol para acceder al administrador
-            $roles[]= 'ROLE_ALLOWED_TO_SWITCH';//Rol para porder probar usuarios
-        }
-        $username = $dialog->ask($output, sprintf('<question>Username[%s]:</question>',$username),$username);
-        $password = $dialog->ask($output, sprintf('<question>Password[%s]:</question>',$password),$password);
-        $email = $dialog->ask($output, sprintf('<question>Email[%s]:</question>',$email),$email);
-        $role = $dialog->ask($output, sprintf('<question>Role[%s]:</question>',implode(',',$roles)),$role);
-        $roles['role'] = $role;
-        
-        $user->setUsername($username);
-        $user->setPlainPassword($password);
-        $user->setEmail($email);
-        $user->setEnabled(true);
-        
-        $user->setRoles($roles);
-        $userManager->updateUser($user,true);
+            $user->setUsername($username);
+            $user->setPlainPassword($password);
+            $user->setEmail($email);
+            $user->setEnabled(true);
 
-        $output->writeln('');
+            $user->setRoles($roles);
+            $userManager->updateUser($user,true);
+            
+            $output->writeln(sprintf('<info>User <comment>"%s"</comment> created.</info>',$username));
+            $output->writeln('');
+        }
+        
         return $this;
     }
 
