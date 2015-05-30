@@ -1,3 +1,5 @@
+{% extends "form_div_layout.html.twig" %}
+
 {% block form_errors %}
 {% spaceless %}
     {% if errors|length > 0 %}
@@ -12,3 +14,21 @@
     {% endif %}
 {% endspaceless %}
 {% endblock form_errors %}
+
+{% block form_label %}
+{% spaceless %}
+    {% set label_attr = label_attr|merge({'class': label_attr.class|default('') ~ ' bold'}) %}
+    {% if label is not sameas(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><b>{{ label|trans({}, translation_domain) }}{% if required and disabled == false %}&nbsp;<span>(*)</span>{% endif %}</b></label>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_label %}   
