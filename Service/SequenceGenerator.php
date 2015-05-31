@@ -39,9 +39,14 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      */
     private $options = array();
     
+    private $cacheMemorySequences;
+    private $cacheMemoryMasks;
+            
     function __construct(array $options = array())
     {
         $this->setOptions($options);
+        $this->cacheMemorySequences = array();
+        $this->cacheMemoryMasks = array();
     }
 
     /**
@@ -169,9 +174,18 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         }
         if (empty($counter) || preg_match('/[^0-9]/i', $counter))
             $counter = $maskOffSetAdd;
+        $maskMd5 = md5($mask);
+        if(!isset($this->cacheMemoryMasks[$maskMd5])){
+            $this->cacheMemoryMasks[$maskMd5] = 0;
+        }else{
+            $this->cacheMemoryMasks[$maskMd5] = (integer)$this->cacheMemoryMasks[$maskMd5] + 1;
+        }
         $counter+=$maskOffSetAdd;
         $counter-=$maskOffSetSubtract;
+        
         if ($mode == self::MODE_NEXT) {
+            //Incrementar el contador por secuencia que aun no se guarda
+            $counter += (integer)$this->cacheMemoryMasks[$maskMd5];
             $counter++;
         }
         // Build numFinal
@@ -194,6 +208,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         }
         $maskafter = str_pad($counter, strlen($maskcounter), "0", STR_PAD_LEFT);
         $numFinal = str_replace($maskbefore, $maskafter, $numFinal);
+        $this->cacheMemorySequences[] = $numFinal;
         return $numFinal;
     }
     
