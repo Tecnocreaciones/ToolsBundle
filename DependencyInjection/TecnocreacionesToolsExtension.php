@@ -47,7 +47,7 @@ class TecnocreacionesToolsExtension extends Extension
         if($config['sequence_generator']['enable'] === true){
            $loader->load('services/sequence_generator.xml');
            
-           if($config['sequence_generator']['options']){
+           if(isset($config['sequence_generator']['options'])){
                $options = $config['sequence_generator']['options'];
                $sequenceGenerator = $container->getDefinition('tecnocreaciones_tools.sequence_generator');
                $sequenceGenerator->addArgument($options);
