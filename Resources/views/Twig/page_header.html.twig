@@ -1,12 +1,12 @@
 {% for page_header in page_headers %}
     {% if loop.first %}
-        {%  if page_header.link is not null %}<a href="{{ page_header.link }}">{% endif %}
+        {%  if page_header.link is not null %}<a href="{{ page_header.link }}" class="link-page-header">{% endif %}
             {{ page_header.label }}
         {%  if page_header.link is not null %}</a>{% endif %}
     {% else %}
         <small>
             <i class="fa fa-angle-right"></i>
-            {%  if page_header.link is not null %}<a href="{{ page_header.link }}">{% endif %}
+            {%  if page_header.link is not null %}<a href="{{ page_header.link }}" class="link-page-header">{% endif %}
                 {{ page_header.label }}
             {%  if page_header.link is not null %}</a>{% endif %}
         </small>
