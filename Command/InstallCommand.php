@@ -23,6 +23,8 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $starttime = microtime(true);
+        
         $appName = $this->getContainer()->getParameter('tecnocreaciones_tools.app_name');
         $input->setInteractive((boolean)$this->getContainer()->getParameter('tecnocreaciones_tools.credentials.interactive'));
         
@@ -53,7 +55,10 @@ class InstallCommand extends ContainerAwareCommand
             ->setupStep($argvInput, $output)
         ;
 
-        $output->writeln(sprintf('<info><comment>%s</comment> has been successfully installed.</info>',$appName));
+        $endtime = microtime(true);
+        $timediff = $endtime - $starttime;
+        //Time Elapsed: 
+        $output->writeln(sprintf('<info><comment>%s</comment> has been successfully installed in <comment>%s seconds</comment></info>',$appName,sprintf('%02d', $timediff)));
         $output->writeln('');
     }
 
@@ -100,11 +105,14 @@ class InstallCommand extends ContainerAwareCommand
         $commandsCount = count($commands);
         $i = 1;
         foreach ($commands as $command) {
+            $starttime = microtime(true);
             $output->writeln(sprintf('<comment>*********</comment> Step (%s/%s) - <info>Running command</info> <comment>"%s"</comment> <comment>*********</comment>',$i,$commandsCount,$command));
             $output->writeln('');
             $this->runCommand($command, $input, $output);
             $output->writeln('');
-            $output->writeln(sprintf('<comment>*********</comment> <info>Finish command</info> <comment>"%s"</comment> <comment>*********</comment>',$command));
+            $endtime = microtime(true);
+            $timediff = $endtime - $starttime;
+            $output->writeln(sprintf('<comment>*********</comment> <info>Finish command</info> <comment>"%s"</comment> in %s seconds <comment>*********</comment>',$command,sprintf('%02d', $timediff)));
             $output->writeln('');
             $i++;
         }
