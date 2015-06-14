@@ -165,10 +165,29 @@ class Configuration implements ConfigurationInterface
                                         ->isRequired()
                                         ->validate()
                                             ->ifNull()
-                                                ->thenInvalid('Invalid role prefix')
+                                                ->thenInvalid('Invalid role prefix')->end()
                             ->end()
                         ->end()
                     ->end()
+                
+                    ->arrayNode('intro')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
+                            ->scalarNode('intro_class')->defaultNull()->end()
+                            ->scalarNode('intro_step_class')->defaultNull()->end()
+                            ->booleanNode('admin')->defaultFalse()->cannotBeEmpty()->end()
+                            ->scalarNode('intro_admin_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Admin\Intro\IntroAdmin')->end()
+                            ->scalarNode('intro_admin_step_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Admin\Intro\IntroStepAdmin')->end()
+                            ->arrayNode('areas')
+                                ->defaultValue(array(
+                                    'intro.welcome',
+                                ))
+                                ->prototype('scalar')
+                            ->end()
+                        ->end()
+                    ->end()
+                
                 ->end()
         ;
         

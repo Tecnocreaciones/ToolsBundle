@@ -1,0 +1,23 @@
+services:
+    sonata.admin.intro:
+        class: %tecnocreaciones_tools.intro.intro_admin_class%
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "admin.group.intro",label_catalogue: "admin", label: "admin.intro.intro" }
+        arguments:
+            - ~
+            - %tecnocreaciones_tools.intro.intro_class%
+            - ~
+        calls:
+            - [ setTranslationDomain, [admin]]
+            - [ setIntroService, [@tecnocreaciones_tools.service.intro]]
+            
+    sonata.admin.intro_step:
+        class: %tecnocreaciones_tools.intro.intro_admin_step_class%
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "admin.group.intro",label_catalogue: "admin", label: "admin.intro.intro_step" }
+        arguments:
+            - ~
+            - %tecnocreaciones_tools.intro.intro_step_class%
+            - ~
+        calls:
+            - [ setTranslationDomain, [admin]]
