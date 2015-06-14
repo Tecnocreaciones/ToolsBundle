@@ -40,6 +40,7 @@ class IntroAdmin extends Admin
             ))
             ->add('maxShowLimit')
             ->add('maxCancelLimit')
+            ->add('translationDomain')
             ->add('autoStart',null,array(
                 'required' => false,
             ))
@@ -86,6 +87,7 @@ class IntroAdmin extends Admin
             ))
             ->add('maxShowLimit')
             ->add('maxCancelLimit')
+            ->add('translationDomain')
             ->add('autoStart')
             ->add('enabled')
         ;

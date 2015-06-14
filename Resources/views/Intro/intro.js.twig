@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+        {% for intro in intros %}
+            {% set nameIntro = 'intro_' ~ intro.id %}
+            function {{ nameIntro }}(){
+                var intro = introJs();
+                  intro.setOptions({
+                    skipLabel: '{{ 'intro.options.skip_label'|trans }}',
+                    nextLabel: '{{ 'intro.options.next_label'|trans|raw }}',
+                    prevLabel: '{{ 'intro.options.prev_label'|trans|raw }}',
+                    doneLabel: '{{ 'intro.options.done_label'|trans }}',
+
+                    steps: [
+                        {% for step in intro.steps %}
+                          {
+                            {% if step.element != "" %}
+                                element: '{{ step.element|raw }}',
+                            {% endif %}
+                            intro: '{{ step.content|trans({},intro.translationDomain)|raw }}',
+                            position: '{{ step.position }}'
+                          }
+                        {% endfor %}
+                    ]
+                  });
+                  {#intro.oncomplete(function(){
+                    console.log('complete');
+                  });#}
+                  intro.start();
+          }
+          {% if intro.autoStart == true %}
+                {{ nameIntro }}();
+          {% endif %}
+        {% endfor %}
+    });
+</script>

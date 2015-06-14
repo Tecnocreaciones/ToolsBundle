@@ -20,7 +20,18 @@ class IntroService
 {
     protected $adapters;
     
-    protected $areas;
+    protected $config;
+    
+    /**
+     *
+     * @var Twig
+     */
+    protected $templating;
+    /**
+     *
+     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     */
+    protected $doctrine;
     
     public function __construct() {
         $this->adapters = array();
@@ -31,13 +42,49 @@ class IntroService
         
     }
     
-    function getAreas() {
-        return $this->areas;
-    }
-
-    function setAreas(array $areas) 
+    public function renderArea($area)
     {
-        $this->areas = $areas;
+        $introClass = $this->config['intro_class'];
+        $em = $this->doctrine->getManager();
+        $intros = $em->getRepository($introClass)->findBy(array(
+            'area' => $area,
+            'enabled' => true,
+        ));
+        $template = 'TecnocreacionesToolsBundle:Intro:intro.js.twig';
+        return $this->renderView($template,array(
+            'intros' => $intros
+        ));
     }
 
+
+    /**
+     * Returns a rendered view.
+     *
+     * @param string $view       The view name
+     * @param array  $parameters An array of parameters to pass to the view
+     *
+     * @return string The rendered view
+     */
+    private function renderView($view, array $parameters = array())
+    {
+        return $this->templating->render($view, $parameters);
+    }
+    
+    function getAreas() {
+        return $this->config['areas'];
+    }
+
+    function setConfig(array $config) 
+    {
+        $this->config = $config;
+    }
+    
+    function setTemplating($templating)
+    {
+        $this->templating = $templating;
+    }
+    
+    function setDoctrine(\Doctrine\Bundle\DoctrineBundle\Registry $doctrine) {
+        $this->doctrine = $doctrine;
+    }
 }

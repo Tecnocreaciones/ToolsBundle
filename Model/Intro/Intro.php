@@ -70,11 +70,18 @@ abstract class Intro implements IntroInterface
     protected $steps;
     
     /**
+     * Dominio de traduccion del contenido
+     * @var string
+     * @ORM\Column(name="translation_domain",type="string")
+     */
+    protected $translationDomain = "messages";
+    
+    /**
      * Habilitado
      * @var boolean
      * @ORM\Column(name="enabled",type="boolean")
      */
-    protected $enabled;
+    protected $enabled = true;
     
     public function __construct() {
         $this->options = array();
@@ -265,7 +272,16 @@ abstract class Intro implements IntroInterface
         return $this->enabled;
     }
 
+    function getTranslationDomain() {
+        return $this->translationDomain;
+    }
+
+    function setTranslationDomain($translationDomain) {
+        $this->translationDomain = $translationDomain;
         
+        return $this;
+    }
+    
     public function __toString() 
     {
         return $this->getName()?:'-';

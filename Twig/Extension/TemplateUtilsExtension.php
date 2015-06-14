@@ -34,6 +34,7 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
             new \Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('print_intro', array($this,'renderIntro'), array('is_safe' => array('html'))),
         );
     }
     
@@ -125,6 +126,15 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
     private function generateAsset($path,$packageName = null){
         return $this->container->get('templating.helper.assets')
                ->getUrl($path, $packageName);
+    }
+    
+    /**
+     * Renderiza una o multiples introducciones en una area
+     * @param type $area
+     */
+    public function renderIntro($area)
+    {
+        return $this->container->get('tecnocreaciones_tools.service.intro')->renderArea($area);
     }
 
     private function trans($id,array $parameters = array(), $domain = 'messages')

@@ -2,4 +2,6 @@ services:
     tecnocreaciones_tools.service.intro:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\Intro\IntroService
         calls:
-            - [ setAreas, ["%tecnocreaciones_tools.intro.areas%"]]
+            - [ setConfig, ["%tecnocreaciones_tools.intro.config%"]]
+            - [ setTemplating, [@templating]]
+            - [ setDoctrine, [@doctrine]]

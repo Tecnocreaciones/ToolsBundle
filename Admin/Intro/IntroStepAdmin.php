@@ -48,7 +48,7 @@ class IntroStepAdmin extends Admin
             ->add('intro')
             ->add('element')
             ->add('content')
-            ->add('position','choice',array(
+            ->add('position',null,array(),'choice',array(
                 'choices' => $positions,
                 'translation_domain' => 'admin'
             ))

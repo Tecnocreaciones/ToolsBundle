@@ -55,7 +55,7 @@ abstract class IntroStep implements IntroStepInterface
      * @var boolean
      * @ORM\Column(name="enabled",type="boolean")
      */
-    protected $enabled;
+    protected $enabled = true;
     
     /**
      * Set intro
@@ -213,7 +213,7 @@ abstract class IntroStep implements IntroStepInterface
     {
         $_toString = '-';
         if($this->getIntro() !== null){
-            $_toString = (string)$this->getIntro().' '.  substr($this->content, 0,20);
+            $_toString = substr($this->content, 0,20);
         }
         
         return $_toString;
