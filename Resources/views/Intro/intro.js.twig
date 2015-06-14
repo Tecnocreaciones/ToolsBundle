@@ -12,13 +12,19 @@
 
                     steps: [
                         {% for step in intro.steps %}
+                          {% if step.contentCallback != "" %}
+                              {% set content = intro_service.renderView(step.contentCallback) %}  
+                          {% else %}
+                              {% set content = step.content|trans({},intro.translationDomain)|raw %}  
+                          {% endif %}
+                              
                           {
                             {% if step.element != "" %}
                                 element: '{{ step.element|raw }}',
                             {% endif %}
-                            intro: '{{ step.content|trans({},intro.translationDomain)|raw }}',
+                            intro: '{{ content|raw }}',
                             position: '{{ step.position }}'
-                          }
+                          },
                         {% endfor %}
                     ]
                   });

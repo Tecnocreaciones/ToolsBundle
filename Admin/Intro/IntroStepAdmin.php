@@ -30,6 +30,7 @@ class IntroStepAdmin extends Admin
             ->add('intro')
             ->add('element')
             ->add('content')
+            ->add('contentCallback')
             ->add('position','choice',array(
                 'choices' => $positions,
                 'translation_domain' => 'admin'

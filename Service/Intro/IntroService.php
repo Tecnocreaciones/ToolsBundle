@@ -51,8 +51,11 @@ class IntroService
             'enabled' => true,
         ));
         $template = 'TecnocreacionesToolsBundle:Intro:intro.js.twig';
+//        $this->templating->setLoader(new \Twig_Loader_String());
+        
         return $this->renderView($template,array(
-            'intros' => $intros
+            'intros' => $intros,
+            'intro_service' => $this,
         ));
     }
 
@@ -65,7 +68,7 @@ class IntroService
      *
      * @return string The rendered view
      */
-    private function renderView($view, array $parameters = array())
+    public function renderView($view, array $parameters = array())
     {
         return $this->templating->render($view, $parameters);
     }

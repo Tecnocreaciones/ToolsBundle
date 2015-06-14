@@ -32,9 +32,16 @@ abstract class IntroStep implements IntroStepInterface
     /**
      * Texto a mostrar en el intro (intro)
      * @var string
-     * @ORM\Column(name="content",type="text")
+     * @ORM\Column(name="content",type="text",nullable=true)
      */
     protected $content;
+    
+    /**
+     * Texto avanzado mostrar en el intro (intro)
+     * @var string
+     * @ORM\Column(name="content_callback",type="text",nullable=true)
+     */
+    protected $contentCallback;
     
     /**
      * Posicion del intro
@@ -129,6 +136,29 @@ abstract class IntroStep implements IntroStepInterface
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set content
+     *
+     * @param string $contentCallback
+     * @return IntroStep
+     */
+    public function setContentCallback($contentCallback)
+    {
+        $this->contentCallback = $contentCallback;
+
+        return $this;
+    }
+
+    /**
+     * Get content
+     *
+     * @return string 
+     */
+    public function getContentCallback()
+    {
+        return $this->contentCallback;
     }
 
     /**
