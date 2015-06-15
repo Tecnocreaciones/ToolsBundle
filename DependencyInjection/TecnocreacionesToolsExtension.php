@@ -183,12 +183,6 @@ class TecnocreacionesToolsExtension extends Extension
         
         if($config['twig'] != ''){
             if($config['twig']['breadcrumb'] === true || $config['twig']['page_header'] === true){
-                $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\TemplateUtilsExtension');
-                $extensionToolsDefinition
-                        ->addMethodCall('setContainer',array(new Reference('service_container')))
-                        ->addTag('twig.extension')
-                        ;
-                $container->setDefinition('tecnocreaciones_tools.template_utils_extension', $extensionToolsDefinition);
 
                 $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.template', $config['twig']['breadcrumb_template']);
                 $container->setParameter('tecnocreaciones_tools.twig.page_header.template', $config['twig']['page_header_template']);
@@ -201,6 +195,35 @@ class TecnocreacionesToolsExtension extends Extension
             $loader->load('services/extra_form_types.xml');
             $container->setParameter('tecnocreaciones.extra_form_types.autocomplete_entities', $config['extra_form_types']['autocomplete_entities']);
         }
+//        var_dump($config);
+//        die;
+        if($config['intro']['enable'] === true)
+        {
+            $loaderYml->load('services/intro.yml');
+            if($config['intro']['admin'] === true){
+                $loaderYml->load('admin/intro.yml');
+            }
+            $container->setParameter('tecnocreaciones_tools.intro.intro_class', $config['intro']['intro_class']);
+            $container->setParameter('tecnocreaciones_tools.intro.intro_step_class', $config['intro']['intro_step_class']);
+            $container->setParameter('tecnocreaciones_tools.intro.intro_admin_class', $config['intro']['intro_admin_class']);
+            $container->setParameter('tecnocreaciones_tools.intro.intro_admin_step_class', $config['intro']['intro_admin_step_class']);
+            $container->setParameter('tecnocreaciones_tools.intro.areas', $config['intro']['areas']);
+            $container->setParameter('tecnocreaciones_tools.intro.config', $config['intro']);
+//            $container->setParameter('tecnocreaciones_tools.repository_as_service.tag_service', $config['repository_as_service']['tag_service']);
+        }
+        
+        if($config['intro']['enable'] === true 
+                || ($config['twig'] != '' && ($config['twig']['breadcrumb'] === true || $config['twig']['page_header'] === true))
+            ){
+            
+            $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\TemplateUtilsExtension');
+                    $extensionToolsDefinition
+                            ->addMethodCall('setContainer',array(new Reference('service_container')))
+                            ->addTag('twig.extension')
+                            ;
+            $container->setDefinition('tecnocreaciones_tools.template_utils_extension', $extensionToolsDefinition);
+        }
+        
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
