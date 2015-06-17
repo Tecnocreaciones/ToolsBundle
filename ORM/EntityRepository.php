@@ -35,8 +35,15 @@ class EntityRepository extends Base implements ContainerAwareInterface
     protected $container;
     public function getPaginator(QueryBuilder $queryBuilder)
     {
+        
+        //$request = $this->container->get('request_stack')->getCurrentRequest();
         $pagerfanta = new Paginator(new DoctrineORMAdapter($queryBuilder));
         $pagerfanta->setDefaultFormat($this->getFormatPaginator());
+        if($this->getFormatPaginator() === Paginator::FORMAT_ARRAY_DATA_TABLES){
+            /*aqui va la implementación de la busqueda datatables */
+        }else{
+            
+        }
         $pagerfanta->setContainer($this->container);
         return $pagerfanta;
     }
