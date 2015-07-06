@@ -160,7 +160,14 @@ class IntroService
     }
     
     function getAreas() {
-        return $this->config['areas'];
+        static $areas = null;
+        if($areas === null){
+            $areas = array();
+            foreach ($this->config['areas'] as $area) {
+                $areas[$area] = $area;
+            }
+        }
+        return $areas;
     }
 
     function setConfig(array $config) 

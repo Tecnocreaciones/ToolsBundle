@@ -45,7 +45,7 @@ abstract class Intro implements IntroInterface
     /**
      * Area
      * @var integer
-     * @ORM\Column(name="area",type="integer")
+     * @ORM\Column(name="area",type="string",length=30)
      */
     protected $area;
     
