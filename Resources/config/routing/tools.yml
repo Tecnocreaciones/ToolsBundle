@@ -1,0 +1,6 @@
+tools_bundle_intro:
+    pattern: /intro.json
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:Tools:intro
+        _format: json
+    requirements: { _method: GET }

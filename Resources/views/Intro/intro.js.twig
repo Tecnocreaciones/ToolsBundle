@@ -28,14 +28,18 @@
                         {% endfor %}
                     ]
                   });
-                  {#intro.oncomplete(function(){
-                    console.log('complete');
-                  });#}
-                  intro.start();
+                  intro.oncomplete(function() {
+                    $.ajax("{{ path('tools_bundle_intro',{intro: intro.id,type_log: constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Intro\\IntroLogInterface::TYPE_LOG_FINISH')}) }}");
+                  });
+                  intro.onexit(function() {
+                    $.ajax("{{ path('tools_bundle_intro',{intro: intro.id,type_log: constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Intro\\IntroLogInterface::TYPE_LOG_CANCEL')}) }}");
+                  });
+                  return intro;
           }
           {% if intro.autoStart == true %}
-                {{ nameIntro }}();
+                {{ nameIntro }}().start();
           {% endif %}
+          
         {% endfor %}
     });
 </script>

@@ -205,11 +205,11 @@ class TecnocreacionesToolsExtension extends Extension
             }
             $container->setParameter('tecnocreaciones_tools.intro.intro_class', $config['intro']['intro_class']);
             $container->setParameter('tecnocreaciones_tools.intro.intro_step_class', $config['intro']['intro_step_class']);
+            $container->setParameter('tecnocreaciones_tools.intro.intro_log_class', $config['intro']['intro_log_class']);
             $container->setParameter('tecnocreaciones_tools.intro.intro_admin_class', $config['intro']['intro_admin_class']);
             $container->setParameter('tecnocreaciones_tools.intro.intro_admin_step_class', $config['intro']['intro_admin_step_class']);
             $container->setParameter('tecnocreaciones_tools.intro.areas', $config['intro']['areas']);
             $container->setParameter('tecnocreaciones_tools.intro.config', $config['intro']);
-//            $container->setParameter('tecnocreaciones_tools.repository_as_service.tag_service', $config['repository_as_service']['tag_service']);
         }
         
         if($config['intro']['enable'] === true 

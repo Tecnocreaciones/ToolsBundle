@@ -176,6 +176,7 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
                             ->scalarNode('intro_class')->defaultNull()->end()
                             ->scalarNode('intro_step_class')->defaultNull()->end()
+                            ->scalarNode('intro_log_class')->defaultNull()->end()
                             ->booleanNode('admin')->defaultFalse()->cannotBeEmpty()->end()
                             ->scalarNode('intro_admin_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Admin\Intro\IntroAdmin')->end()
                             ->scalarNode('intro_admin_step_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Admin\Intro\IntroStepAdmin')->end()

@@ -28,4 +28,7 @@ interface IntroInterface {
     
     function getArea();
     function setArea($area);
+    
+    function getMaxShowLimit();
+    function getMaxCancelLimit();
 }
