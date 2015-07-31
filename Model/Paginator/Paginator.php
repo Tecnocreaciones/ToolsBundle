@@ -61,17 +61,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
                         'getNbPages' => $this->getNbPages(),
                         'getMaxPerPage' => $this->getMaxPerPage(),
                     );
-        if($route != null){
-            $links['first']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => 1)));
-            $links['self']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getCurrentPage())));
-            $links['last']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getNbPages())));
-            if($this->hasPreviousPage()){
-                $links['previous']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getPreviousPage())));
-            }
-            if($this->hasNextPage()){
-                $links['next']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getNextPage())));
-            }
-        }
+        
         $pageResult = $this->getCurrentPageResults();
         if(is_array($pageResult)){
             $results = $pageResult;
@@ -79,7 +69,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
             $results = $this->getCurrentPageResults()->getArrayCopy();
         }
         return array(
-            '_links' => $links,
+            '_links' => $this->getLinks($route,$parameters),
             '_embedded' => array(
                 'results' => $results,
                 'paginator' => $paginator
@@ -94,6 +84,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
             'recordsTotal' => $this->getNbResults(),
             'recordsFiltered' => $this->getNbResults(),
             'data' => $results,
+            '_links' => $this->getLinks($route,$parameters),
         );
         return $data;
     }
@@ -121,18 +112,44 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         $this->defaultFormat = $defaultFormat;
     }
     
+    protected function getLinks($route,array $parameters = array()){
+        $links = array();
+        if($route != null){
+            $links['first']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => 1)));
+            $links['self']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getCurrentPage())));
+            $links['last']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getNbPages())));
+            if($this->hasPreviousPage()){
+                $links['previous']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getPreviousPage())));
+            }
+            if($this->hasNextPage()){
+                $links['next']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getNextPage())));
+            }
+        }
+        return $links;
+    }
+            
     function setRequest(\Symfony\Component\HttpFoundation\Request $request) {
         $this->request = $request;
-        $start = $request->get("start");
-        $length = $request->get("length");
-        $this->draw = $request->get("draw",  $this->draw) + 1;
-        if($start> 0){
-            $page = $start / $length;
-            $page = $page + 1;
-        }else{
-            $page = 1;
+        
+        if(self::FORMAT_ARRAY_DATA_TABLES == $this->defaultFormat){
+            $start = $request->get("start",0);
+            $length = (int)$request->get("length",10);
+            $this->draw = $request->get("draw",  $this->draw) + 1;
+            if($start > 0){
+                $page = $start / $length;
+                $page = $page + 1;
+            }else{
+                $page = 1;
+            }
+            if(!is_int($length)){
+                $length = 10;
+            }
+            if(!is_int($page)){
+                $page = 1;
+            }
+            $this->setCurrentPage($page);
+            $this->setMaxPerPage($length);
         }
-        $this->setCurrentPage($page);
-        $this->setMaxPerPage($length);
+        
     }
 }

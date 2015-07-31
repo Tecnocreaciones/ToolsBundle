@@ -56,6 +56,7 @@ class EntityRepository extends Base implements ContainerAwareInterface
         $pagerfanta = new Paginator(new DoctrineORMAdapter($queryBuilder));
         $pagerfanta->setDefaultFormat($this->getFormatPaginator());
         $pagerfanta->setContainer($this->container);
+        $pagerfanta->setRequest($request);
         return $pagerfanta;
     }
     
