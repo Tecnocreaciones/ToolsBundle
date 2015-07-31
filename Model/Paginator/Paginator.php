@@ -132,11 +132,13 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         $this->request = $request;
         
         if(self::FORMAT_ARRAY_DATA_TABLES == $this->defaultFormat){
-            $start = $request->get("start",0);
-            $length = (int)$request->get("length",10);
-            $this->draw = $request->get("draw",  $this->draw) + 1;
+            //Ejemplo start(20) / length(10) = 2
+            $start = (int)$request->get("start",0);//Elemento inicio
+            $length = (int)$request->get("length",10);//Cantidad de elementos por pagina
+            $this->draw = $request->get("draw",  $this->draw) + 1;//No cache
+            
             if($start > 0){
-                $page = $start / $length;
+                $page = (int)($start / $length);
                 $page = $page + 1;
             }else{
                 $page = 1;
