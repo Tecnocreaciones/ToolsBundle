@@ -110,6 +110,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
     function setDefaultFormat($defaultFormat) 
     {
         $this->defaultFormat = $defaultFormat;
+        return $this;
     }
     
     protected function getLinks($route,array $parameters = array()){
