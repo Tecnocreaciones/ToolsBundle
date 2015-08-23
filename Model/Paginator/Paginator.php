@@ -47,6 +47,12 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         self::FORMAT_ARRAY_DEFAULT,self::FORMAT_ARRAY_DATA_TABLES
     );
             
+    /**
+     * Formato por defecto, compatible con ng-tables
+     * @param type $route
+     * @param array $parameters
+     * @return type
+     */
     function formatToArrayDefault($route = null,array $parameters = array()) {
         $links = array(
             'self'  => array('href' => ''),
@@ -77,6 +83,12 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         );
     }
     
+    /**
+     * Formato de paginacion de datatables
+     * @param type $route
+     * @param array $parameters
+     * @return type
+     */
     function formatToArrayDataTables($route = null,array $parameters = array()) {
         $results = $this->getCurrentPageResults()->getArrayCopy();
         $data = array(
@@ -89,6 +101,13 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         return $data;
     }
     
+    /**
+     * Convierte los resultados de la pagina actual en array
+     * @param type $route
+     * @param array $parameters
+     * @param type $format
+     * @return type
+     */
     function toArray($route = null,array $parameters = array(),$format = null) {
         if($format === null){
             $format = $this->defaultFormat;
@@ -99,6 +118,12 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         }
     }
     
+    /**
+     * Genera una url
+     * @param type $route
+     * @param array $parameters
+     * @return type
+     */
     protected function  generateUrl($route,array $parameters){
         return $this->container->get('router')->generate($route, $parameters, Router::ABSOLUTE_URL);
     }
@@ -107,12 +132,23 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         $this->container = $container;
     }
     
+    /**
+     * Formato de data a devolver
+     * @param type $defaultFormat
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator
+     */
     function setDefaultFormat($defaultFormat) 
     {
         $this->defaultFormat = $defaultFormat;
         return $this;
     }
     
+    /**
+     * Genera los links de navegacion entre una y otra pagina
+     * @param type $route
+     * @param array $parameters
+     * @return type
+     */
     protected function getLinks($route,array $parameters = array()){
         $links = array();
         if($route != null){
@@ -128,7 +164,11 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         }
         return $links;
     }
-            
+    
+    /**
+     * Establece el request actual para calculos en los formaters
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
     function setRequest(\Symfony\Component\HttpFoundation\Request $request) {
         $this->request = $request;
         
