@@ -77,7 +77,7 @@ class DataTableData
     public function getColumn($name)
     {
         if(!isset($this->columns[$name])){
-            throw new Exception(sprintf("Column name %s is not valid",$name));
+            return null;
         }
         return $this->columns[$name];
     }
