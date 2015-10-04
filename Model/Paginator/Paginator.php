@@ -34,9 +34,14 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
     protected $request;
 
     /**
-     * Devuelve un formato estandar de trabajo
+     * Devuelve un formato estandar de trabajo (ng-table)
      */
     const FORMAT_ARRAY_DEFAULT = 'default';
+    
+    /**
+     * Devuelve un formato estandar de trabajo
+     */
+    const FORMAT_ARRAY_STANDARD = 'standard';
     
     /**
      * Devuelve un formato para que pueda ser leido por el plugin DataTables de jQuery
@@ -44,7 +49,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
     const FORMAT_ARRAY_DATA_TABLES = 'dataTables';
     
     private $formatArray = array(
-        self::FORMAT_ARRAY_DEFAULT,self::FORMAT_ARRAY_DATA_TABLES
+        self::FORMAT_ARRAY_DEFAULT,self::FORMAT_ARRAY_DATA_TABLES,self::FORMAT_ARRAY_STANDARD
     );
             
     /**
@@ -80,6 +85,40 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
                 'results' => $results,
                 'paginator' => $paginator
             ),
+        );
+    }
+            
+    /**
+     * Formato estandarizado y sencillo
+     * @param type $route
+     * @param array $parameters
+     * @return type
+     */
+    function formatToArrayStandard($route = null,array $parameters = array()) {
+        $links = array(
+            'self'  => array('href' => ''),
+            'first' => array('href' => ''),
+            'last'  => array('href' => ''),
+            'next'  => array('href' => ''),
+            'previous'  => array('href' => ''),
+        );
+        $paginator = array(
+                        'currentPage' => $this->getCurrentPage(),
+                        'nroPages' => $this->getNbPages(),
+                        'maxPerPage' => $this->getMaxPerPage(),
+                        'totalResults' => $this->getNbResults(),
+                    );
+        
+        $pageResult = $this->getCurrentPageResults();
+        if(is_array($pageResult)){
+            $results = $pageResult;
+        }else{
+            $results = $this->getCurrentPageResults()->getArrayCopy();
+        }
+        return array(
+            'links' => $this->getLinks($route,$parameters),
+            'data' => $results,
+            'meta' => $paginator
         );
     }
     
@@ -192,6 +231,11 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
             }
             $this->setCurrentPage($page);
             $this->setMaxPerPage($length);
+        }else if(self::FORMAT_ARRAY_STANDARD == $this->defaultFormat){
+            $page = (int)$request->get("page",1);//Elemento inicio
+            $maxPerPage = (int)$request->get("maxPerPage",10);//Elemento inicio
+            $this->setCurrentPage($page);
+            $this->setMaxPerPage($maxPerPage);
         }
         
     }
