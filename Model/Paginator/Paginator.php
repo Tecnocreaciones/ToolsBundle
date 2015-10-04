@@ -104,8 +104,8 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         );
         $paginator = array(
                         'currentPage' => $this->getCurrentPage(),
-                        'nroPages' => $this->getNbPages(),
                         'maxPerPage' => $this->getMaxPerPage(),
+                        'totalPages' => $this->getNbPages(),
                         'totalResults' => $this->getNbResults(),
                     );
         
