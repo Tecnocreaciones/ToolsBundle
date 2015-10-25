@@ -117,8 +117,8 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         }
         return array(
             'links' => $this->getLinks($route,$parameters),
+            'meta' => $paginator,
             'data' => $results,
-            'meta' => $paginator
         );
     }
     
