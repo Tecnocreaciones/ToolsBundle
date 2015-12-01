@@ -1,9 +1,10 @@
     {% spaceless %}
-        <input type="text" name="{{ full_name }}_autocomplete_input" id="{{ id }}_autocomplete_input" value=""
+        <select type="text" name="{{ full_name }}" id="{{ id }}_autocomplete_input" value=""
             {%- if read_only %} readonly="readonly"{% endif -%}
             {%- if disabled %} disabled="disabled"{% endif -%}
             {%- if required %} required="required"{% endif %}
-        />
+        >
+        </select>
         <div id="{{ id }}_hidden_inputs_wrap">
             {% if multiple -%}
                 {%- for idx, val in value if idx~'' != '_labels' -%}
@@ -15,7 +16,6 @@
         </div>
 
         <script type="text/javascript">
-{#            (function ($) {#}
             $(document).ready(function(){
                 
                 var autocompleteInput = $('#{{ id }}_autocomplete_input');
@@ -30,23 +30,22 @@
                     multiple: {{ multiple ? 'true' : 'false' }},
                     width: '{{ width }}',
                     dropdownAutoWidth: {{ dropdown_auto_width ? 'true' : 'false' }},
-                    containerCssClass: '{{ container_css_class ~ ' form-control' }}',
-                    dropdownCssClass: '{{ dropdown_css_class }}',
                     ajax: {
                         url:  '{{ url ?: path(route.name, route.parameters|default([])) }}',
                         dataType: 'json',
-                        quietMillis: 100,
-                        data: function (term, page) { // page is the one-based page number tracked by Select2
+                        delay: 250,
+                        data: function (params) { // page is the one-based page number tracked by Select2
                             {% block sonata_type_model_autocomplete_ajax_request_parameters %}
                             return {
                                     //search term
-                                    '{{ req_param_name_search }}': term,
+                                    '{{ req_param_name_search }}': params.term,
+                                    page: params.page,
 
                                     // page size
                                     '{{ req_param_name_items_per_page }}': {{ items_per_page }},
 
                                     // page number
-                                    '{{ req_param_name_page_number }}': page,
+                                    '{{ req_param_name_page_number }}': params.page,
                                     'entity_alias': '{{ entity_alias }}',
 
                                     {% if context == 'filter' %}
@@ -66,63 +65,62 @@
                             };
                             {% endblock %}
                         },
-                        results: function (data, page) {
+                        processResults: function (data, params) {
+                            params.page = params.page || 1;
                             // notice we return the value of more so Select2 knows if more results can be loaded
-                            return {results: data.items, more: data.more};
+                            return {
+                                results: data.items, 
+                                pagination: {
+                                  more: data.more
+                                }
+                            };
                         }
                     },
-                    formatResult: function (item) {
-                        return {% block sonata_type_model_autocomplete_dropdown_item_format %}'<div class="{{ dropdown_item_css_class }}">'+item.label+'<\/div>'{% endblock %};// format of one dropdown item
+                    templateResult: function (item) {
+                        if(item.loading === true){
+                            return
+                        }
+                        return {% block sonata_type_model_autocomplete_dropdown_item_format %}'<div class="{{ dropdown_item_css_class }}">'+item.name+'<\/div>'{% endblock %};// format of one dropdown item
                     },
-                    formatSelection: function (item) {
-                        return {% block sonata_type_model_autocomplete_selection_format %}item.label{% endblock %};// format selected item '<b>'+item.label+'</b>';
+                    templateSelection: function (item) {
+                        return {% block sonata_type_model_autocomplete_selection_format %}item.name{% endblock %};// format selected item '<b>'+item.label+'</b>';
                     },
                     escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
                 });
 
-                autocompleteInput.on('change', function(e) {
+                autocompleteInput.on('select2:select', function(e) {
+                    var addedItems = e.params.data;
 
-                    // console.log('change '+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
+                    {% if multiple %}
+                        if(!$.isArray(addedItems)) {
+                            addedItems = [addedItems];
+                        }
 
-                    // remove input
-                    if (undefined !== e.removed && null !== e.removed) {
-                        var removedItems = e.removed;
+                        var length = addedItems.length;
+                        for (var i = 0; i < length; i++) {
+                            el = addedItems[i];
+                            $('#{{ id }}_hidden_inputs_wrap').append('<input type="hidden" name="{{ full_name }}[]" value="'+el.id+'" />');
+                        }
+                    {%- else -%}
+                        $('#{{ id }}_hidden_inputs_wrap input:hidden').val(addedItems.id);
+                    {%- endif %}
+                });
+                autocompleteInput.on('select2:unselect', function(e) {
+                    var removedItems = e.params.data;
 
-                        {% if multiple %}
-                            if(!$.isArray(removedItems)) {
-                                removedItems = [removedItems];
-                            }
+                    {% if multiple %}
+                        if(!$.isArray(removedItems)) {
+                            removedItems = [removedItems];
+                        }
 
-                            var length = removedItems.length;
-                            for (var i = 0; i < length; i++) {
-                                el = removedItems[i];
-                                $('#{{ id }}_hidden_inputs_wrap input:hidden[value="'+el.id+'"]').remove();
-                            }
-                        {%- else -%}
-                            $('#{{ id }}_hidden_inputs_wrap input:hidden').val('');
-                        {%- endif %}
-                    }
-
-                    // add new input
-                    var el = null;
-                    if (undefined !== e.added) {
-
-                        var addedItems = e.added;
-
-                        {% if multiple %}
-                            if(!$.isArray(addedItems)) {
-                                addedItems = [addedItems];
-                            }
-
-                            var length = addedItems.length;
-                            for (var i = 0; i < length; i++) {
-                                el = addedItems[i];
-                                $('#{{ id }}_hidden_inputs_wrap').append('<input type="hidden" name="{{ full_name }}[]" value="'+el.id+'" />');
-                            }
-                        {%- else -%}
-                            $('#{{ id }}_hidden_inputs_wrap input:hidden').val(addedItems.id);
-                        {%- endif %}
-                    }
+                        var length = removedItems.length;
+                        for (var i = 0; i < length; i++) {
+                            el = removedItems[i];
+                            $('#{{ id }}_hidden_inputs_wrap input:hidden[value="'+el.id+'"]').remove();
+                        }
+                    {%- else -%}
+                        $('#{{ id }}_hidden_inputs_wrap input:hidden').val('');
+                    {%- endif %}
                 });
 
                 // Initialise the autocomplete
@@ -132,14 +130,20 @@
                     data = {%- if multiple -%}[ {%- endif -%}
                     {%- for idx, val  in value if idx~'' != '_labels' -%}
                         {%- if not loop.first -%}, {% endif -%}
-                        {id: '{{ val|e('js') }}', label:'{{ value['_labels'][idx]|e('js') }}'}
+                        {id: '{{ val|e('js') }}', name:'{{ value['_labels'][idx]|e('js') }}'}
                     {%- endfor -%}
                     {%- if multiple -%} ] {%- endif -%};
                 {% endif -%}
 
-                if (undefined==data.length || 0<data.length) { // Leave placeholder if no data set
+                if (undefined == data.length || 0 < data.length) { // Leave placeholder if no data set
                     autocompleteInput.select2('data', data);
+                    autocompleteInput.select2('val', data);
                 }
+                {% if multiple -%}
+                    
+                {% else -%}
+{#                    console.log("{{ value[0]|default('') }}");#}
+                {% endif -%}
 
                 // remove unneeded autocomplete text input before form submit
                 $('#{{ id }}_autocomplete_input').closest('form').submit(function()
@@ -148,7 +152,6 @@
                     return true;
                 });
             });
-{#            })(jQuery);#}
         </script>
     {% endspaceless %}
 

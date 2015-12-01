@@ -41,7 +41,7 @@ class RolePatternVoter extends RoleVoter {
     protected function extractRoles(TokenInterface $token) {
         return $this->roleHierarchy->getReachableRoles($token->getRoles());
     }
-
+    
     public function vote(TokenInterface $token, $object, array $attributes) {
         $result = VoterInterface::ACCESS_ABSTAIN;
         $roles = $this->extractRoles($token);

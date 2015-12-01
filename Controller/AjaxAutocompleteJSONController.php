@@ -106,11 +106,17 @@ class AjaxAutocompleteJSONController extends Controller
         }
         $queryBuilder
             ->orderBy($alias.".".$property)
-            ->setMaxResults($maxRows)
+//            ->setMaxResults($maxRows)
             ;
-        
-        $results = $queryBuilder->getQuery()->getResult();
-        
+        $paginator = new \Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator(new \Pagerfanta\Adapter\DoctrineORMAdapter($queryBuilder));
+        $paginator
+                ->setMaxPerPage($maxRows)
+                ;
+        $results = $paginator->getCurrentPageResults();
+        $more = false;
+        if($paginator->hasNextPage()){
+            $more = true;
+        }
 //            print_r($queryBuilder->getQuery()->getSQL());
 //        $results = $em->createQuery(
 //            'SELECT e.' . $property . '
@@ -126,14 +132,17 @@ class AjaxAutocompleteJSONController extends Controller
 //            $res[] = $r[$entityInf['property']];
             $items[] = array(
                 'id'    => $entity->getId(),
-                'label' => (string)$entity,
+                'name' => (string)$entity,
             );
         }
 
         return new \Symfony\Component\HttpFoundation\JsonResponse(array(
-            'status' => 'OK',
-            'more'   => false,
-            'items'  => $items
+//            'status' => 'OK',
+//            'more'   => false,
+            'items'  => $items,
+            'total_count'  => $paginator->getNbResults(),
+            'incomplete_results' => false,
+            'more' => $more,
         ));
 
     }
