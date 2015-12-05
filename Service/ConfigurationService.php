@@ -40,16 +40,30 @@ class ConfigurationService implements ContainerAwareInterface
     private $availableConfiguration;
             
     /**
-     *
-     * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration 
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration
      */
     private $configurations = null;
-    
+    /**
+     *
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationWrapper
+     */
+    private $configurationsWrapper;
+            
     function __construct(array $options = array())
     {
         $this->setOptions($options);
+        $this->configurationsWrapper = [];
     }
     
+    public function addConfigurationManager(\Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager $configurationManager) 
+    {
+        if(isset($this->configurationsManager[$configurationManager->getId()])){
+            throw new \RuntimeException(sprintf("The configurationManager id '%s' already added",$configurationManager->getId()));
+        }
+        $this->configurationsManager[$configurationManager->getId()] = $configurationManager;
+        return $this;
+    }
+
     /**
      * Sets options.
      *

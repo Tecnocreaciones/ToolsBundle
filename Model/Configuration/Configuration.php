@@ -32,6 +32,14 @@ abstract class Configuration
     protected $key;
     
     /**
+     * Id wrapper
+     * 
+     * @var string
+     * @ORM\Column(name="idWrapper", type="string",length=200,nullable=true)
+     */
+    protected $idWrapper;
+    
+    /**
      * Valor de configuracion
      * 
      * @var string
@@ -165,6 +173,15 @@ abstract class Configuration
         return $this;
     }
     
+    public function getIdWrapper() {
+        return $this->idWrapper;
+    }
+
+    public function setIdWrapper($idWrapper) {
+        $this->idWrapper = $idWrapper;
+        return $this;
+    }
+        
     public function __toString() {
         return $this->getDescription()?: '-';
     }
