@@ -125,7 +125,7 @@ class ModelManager
         if (!isset($id)) {
             return null;
         }
-
+//        var_dump($id);
         $values = array_combine($this->getIdentifierFieldNames($class), explode(self::ID_SEPARATOR, $id));
 
         return $this->getEntityManager($class)->getRepository($class)->find($values);

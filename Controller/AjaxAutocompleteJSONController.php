@@ -132,7 +132,7 @@ class AjaxAutocompleteJSONController extends Controller
 //            $res[] = $r[$entityInf['property']];
             $items[] = array(
                 'id'    => $entity->getId(),
-                'name' => (string)$entity,
+                'text' => (string)$entity,
             );
         }
 

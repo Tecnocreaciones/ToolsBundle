@@ -74,10 +74,20 @@ class ModelToIdPropertyTransformer implements DataTransformerInterface
             if ($key === '_labels') {
                 continue;
             }
-
-            $collection->add($this->modelManager->find($this->className, $id));
+            if ($key === 'selected' && is_array($id)) {
+                foreach ($id as $item) {
+                    $model = $this->modelManager->find($this->className, $item['id']);
+                    if(!$collection->contains($model)){
+                        $collection->add($model);
+                    }
+                }
+            }else{
+                $model = $this->modelManager->find($this->className, $id);
+                if(!$collection->contains($model)){
+                    $collection->add($model);
+                }
+            }
         }
-
         return $collection;
     }
 
@@ -114,6 +124,7 @@ class ModelToIdPropertyTransformer implements DataTransformerInterface
             throw new \RuntimeException('Please define "property" parameter.');
         }
 
+        $result['selected'] = [];
         foreach ($collection as $entity) {
             $id  = current($this->modelManager->getIdentifierValues($entity));
 
@@ -133,6 +144,7 @@ class ModelToIdPropertyTransformer implements DataTransformerInterface
 
             $result[] = $id;
             $result['_labels'][] = $label;
+            $result['selected'][] = ["id" => $id,"text" => $label];
         }
 
         return $result;
