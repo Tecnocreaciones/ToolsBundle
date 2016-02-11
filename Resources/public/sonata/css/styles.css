@@ -1,0 +1,21 @@
+/*
+This file is part of the TecnoReady Solutions C.A. package.
+
+(c) www.tecnoready.com
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+*/
+/* 
+    Created on : 11/02/2016, 05:32:12 PM
+    Author     : Carlos Mendoza <inhack20@gmail.com>
+*/
+
+table.sonata-ba-list td {
+    overflow: visible;
+}
+@media (min-width: 768px) {
+    .table-responsive {
+        overflow: visible;
+    }
+}

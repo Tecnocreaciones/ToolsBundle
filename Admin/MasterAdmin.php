@@ -24,6 +24,8 @@ use Sonata\AdminBundle\Show\ShowMapper;
  */
 abstract class MasterAdmin extends Admin
 {
+    private $reflectionClass;
+    
     protected function configureShowFields(ShowMapper $show) 
     {
         $show
@@ -81,5 +83,14 @@ abstract class MasterAdmin extends Admin
     protected function getChoiceEmptyValue()
     {
         return 'choice.empty_value';
+    }
+    
+    protected function hasProperty($property)
+    {
+        if(!$this->reflectionClass){
+            $this->reflectionClass = new \ReflectionClass($this->getClass());
+            
+        }
+        return $this->reflectionClass->hasProperty($property);
     }
 }
