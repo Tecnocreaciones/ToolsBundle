@@ -135,3 +135,48 @@ $(function(){ //DOM Ready
         //this = the widget-box
    });
 });
+
+
+
+###Configuration Codemirror
+Add default parameters to `config.yml`:
+``` yaml
+twig:
+    form:
+        resources:
+            - 'TecnocreacionesToolsBundle:ExtraFormTypes:code_mirror_widget.html.twig'
+
+assetic:
+    bundles:
+        - # ... other bundles
+        - TecnocreacionesToolsBundle
+
+tecnocreaciones_tools:
+    extra_form_types:
+        code_mirror:
+                parameters:
+                    mode: twig
+                    lineNumbers: true
+                    lineWrapping: true
+                    theme: 3024-day
+                mode_dirs:
+                - @TecnocreacionesToolsBundle/Resources/public/codemirror/js/mode
+                themes_dirs:
+                - @TecnocreacionesToolsBundle/Resources/public/codemirror/css/theme
+```
+
+
+Install assets:
+``` bash
+$ ./app/console assets:install web --symlink
+```
+
+###Usage
+``` php
+ $builder->add('content', 'code_mirror', array(
+    'required' => true,
+    'parameters' => array(
+         'lineNumbers' => 'true'
+     )
+ ));
+```

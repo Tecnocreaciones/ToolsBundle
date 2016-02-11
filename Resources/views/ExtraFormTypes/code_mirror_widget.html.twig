@@ -1,0 +1,28 @@
+{% form_theme form _self %}
+
+{% block code_mirror_widget %}
+    {% spaceless %}
+        <textarea id="{{ id }}" name="{{ name }}">{{ data }}</textarea>
+        {% if code_mirror_is_first_call() %}
+            {% javascripts '@TecnocreacionesToolsBundle/Resources/public/codemirror/js/codemirror.js'  %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endif %}
+        {% for mode_path in code_mirror_get_js_mode(parameters) %}
+            <script src="{{ asset(mode_path) }}" type="text/javascript"></script>
+        {% endfor %}
+
+        {% if code_mirror_get_css_theme(parameters) %}
+            {% set theme = code_mirror_get_css_theme(parameters) %}
+
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset("/bundles/tecnocreacionestools/codemirror/css/theme/"~parameters['theme']) }}.css" />
+            {% stylesheets '@TecnocreacionesToolsBundle/Resources/public/codemirror/css/codemirror.css' %}
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset_url }}" />
+            {% endstylesheets %}
+        {% endif %}
+
+        <script>
+            var code_mirror_{{ id }} = CodeMirror.fromTextArea(document.getElementById("{{ id }}"), {{ code_mirror_parameters_render(parameters)|raw }});
+        </script>
+    {% endspaceless %}
+{% endblock %}
