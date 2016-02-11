@@ -1,0 +1,25 @@
+{#
+
+This file is part of the Sonata package.
+
+(c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+
+#}
+
+{% extends admin.getTemplate('base_list_field') %}
+
+{% block field %}
+    <div class="btn-group">
+       <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           {{ "link_actions"|trans({},"SonataAdminBundle") }} <span class="caret"></span>
+      </button>
+        <ul class="dropdown-menu">
+        {% for actions in field_description.options.actions %}
+            {% include actions.template %}
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

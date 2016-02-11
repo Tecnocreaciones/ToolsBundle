@@ -1,0 +1,8 @@
+link_action_trash: 'Papelera'
+action_untrash: 'Mueve el elemento de la papelera a su lista original'
+action_restore: 'Restaurar elemento'
+title_restore: 'Restaurar elemento'
+message_restore_confirmation: '¿Desea mover el elemento de la papelera a su lista original?'
+btn_restore: 'Restaurar'
+restore_or: 'o'
+flash_untrash_successfull: 'Elemento se recupero de la papelera correctamente.'
