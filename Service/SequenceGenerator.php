@@ -147,11 +147,15 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         
         $posnumstart = strpos($maskwithnocode, $maskcounter); // Pos of counter in final string (from 0 to ...)
         $sqlstring = 'SUBSTRING(' .$field . ', ' . ($posnumstart) . ', ' . strlen($maskcounter) . ')';
+        $date = new \DateTime();
         $maskLike = trim($mask);
         $maskLike = str_replace("%", "_", $maskLike);
         // Replace protected special codes with matching number of _ as wild card caracter
         foreach ($this->getDefaultMasks() as $key => $value) {
-            $maskLike = preg_replace('/\{'.$key.'\}/i', str_pad('',strlen($key),'_'), $maskLike);
+            //Remplazar las mascaras definidas por defecto por sus valores actuales
+            $valueReplace = $date->format($value['date_format']);
+            $valueReplace = str_pad($valueReplace, $value['str_pad_left']['length'],$value['str_pad_left']['pad'],STR_PAD_LEFT);
+            $maskLike = preg_replace('/\{'.$key.'\}/i', $valueReplace, $maskLike);
         }
         foreach ($this->getAdditionalMasks() as $key => $value) {
             if(isset($parameters[$value])){
@@ -159,7 +163,6 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
             }
         }
         $maskLike = str_replace($this->dol_string_nospecial('{' . $masktri . '}'), str_pad("", strlen($maskcounter), "_"), $maskLike);
-        
         // Get counter in database
         $counter = 0;
         $qb->select('MAX('.$sqlstring.') as v')
@@ -190,7 +193,6 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         }
         // Build numFinal
         $numFinal = $mask;
-        $date = new \DateTime();
         // We replace special codes except refclient
         foreach ($this->getDefaultMasks() as $key => $value) {
             $numFinal = preg_replace('/\{'.$key.'\}/i',$date->format($value['date_format']), $numFinal);
@@ -296,10 +298,10 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      */
     private function getDefaultMasks() {
         return array(
-            'yyyy' => array('date_format' => 'Y'),
-            'yy' => array('date_format' => 'y'),
-            'mm' => array('date_format' => 'm'),
-            'dd' => array('date_format' => 'd'),
+            'yyyy' => array('date_format' => 'Y','str_pad_left' => array('pad' => '0','length'=> 4)),
+            'yy' => array('date_format' => 'y','str_pad_left' => array('pad' => '0','length'=> 2)),
+            'mm' => array('date_format' => 'm','str_pad_left' => array('pad' => '0','length'=> 2)),
+            'dd' => array('date_format' => 'd','str_pad_left' => array('pad' => '0','length'=> 2)),
         );
     }
     
