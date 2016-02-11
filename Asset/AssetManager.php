@@ -25,14 +25,20 @@ class AssetManager
     protected $cacheDriver;
 
     protected $env;
-
-    function __construct($fileLocator, $modeDirs, $themesDirs, $cacheDir, $env)
+    
+    protected $codemirrorLib;
+    
+    function __construct($fileLocator, $modeDirs, $themesDirs,$codemirrorLib, $cacheDir, $env)
     {
         $this->fileLocator = $fileLocator;
         $this->modeDirs = $modeDirs;
         $this->themesDirs = $themesDirs;
         $this->cacheDriver = new PhpFileCache($cacheDir);
         $this->env = $env;
+        if($codemirrorLib === null){
+            $codemirrorLib = "/bundles/tecnocreacionestools/codemirror/js/codemirror.js";
+        }
+        $this->codemirrorLib = $codemirrorLib;
         #check env and fetch cache
         if ($this->env == 'prod' && $cacheModes = $this->cacheDriver->fetch(static::CACHE_MODES_NAME)) {
             $this->modes = $cacheModes;
@@ -79,6 +85,10 @@ class AssetManager
     public function getThemes()
     {
         return $this->themes;
+    }
+    
+    public function getCodemirrorLib() {
+        return $this->codemirrorLib;
     }
 
     /**

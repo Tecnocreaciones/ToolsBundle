@@ -10,7 +10,7 @@ use Assetic\Asset\FileAsset;
 class CodeMirrorExtension extends \Twig_Extension
 {
     /**
-     * @var AssetManager
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Asset\AssetManager
      */
     protected $assetManager;
 
@@ -28,6 +28,7 @@ class CodeMirrorExtension extends \Twig_Extension
             'code_mirror_is_first_call' => new \Twig_Function_Method($this, 'isFirstCall'),
             'code_mirror_get_js_mode' => new \Twig_Function_Method($this, 'code_mirror_get_js_mode'),
             'code_mirror_get_css_theme' => new \Twig_Function_Method($this, 'code_mirror_get_css_theme'),
+            'code_mirror_get_lib' => new \Twig_Function_Method($this, 'code_mirror_get_lib'),
         );
     }
 
@@ -46,6 +47,11 @@ class CodeMirrorExtension extends \Twig_Extension
     public function code_mirror_get_js_mode($parameters)
     {
         return $this->assetManager->getMode($parameters['mode']);
+    }
+
+    public function code_mirror_get_lib()
+    {
+        return $this->assetManager->getCodemirrorLib();
     }
 
     public function code_mirror_get_css_theme($parameters)

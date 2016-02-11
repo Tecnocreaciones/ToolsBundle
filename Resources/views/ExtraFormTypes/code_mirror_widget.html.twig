@@ -2,11 +2,9 @@
 
 {% block code_mirror_widget %}
     {% spaceless %}
-        <textarea id="{{ id }}" name="{{ name }}">{{ data }}</textarea>
+        <textarea id="{{ id }}" name="{{ full_name }}">{{ data }}</textarea>
         {% if code_mirror_is_first_call() %}
-            {% javascripts '@TecnocreacionesToolsBundle/Resources/public/codemirror/js/codemirror.js'  %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
+                <script type="text/javascript" src="{{ asset(code_mirror_get_lib()) }}"></script>
         {% endif %}
         {% for mode_path in code_mirror_get_js_mode(parameters) %}
             <script src="{{ asset(mode_path) }}" type="text/javascript"></script>

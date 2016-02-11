@@ -153,6 +153,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->arrayNode('code_mirror')
                                 ->children()
+                                  ->scalarNode('codemirror_compressed')->defaultNull()->end()
                                   ->scalarNode('form_type')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Form\Type\CodeMirrorType')->end()
                                   ->scalarNode('twig_extension')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\CodeMirrorExtension')->end()
                                   ->arrayNode('parameters')

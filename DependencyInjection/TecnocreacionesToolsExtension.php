@@ -198,6 +198,7 @@ class TecnocreacionesToolsExtension extends Extension
             $loader->load('services/extra_form_types.xml');
             $container->setParameter('tecnocreaciones.extra_form_types.autocomplete_entities', $config['extra_form_types']['autocomplete_entities']);
             
+            $container->setParameter('code_mirror.codemirror_compressed', $codeMirror['codemirror_compressed']);
             $container->setParameter('code_mirror.form_type', $codeMirror['form_type']);
             $container->setParameter('code_mirror.parameters', $codeMirror['parameters']);
             $container->setParameter('code_mirror.twig.extension', $codeMirror['twig_extension']);
