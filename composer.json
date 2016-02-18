@@ -15,7 +15,8 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "*",
-        "doctrine/orm": "*"
+        "doctrine/orm": "*",
+        "zendframework/zend-json": "2.0.*"
     },
     "autoload": {
         "psr-0": { "Tecnocreaciones\\Bundle\\ToolsBundle": "" }
