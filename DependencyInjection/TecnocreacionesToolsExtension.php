@@ -235,6 +235,11 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setDefinition('tecnocreaciones_tools.template_utils_extension', $extensionToolsDefinition);
         }
         
+        if($config['link_generator']['enable'] === true)
+        {
+            $loaderYml->load('services/link_generator.yml');
+        }
+        
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
@@ -245,5 +250,7 @@ class TecnocreacionesToolsExtension extends Extension
         $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.enable', $config['twig']['breadcrumb']);
         $container->setParameter('tecnocreaciones_tools.twig.page_header.enable', $config['twig']['page_header']);
         $container->setParameter('tecnocreaciones_tools.twig.extra_form_types.enable', $config['extra_form_types']['enable']);
+        
+        $container->setParameter('tecnocreaciones_tools.service.link_generator.enable', $config['link_generator']['enable']);
     }
 }

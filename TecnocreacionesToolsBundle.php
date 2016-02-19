@@ -14,5 +14,6 @@ class TecnocreacionesToolsBundle extends Bundle
         
         $container->addCompilerPass(new DependencyInjection\Compiler\UnitTypePass());
         $container->addCompilerPass(new DependencyInjection\Compiler\WidgetBoxPass());
+        $container->addCompilerPass(new DependencyInjection\Compiler\LinkGeneratorPass());
     }
 }

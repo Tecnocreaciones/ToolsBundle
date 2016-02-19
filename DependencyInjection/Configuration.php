@@ -207,7 +207,15 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 
+                
                 ->end()
+                    ->arrayNode('link_generator')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
+                            ->scalarNode('link_generator_item_service')->defaultNull()->end()
+                        ->end()
+                    ->end()
         ;
         
         return $treeBuilder;

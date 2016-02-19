@@ -24,15 +24,28 @@ use Sonata\AdminBundle\Show\ShowMapper;
  */
 abstract class MasterAdmin extends Admin
 {
+    const FORMAT_DATE_TIME = 'Y-m-d h:i:s a';
     private $reflectionClass;
     
     protected function configureShowFields(ShowMapper $show) 
     {
-        $show
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('enabled')
-            ;
+        $fieldDate = ['type' => 'datetime','parameters' => ['format' => self::FORMAT_DATE_TIME]];
+        $fields = array(
+            'description' => ['type' => null],
+            'createdAt' => $fieldDate,
+            'updatedAt' => $fieldDate,
+            'deletedAt' => $fieldDate,
+            'enabled');
+        foreach ($fields as $key => $value) {
+            if($this->hasProperty($key) && !$show->has($key)){
+                $type = $value['type'];
+                $parameters = [];
+                if(isset($value['parameters'])){
+                    $parameters = $value['parameters'];
+                }
+                $show->add($key,$type,$parameters);
+            }
+        }
     }
     
     protected function configureListFields(ListMapper $list) 
