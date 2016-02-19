@@ -54,6 +54,8 @@ tecnocreaciones_tools:
                 role: ROLE_ADMIN
                 search: contains
     # extra Inspired in ShtumiUsefulBundle
+    link_generator:
+        enable: true
 sonata_admin:
     dashboard:
             groups:
@@ -180,3 +182,12 @@ $ ./app/console assets:install web --symlink
      )
  ));
 ```
+
+
+Configurar: link_generator
+    Crear una clase que herede de "LinkGeneratorItem" e implementar sus metodos.
+    Luego agregarlo como servicio con la tag "link_generator.item"
+    app.my_link_generator_item:
+        class: Coramer\Sigtec\WebBundle\Service\MyLinkGeneratorItem
+        tags:
+            - { name: link_generator.item }

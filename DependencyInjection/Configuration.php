@@ -213,7 +213,6 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
-                            ->scalarNode('link_generator_item_service')->defaultNull()->end()
                         ->end()
                     ->end()
         ;
