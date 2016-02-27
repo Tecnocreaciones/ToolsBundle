@@ -65,7 +65,7 @@ class LinkGeneratorService implements ContainerAwareInterface
         $this->iconsDefinition = $iconsDefinition;
         $defaultConfig = array(
             'type' => self::TYPE_LINK_DEFAULT,
-            'icon' => 'fa fa-2x fa-flag',
+            'icon' => null,
             'method' => 'renderDefault',
             'routeParameters' => array(),
             'labelMethod' => null,
@@ -113,7 +113,7 @@ class LinkGeneratorService implements ContainerAwareInterface
         $labelMethod = $entityConfig['labelMethod'];
         
         if($labelMethod !== null){
-            $label = call_user_func_array($entity, $labelMethod,array());
+            $label = call_user_func_array([$entity, $labelMethod],array());
         }else{
             $label = (string)$entity;
         }
@@ -135,7 +135,10 @@ class LinkGeneratorService implements ContainerAwareInterface
             return $entityConfig['icon'];
         }
         
-        $icon = sprintf('<i class="%s"></i>',$entityConfig['icon']);
+        $icon = "";
+        if($entityConfig['icon'] !== null){
+            $icon = sprintf('<i class="%s"></i>',$entityConfig['icon']);
+        }
         $href = $this->buildUrl($entity, $entityConfig);
         $entityConfig['url'] = $href;
         if(isset($parameters['_onlyUrl']) && $parameters['_onlyUrl'] === true){
@@ -183,7 +186,11 @@ class LinkGeneratorService implements ContainerAwareInterface
             $entityClass = \Doctrine\Common\Util\ClassUtils::getRealClass($entityClass);
         }
         if(!isset($this->configsObjects[$entityClass])){
-            throw new Exception(sprintf('The config for entity "%s", not defined',$entityClass));
+            $itemClassLoaded = [];
+            foreach ($this->linkGeneratorItems as $linkGeneratorItem){
+                $itemClassLoaded[] = get_class($linkGeneratorItem);
+            }
+            throw new Exception(sprintf('The config for entity "%s", not defined. Please define in LinkGeneratorItem already load (%s)',$entityClass,  implode(",",$itemClassLoaded)));
         }
         return $this->configsObjects[$entityClass];
     }
