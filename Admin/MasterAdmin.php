@@ -81,11 +81,11 @@ abstract class MasterAdmin extends Admin
     protected function configureFormFields(FormMapper $form) 
     {
         if($this->hasProperty("enabled")){
-            $form
-                ->add('enabled',null,array(
-                    "required" => false,
-                ))
-                ;
+        $form
+            ->add('enabled',null,array(
+                "required" => false,
+            ))
+            ;
         }
     }
     
