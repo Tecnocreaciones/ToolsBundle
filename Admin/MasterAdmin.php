@@ -50,9 +50,10 @@ abstract class MasterAdmin extends Admin
     
     protected function configureListFields(ListMapper $list) 
     {
+        if($this->hasProperty("enabled")){
+            $list->add('enabled',null,array('editable' => true));
+        }
         $list
-//            ->add('createdAt')
-            ->add('enabled',null,array('editable' => true))
             ->add('_action', 'show', array(
                 'template' => 'TecnocreacionesToolsBundle:SonataAdmin/CRUD:list__action.html.twig',
                 'actions' => array(
@@ -79,18 +80,22 @@ abstract class MasterAdmin extends Admin
     
     protected function configureFormFields(FormMapper $form) 
     {
-        $form
-            ->add('enabled',null,array(
-                "required" => false,
-            ))
-            ;
+        if($this->hasProperty("enabled")){
+            $form
+                ->add('enabled',null,array(
+                    "required" => false,
+                ))
+                ;
+        }
     }
     
     protected function configureDatagridFilters(DatagridMapper $filter) 
     {
-        $filter
-            ->add('enabled')
-            ;
+        if($this->hasProperty("enabled")){
+            $filter
+                ->add('enabled')
+                ;
+        }
     }
     
     protected function getChoiceEmptyValue()
