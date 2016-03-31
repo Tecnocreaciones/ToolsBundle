@@ -1,6 +1,7 @@
-
 {% import searchService.standardFilters as standardFilters %}
+
 {% set translationDomain = "titles" %}
+
 {% trans_default_domain translationDomain %}
 {% set totalGroup = 0 %}
 {% for filterBlock in filterBlocks %}
@@ -12,42 +13,48 @@
     {% set typeTabs = "side-tabs" %}
 {% endif %}
 
+{% for filterBlock in filterBlocks %}
+    {% set groups = filterBlock.groupsFilters %}
+    {% set style = null %}
+    {% if filterBlock.parameter(constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilterBlock::PARAMETER_STYLE')) is not null %}
+        {% set style = "style='"~filterBlock.parameter(constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilterBlock::PARAMETER_STYLE'))~"'" %}
+    {% endif %}
+    {{ standardFilters.optionsBlock() }}
+    {{ standardFilters.eraserAll() }}
 
-<div class="{{ typeTabs }} margin-bottom">
-    {% for filterBlock in filterBlocks %}
-        {% set groups = filterBlock.groupsFilters %}
-        {% set style = null %}
-        {% if filterBlock.parameter(constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilterBlock::PARAMETER_STYLE')) is not null %}
-            {% set style = "style='"~filterBlock.parameter(constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilterBlock::PARAMETER_STYLE'))~"'" %}
-        {% endif %}
-        {{ standardFilters.optionsBlock() }}
-        {{ standardFilters.eraserAll() }}
-        <ul class="tabs">
+    <div class="tabbable tabs-left">
+        <ul class="nav nav-tabs" id="myTab3">
             {% for group in groups %}
                 {% if loop.first %}
-                    <li class="active">
-                        <a id="tab_{{ loop.index }}" href="#tab-{{ loop.index }}" class="with-tooltip" tooltip="{{ group|trans({},translationDomain) }}">
+                    <li class="tab-sky active">
+                        <a data-toggle="tab" id="tab_{{ loop.index }}" href="#tab-{{ loop.index }}" tooltip="{{ group|trans({},translationDomain) }}">
                             {{ group|trans({},translationDomain) }}
                         </a>
                     </li>
                 {% else %}
-                    <li>
-                        <a id="tab_{{ loop.index }}" href="#tab-{{ loop.index }}" class="with-tooltip" tooltip="{{ group|trans({},translationDomain) }}">
+                    <li class="tab-red">
+                        <a data-toggle="tab" id="tab_{{ loop.index }}" href="#tab-{{ loop.index }}" tooltip="{{ group|trans({},translationDomain) }}">
                             {{ group|trans({},translationDomain) }}
                         </a>
-                    </li>  
+                    </li>
                 {% endif %}
             {% endfor %}
         </ul>
-        <div class="tabs-content" {{ style|raw }}>
+
+        <div class="tab-content" {{ style|raw }}>
+
             {% for group in groups %}
                 {% set entityFilters = filterBlock.filtersByGroup(group) %}
-                <div id="tab-{{ loop.index }}">
+                <div id="tab-{{ loop.index }}" class="tab-pane{% if loop.first %} active{% endif %}">
                     <div class="with-padding">
                         <div class="columns">
                             {% for filter in entityFilters %}
                                 {% set typeFilter = filter.typeFilter %}
-                                {% if typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_YES_NO') %}
+                                {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
+{#                                {% from groupFilter.macroTemplate import typeFilter %}#}
+                                {{ searchService.renderFilter(groupFilter,typeFilter) }}
+{#                                {{ attribute(standardFilters, typeFilter,[filter.label,filter.modelName]) }}#}
+                                {#{% if typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_YES_NO') %}
                                     {{ standardFilters.yesNo(filter.label,filter.modelName) }}
                                 {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_INPUT') %}
                                     {{ standardFilters.input(filter.label,filter.modelName) }}
@@ -58,11 +65,9 @@
                                 {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_TODO') %}
                                     {{ standardFilters.todo(filter.label) }}
                                 {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_INPUT_FROM_TO') %}
-                                    {% set modelFrom = filter.modelName ~ "_from" %}
-                                    {% set modelTo = filter.modelName ~ "_to" %}
-                                    {{ filters.input_from_to(filter.label,modelFrom,modelTo) }}
-                                {% endif  %}
-{#                                {{ customFilters.port(filter.modelName,filter) }}#}
+                                    {{ filters.inputFromTo(filter.label,filter.modelName) }}
+                                {% endif  %}#}
+                                {#                                {{ customFilters.port(filter.modelName,filter) }}#}
                             {% endfor %}
                         </div>
                     </div>
@@ -70,10 +75,5 @@
             {% endfor %}
         </div>
     </div>
-    <script>
-        $(document).ready(function(){
-            $("#tab_2").click();
-            $("#tab_1").click();
-        });
-    </script>
+
 {% endfor %}

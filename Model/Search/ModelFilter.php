@@ -18,14 +18,6 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Search;
  */
 class ModelFilter extends \Tecnocreaciones\Bundle\ToolsBundle\Model\Base\BaseModelMaster
 {
-    const TYPE_INPUT= "input";
-    const TYPE_INPUT_FROM_TO = "input_from_to";
-    const TYPE_YES_NO = "yesNo";
-    const TYPE_DATE = "date";
-    const TYPE_SELECT = "select";
-    const TYPE_TODO = "todo";
-    const TYPE_YEAR = "year";
-    
     const DATATYPE_STRING = "string";
     const DATATYPE_NUMBER = "number";
     const DATATYPE_FLOAT = "float";

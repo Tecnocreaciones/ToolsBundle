@@ -92,16 +92,9 @@
     </div>
 {% endmacro %}
 
-{% macro input_from_to(label,modelNameFrom,modelNameTo) %}
-    {% if modelNameTo %}
-        {% set modelNameFrom = modelNameFrom|replace(".","__") %}
-        {% set modelNameTo = modelNameTo|replace(".","__") %}
-    {% else %}
-        {% set modelNameFrom = modelNameFrom|replace(".","__") %}
-        {% set modelNameTo = modelNameFrom %}
-        {% set modelNameFrom = modelNameFrom ~ "_from" %}
-        {% set modelNameTo = modelNameTo ~ "_to" %}
-    {% endif %}
+{% macro inputFromTo(label,modelName) %}
+    {% set modelNameFrom = modelName ~ "_from" %}
+    {% set modelNameTo = modelName ~ "_to" %}
 
     {% import _self as filters %}
     {% set idFrom = uniqueId() %}

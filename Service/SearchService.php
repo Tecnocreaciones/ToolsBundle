@@ -12,11 +12,12 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 
 /**
- * Manejador de filtros ()
+ * Manejador de filtros (tecnocreaciones_tools.search)
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class SearchService {
+class SearchService
+{
     /**
      * Filtros estandares
      */
@@ -36,12 +37,20 @@ class SearchService {
     private $filterBlockRepository;
     
     /**
-     *
      * @var \Twig_Environment
      */
     private $twig;
 
-
+    /**
+     * Filtros disponibles
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface
+     */
+    private $groupFilters;
+    
+    public function __construct() {
+        $this->groupFilters = [];
+    }
+    
     public function renderFilterArea($areaName) {
         $filterBlocks = $this->filterBlockRepository->findByArea($areaName);
         return $this->renderFilterBlock($filterBlocks);
@@ -91,5 +100,36 @@ class SearchService {
     public function setTwig(\Twig_Environment $twig) {
         $this->twig = $twig;
         return $this;
+    }
+    
+    public function addGroupFilter(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface $filter)
+    {
+        if(isset($this->groupFilters[$filter->getName()])){
+            throw new \RuntimeException(sprintf("The group filter %s is already added.", $filter->getName()));
+        }
+        $this->groupFilters[$filter->getName()] = $filter;
+        return $this;
+    }
+    
+    public function getFilterGroupByFilter($filterName)
+    {
+        $foundGroupFilter = null;
+        foreach ($this->groupFilters as $groupFilter)
+        {
+            if(array_key_exists($filterName,$groupFilter->getTypes())){
+                $foundGroupFilter = $groupFilter;
+                break;
+            }
+        }
+        return $foundGroupFilter;
+    }
+    
+    public function renderFilter(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface $filter,$filterName) {
+        
+        $template = $this->twig->loadTemplate($filter->getMacroTemplate());
+        var_dump($template);
+        $subject = $template->renderBlock($filterName,[]);
+        var_dump($subject);
+        return $subject;
     }
 }

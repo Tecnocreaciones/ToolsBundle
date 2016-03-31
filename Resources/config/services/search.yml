@@ -1,9 +1,12 @@
 services:
+    tecnocreaciones_tools.search.standard:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\StandardFilters
     tecnocreaciones_tools.search:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\SearchService
         calls:
             - [ setFilterBlockRepository, [@app.repository.search.filter_block]]
             - [ setTwig, [@twig]]
+            - [ addGroupFilter, [@tecnocreaciones_tools.search.standard]]
     tools.search.twig.extension:
         class: Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\SearchExtension
         tags:

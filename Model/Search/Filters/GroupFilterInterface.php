@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Search;
+namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters;
 
 /**
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-interface ModelFilterInterface {
+interface GroupFilterInterface {
     public static function getTypes();
     
     public static function getMacroTemplate();
+    
+    public static function getName();
 }
