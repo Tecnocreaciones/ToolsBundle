@@ -141,85 +141,22 @@ class EntityRepository extends Base implements ContainerAwareInterface
             ->addSelect($a.".description ".$a."_description")
             ;
         $this->addFieldDescription($criteria, $qb);
+        $sqb = $this->createSearchQueryBuilder($qb, $criteria);
+        $sqb->addFieldDescription();
         
         $this->applyCriteria($qb, $criteria->toArray());
         $this->applySorting($qb, $orderBy);
         $qb->orderBy($a.".description","ASC");
         return $this->getScalarPaginator($qb);
     }
-    
-    protected function addFieldDescription($criteria,$qb) {
-        if(($description = $criteria->remove('description')) != null){
-            $qb
-                ->andWhere($qb->expr()->like($this->getAlias().'.description', $qb->expr()->literal("%$description%")));
-        }
-    }
-    
-    private function normalizeField($alias,$field) {
-        $fieldResponse = "";
-        $fieldExplode = explode("__", $field);
-        if(count($fieldExplode) == 2){
-            $fieldResponse = sprintf("%s_%s.%s",$alias,$fieldExplode[0],$fieldExplode[1]);
-        }else{
-            $fieldResponse = $fieldExplode[0];
-        }
-        return $fieldResponse;
-    }
-    protected function addFieldIn(array $fields,\Doctrine\ORM\QueryBuilder $qb,$criteria)
+    /**
+     * @param type $qb
+     * @param type $criteria
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
+     */
+    protected function createSearchQueryBuilder($qb, $criteria) 
     {
-        foreach ($fields as $field){
-            $normalizeField = $this->normalizeField($this->getAlias(),$field);
-            $valueField = json_decode($criteria->remove($field),false);
-            if(count($valueField) > 0){
-                $qb
-                    ->andWhere($qb->expr()->in($normalizeField, $valueField))
-                    ;
-                
-            }
-        }
-    }
-    protected function addFieldEquals(array $fields,\Doctrine\ORM\QueryBuilder $qb,$criteria)
-    {
-        foreach ($fields as $field){
-            $normalizeField = $this->normalizeField($this->getAlias(),$field);
-            $valueField = $criteria->remove($field);
-            if($valueField !== null){
-                $qb->andWhere(sprintf("%s = %s",$normalizeField,$qb->expr()->literal($valueField)));
-            }
-        }
-    }
-    protected function addFieldLike(array $fields,\Doctrine\ORM\QueryBuilder $qb,$criteria)
-    {
-        foreach ($fields as $field){
-            $normalizeField = $this->normalizeField($this->getAlias(),$field);
-            $valueField = $criteria->remove($field);
-            if($valueField !== null){
-                $qb->andWhere($qb->expr()->like($normalizeField,$qb->expr()->literal("%".$valueField."%")));
-            }
-        }
-    }
-    
-    protected function addFieldFromTo(array $fields,$qb,$criteria)
-    {
-        foreach ($fields as $field){
-            $fieldFrom = $field."_from";
-            $fieldTo = $field."_to";
-            $valueFieldFrom = $criteria->remove($fieldFrom);
-            $valuefieldTo = $criteria->remove($fieldTo);
-            $normalizeField = $this->normalizeField($this->getAlias(),$field);
-            if($valueFieldFrom != null){
-                $qb
-                    ->andWhere(sprintf("%s >= :%s",$normalizeField,$fieldFrom))
-                    ->setParameter($fieldFrom,$valueFieldFrom)
-                    ;
-            }
-            if($valuefieldTo != null){
-                $qb
-                    ->andWhere(sprintf("%s <= :%s",$normalizeField,$fieldTo))
-                    ->setParameter($fieldTo,$valuefieldTo)
-                    ;
-            }
-        }
+        return new Query\SearchQueryBuilder($qb, $criteria, $this->getAlias());
     }
     
     /**
@@ -244,62 +181,6 @@ class EntityRepository extends Base implements ContainerAwareInterface
             } else {
                 $queryBuilder->andWhere($queryBuilder->expr()->in($this->getPropertyName($property), $value));
             }
-        }
-    }
-    
-    protected function addFieldDate(array $fieldDates,$qb,$criteria) {
-        foreach ($fieldDates as $fieldDate) {
-            $fieldDateDay = $criteria->remove("day_".$fieldDate);
-            $fieldDateMonth = $criteria->remove("month_".$fieldDate);
-            $fieldDateYear = $criteria->remove("year_".$fieldDate);
-            if(empty($fieldDateDay) && empty($fieldDateMonth) && empty($fieldDateYear) ){
-                continue;
-            }
-            
-            if($fieldDateDay !== null && $fieldDateMonth !== null && $fieldDateYear !== null){
-                $fieldDateDay = str_pad($fieldDateDay, 2,"0",STR_PAD_LEFT);
-                $fieldDateMonth = str_pad($fieldDateMonth, 2,"0",STR_PAD_LEFT);
-                
-                $fieldDateValue = sprintf("%s/%s/%s",$fieldDateDay,$fieldDateMonth,$fieldDateYear);
-                $dateTime = \DateTime::createFromFormat("d/m/Y", $fieldDateValue);
-                $qb->andWhere($qb->expr()->like($this->getAlias().".".$fieldDate,$qb->expr()->literal("%".$dateTime->format("Y-m-d")."%")));
-            }else{
-                
-                if($fieldDateDay !== null){
-                    $fieldDateDay = str_pad($fieldDateDay, 2,"0",STR_PAD_LEFT);
-                    $qb
-                        ->andWhere(
-                            $qb->expr()->like(
-                                $this->getAlias().".".$fieldDate,$qb->expr()->literal("%-%-".$fieldDateDay)
-                                             )
-                                );
-                }
-                if($fieldDateMonth !== null){
-                    $fieldDateMonth = str_pad($fieldDateMonth, 2,"0",STR_PAD_LEFT);
-                    $qb
-                        ->andWhere(
-                            $qb->expr()->like(
-                                $this->getAlias().".".$fieldDate,$qb->expr()->literal("%-".$fieldDateMonth."-%")
-                                             )
-                                );
-                }
-                if($fieldDateYear !== null){
-                    $qb
-                        ->andWhere(
-                            $qb->expr()->like(
-                                $this->getAlias().".".$fieldDate,$qb->expr()->literal($fieldDateYear."-%-%")
-                                             )
-                                );
-                }
-            }
-        }
-    }
-    
-    protected function addFieldMaxResults($qb,$criteria) {
-        if(($maxResults = $criteria->remove('max_results')) != null && $maxResults > 0){
-            $qb
-                ->setMaxResults($maxResults)
-                ;
         }
     }
     

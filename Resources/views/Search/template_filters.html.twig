@@ -51,8 +51,7 @@
                             {% for filter in entityFilters %}
                                 {% set typeFilter = filter.typeFilter %}
                                 {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
-{#                                {% from groupFilter.macroTemplate import typeFilter %}#}
-                                {{ searchService.renderFilter(groupFilter,typeFilter) }}
+                                {{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}
 {#                                {{ attribute(standardFilters, typeFilter,[filter.label,filter.modelName]) }}#}
                                 {#{% if typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_YES_NO') %}
                                     {{ standardFilters.yesNo(filter.label,filter.modelName) }}

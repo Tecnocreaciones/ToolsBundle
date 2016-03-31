@@ -71,7 +71,7 @@
 
 {% macro yesNo(label,modelName) %}
     {% import _self as filters %}
-    {% set values = ["sigtec.no","sigtec.yes"] %}
+    {% set values = ["choice.no","choice.yes"] %}
     {{ filters.select(label,modelName,values) }}
 {% endmacro %}
 
@@ -197,14 +197,14 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
-                var select = $("#{{ id }}");
-                select.select2({
-                placeholder: "{% if modeTODO %}FALTA LISTA{% else %}Seleccione{% endif %}",
-                        dropdownAutoWidth: true,
-                });
+    $(document).ready(function () {
+            var select = $("#{{ id }}");
+            select.select2({
+            placeholder: "{% if modeTODO %}FALTA LISTA{% else %}Seleccione{% endif %}",
+            dropdownAutoWidth: true,
+            });
         });</script>
-    {% endmacro %}
+{% endmacro %}
 
 {% macro select2(label,route,property,modelName,master,groupBy,parameters) %}
     {% set modelName = modelName|replace(".","__") %}
@@ -302,7 +302,7 @@
                     });
             });
     </script>
-{% endmacro select2 %}
+{% endmacro %}
 
 {% macro todo(label) %}
     {% import _self as filters %}

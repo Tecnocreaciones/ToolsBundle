@@ -124,12 +124,18 @@ class SearchService
         return $foundGroupFilter;
     }
     
-    public function renderFilter(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface $filter,$filterName) {
+    public function renderFilter(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface $groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
+    {
+        $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
+        $this->twig->addGlobal("currentFilter", $filter);
+//        $reflection = new \ReflectionClass($template);
         
-        $template = $this->twig->loadTemplate($filter->getMacroTemplate());
-        var_dump($template);
-        $subject = $template->renderBlock($filterName,[]);
-        var_dump($subject);
-        return $subject;
+//        var_dump($reflection->getFileName());
+//        var_dump($template);
+        
+        $filterName = "get".$filterName;
+//        $subject = $template->renderBlock($filterName,[]);
+//        var_dump($filter);
+        return (string)$template->$filterName($filter->getLabel(),$filter->getModelName());
     }
 }
