@@ -51,7 +51,7 @@
                             {% for filter in entityFilters %}
                                 {% set typeFilter = filter.typeFilter %}
                                 {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
-                                <div class="col-md-3">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>
+                                <div class="col-md-4">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>
                             {% endfor %}
     {#                          <div class="col-md-4">.col-md-4</div>#}
                         </div>
