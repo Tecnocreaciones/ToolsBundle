@@ -54,6 +54,7 @@ class FilterAddedAdmin extends MasterAdmin
     
     protected function configureListFields(ListMapper $list) {
         $list
+            ->addIdentifier("id")
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")

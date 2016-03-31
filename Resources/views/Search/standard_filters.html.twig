@@ -6,29 +6,63 @@
     {{ filters.eraser(id,type) }}
 {% endmacro %}
 
-{% macro divParameters() %}class="new-row-mobile-portrait four-columns four-columns-tablet six-columns-mobile-landscape twelve-columns-mobile-portrait block-filter"{% endmacro %}
+{% macro divParameters() %}class="block-filter"{% endmacro %}
 
 {% macro optionsBlock() %}
     {% import _self as filters %}
+    <style>
+        .filters {
+            display: block;
+            margin-top: 9px;
+        }
+        .eraser {
+            position: absolute;
+            left: -2px;
+            top: 7px;
+            font-size: 23px;
+            color: rgba(228, 54, 10, 0.65);
+        }
+        .eraser-all {
+            z-index: 1;
+{#            position: absolute;#}
+            right: 0;
+            top: -19px;
+            font-size: 23px;
+            color: rgba(228, 54, 10, 0.65);
+        }
+        .label-filter {
+            margin-left: 26px;
+            font-weight: bold;
+        }
+        .block-filter {
+            position: relative;
+            padding: 5px;
+        }
+        .select2-container .select2-selection--multiple {
+{#            height: 31px;#}
+            min-height: 30px;
+        }
+    </style>
     <script>
         var showHover = function () {
-        $('[data-show-hover]').hide().each(function () {
-        var self = $(this),
-                parent = $(this).data('showHover');
-                if ($(this).data('showHoverInit') !== true) {
-        self.closest(parent).on('mouseover', function (e) {
-        {#                        e.stopPropagation();#}
-            self.show();
-            }).on('mouseout', function () {
-            self.hide();
-            });
-                    $(this).data('showHoverInit', true);
-            }
-            });
-            };
+            $('[data-show-hover]').hide().each(function () {
+            var self = $(this),
+                    parent = $(this).data('showHover');
+                    if ($(this).data('showHoverInit') !== true) {
+            self.closest(parent).on('mouseover', function (e) {
+                                    //e.stopPropagation();
+                self.show();
+                }).on('mouseout', function () {
+                self.hide();
+                });
+                        $(this).data('showHoverInit', true);
+                }
+                });
+        };
                     showHover();
-                    window.showHover = showHover;</script>
-    {% endmacro %}
+            window.showHover = showHover;
+    </script>
+{% endmacro %}
 
 {% macro eraserAll() %}
     {% set id = uniqueId() %}
