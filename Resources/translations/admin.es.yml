@@ -1,8 +1,23 @@
-admin:
-    configuration: Configuración
-    configuration_group: Grupos de configuración
+admin.configuration: Configuración
+admin.configuration_group: Grupos de configuración
     
 Group: Grupo
 Value: Valor
 "Configuration List": Configuraciones
 "Base Group List": Grupos de configuración
+admin.group.search: 'Búsqueda'
+'Filter Group List': 'Lista de grupos de filtros'
+admin.search.filter_group: 'Grupo de filtro'
+admin.search.filter: 'Filtro'
+admin.search.filter_block: 'Bloque de filtro'
+'Filter List': 'Lista de filtros'
+'Filter Block List': 'Bloques de filtros'
+'Order Block': 'Orden del bloque'
+'Filter Group': 'Grupo'
+'Type Filter': 'Tipo de filtro'
+admin.search.filter_added: 'Filtro añadido'
+Filter: 'Filtro'
+'Order Filter': 'Orden'
+'Filter Block': 'Bloque'
+'Filter Addeds': 'Filtros añadidos'
+Parameters: 'Parametros'

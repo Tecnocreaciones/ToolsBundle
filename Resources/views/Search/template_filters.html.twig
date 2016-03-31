@@ -1,0 +1,79 @@
+
+{% import searchService.standardFilters as standardFilters %}
+{% set translationDomain = "titles" %}
+{% trans_default_domain translationDomain %}
+{% set totalGroup = 0 %}
+{% for filterBlock in filterBlocks %}
+    {% set totalGroup = totalGroup + filterBlock.groupsFilters|length %}
+{% endfor %}
+
+{% set typeTabs = "standard-tabs" %}
+{% if totalGroup > 0 %}
+    {% set typeTabs = "side-tabs" %}
+{% endif %}
+
+
+<div class="{{ typeTabs }} margin-bottom">
+    {% for filterBlock in filterBlocks %}
+        {% set groups = filterBlock.groupsFilters %}
+        {% set style = null %}
+        {% if filterBlock.parameter(constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilterBlock::PARAMETER_STYLE')) is not null %}
+            {% set style = "style='"~filterBlock.parameter(constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilterBlock::PARAMETER_STYLE'))~"'" %}
+        {% endif %}
+        {{ standardFilters.optionsBlock() }}
+        {{ standardFilters.eraserAll() }}
+        <ul class="tabs">
+            {% for group in groups %}
+                {% if loop.first %}
+                    <li class="active">
+                        <a id="tab_{{ loop.index }}" href="#tab-{{ loop.index }}" class="with-tooltip" tooltip="{{ group|trans({},translationDomain) }}">
+                            {{ group|trans({},translationDomain) }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a id="tab_{{ loop.index }}" href="#tab-{{ loop.index }}" class="with-tooltip" tooltip="{{ group|trans({},translationDomain) }}">
+                            {{ group|trans({},translationDomain) }}
+                        </a>
+                    </li>  
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <div class="tabs-content" {{ style|raw }}>
+            {% for group in groups %}
+                {% set entityFilters = filterBlock.filtersByGroup(group) %}
+                <div id="tab-{{ loop.index }}">
+                    <div class="with-padding">
+                        <div class="columns">
+                            {% for filter in entityFilters %}
+                                {% set typeFilter = filter.typeFilter %}
+                                {% if typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_YES_NO') %}
+                                    {{ standardFilters.yesNo(filter.label,filter.modelName) }}
+                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_INPUT') %}
+                                    {{ standardFilters.input(filter.label,filter.modelName) }}
+                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_DATE') %}
+                                    {{ standardFilters.date(filter.label,filter.modelName) }}
+                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_SELECT') %}
+                                    {{ standardFilters.select(filter.label,filter.modelName,filter.getParameter('values')) }}
+                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_TODO') %}
+                                    {{ standardFilters.todo(filter.label) }}
+                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_INPUT_FROM_TO') %}
+                                    {% set modelFrom = filter.modelName ~ "_from" %}
+                                    {% set modelTo = filter.modelName ~ "_to" %}
+                                    {{ filters.input_from_to(filter.label,modelFrom,modelTo) }}
+                                {% endif  %}
+{#                                {{ customFilters.port(filter.modelName,filter) }}#}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $("#tab_2").click();
+            $("#tab_1").click();
+        });
+    </script>
+{% endfor %}

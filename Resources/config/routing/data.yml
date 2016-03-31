@@ -1,0 +1,6 @@
+tools_bundle_data:
+    pattern: /search.json
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:Data:search
+        _format: json
+    requirements: { _method: GET }

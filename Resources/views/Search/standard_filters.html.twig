@@ -1,0 +1,317 @@
+{% macro label_filter(label,id,type) %}
+    {% import _self as filters %}
+    <label class="label-filter">
+        {{ label|trans({},'labels') }}
+    </label>
+    {{ filters.eraser(id,type) }}
+{% endmacro %}
+
+{% macro divParameters() %}class="new-row-mobile-portrait four-columns four-columns-tablet six-columns-mobile-landscape twelve-columns-mobile-portrait block-filter"{% endmacro %}
+
+{% macro optionsBlock() %}
+    {% import _self as filters %}
+    <script>
+        var showHover = function () {
+        $('[data-show-hover]').hide().each(function () {
+        var self = $(this),
+                parent = $(this).data('showHover');
+                if ($(this).data('showHoverInit') !== true) {
+        self.closest(parent).on('mouseover', function (e) {
+        {#                        e.stopPropagation();#}
+            self.show();
+            }).on('mouseout', function () {
+            self.hide();
+            });
+                    $(this).data('showHoverInit', true);
+            }
+            });
+            };
+                    showHover();
+                    window.showHover = showHover;</script>
+    {% endmacro %}
+
+{% macro eraserAll() %}
+    {% set id = uniqueId() %}
+    <a id="{{ id }}" href="#" class="eraser-all with-tooltip" title="Limpiar todos los filtros">
+        <i class="fa fa-eraser fa-2x"></i>
+    </a>
+    <script>
+                $(document).ready(function(){
+        $("#{{ id }}").on("click", function () {
+        $(".eraser").click();
+        });
+        });</script>
+    {% endmacro %}
+
+{% macro eraser(ids,type) %}
+    {% if ids is not iterable %}
+        {% set ids = [ids] %}
+    {% endif %}
+    {% set id2 = uniqueId() %}
+    <a id="{{ id2 }}" href="#" class="eraser with-tooltip" title="Limpiar filtro" data-show-hover=".block-filter">
+        <i class="fa fa-eraser"></i>
+    </a>
+    <script>
+                $(document).ready(function(){
+        showHover();
+                $("#{{ id2 }}").on("click", function () {
+        {% for id in ids %}
+            var input = $("#{{ id }}");{% if type == "select" %}
+                    input.select2("val", "");
+                    input.trigger("change");{% elseif type == "select2" %}
+                    input.select2("val", "");
+                    input.html("");
+                    input.trigger("change");{% elseif type == "input" %}
+                    input.val("");
+                    input.val(null);
+                    input.trigger("change");{% endif %}        {% endfor %}
+                        });
+                        });</script>
+    {% endmacro %}
+
+{% macro yesNo(label,modelName) %}
+    {% import _self as filters %}
+    {% set values = ["sigtec.no","sigtec.yes"] %}
+    {{ filters.select(label,modelName,values) }}
+{% endmacro %}
+
+{% macro input(label,modelName,id) %}
+    {% set modelName = modelName|replace(".","__") %}
+    {% import _self as filters %}
+    {% if id is null %}
+        {% set id = uniqueId() %}
+    {% endif %}
+
+    <div {{ filters.divParameters() }}>
+        <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
+            {{ filters.label_filter(label,id,'input') }}
+            <div class="filters">
+                <input id="{{ id }}" style="width: 100px" class="input" ng-model="model.{{ modelName }}" />
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro input_from_to(label,modelNameFrom,modelNameTo) %}
+    {% if modelNameTo %}
+        {% set modelNameFrom = modelNameFrom|replace(".","__") %}
+        {% set modelNameTo = modelNameTo|replace(".","__") %}
+    {% else %}
+        {% set modelNameFrom = modelNameFrom|replace(".","__") %}
+        {% set modelNameTo = modelNameFrom %}
+        {% set modelNameFrom = modelNameFrom ~ "_from" %}
+        {% set modelNameTo = modelNameTo ~ "_to" %}
+    {% endif %}
+
+    {% import _self as filters %}
+    {% set idFrom = uniqueId() %}
+    {% set idTo = uniqueId() %}
+
+    <div {{ filters.divParameters() }}>
+        <div class="with-mid-padding">
+            {{ filters.label_filter(label,[idFrom,idTo],'input') }}
+            <div class="filters">
+                {{ "filter.from"|trans({},"CoramerSigtecWebBundle") }}
+                <input id="{{ idFrom }}" style="width: 20px" class="input" ng-model="model.{{ modelNameFrom }}" ng-init="initWatch('{{ modelNameFrom }}')" />
+                {{ "filter.to"|trans({},"CoramerSigtecWebBundle") }}
+                <input id="{{ idTo }}" style="width: 20px" class="input" ng-model="model.{{ modelNameTo }}" ng-init="initWatch('{{ modelNameTo }}')" />
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro date(label,modelName) %}
+    {% set modelName = modelName|replace(".","__") %}
+
+    {% set modelNameDay = "day_" ~ modelName %}
+    {% set modelNameMonth = "month_" ~ modelName %}
+    {% set modelNameYear = "year_" ~ modelName %}
+    {% import _self as filters %}
+    {% set idDay = uniqueId() %}
+    {% set idMonth = uniqueId() %}
+    {% set idYear = uniqueId() %}
+
+    <div {{ filters.divParameters() }}>
+        <div class="with-mid-padding">
+            {{ filters.label_filter(label,[idDay,idMonth,idYear],'select') }}
+            <div class="filters">
+                <select id="{{ idDay }}" style="width: 60px" ng-model="model.{{ modelNameDay }}" ng-init="initWatch('{{ modelNameDay }}')">
+                    <option value="">Día</option>
+                    {% for i in 1..31 %}
+                        <option value="{{ strpadleft(i,2,"0") }}">{{ strpadleft(i,2,"0") }}</option>
+                    {% endfor %}
+                </select>
+                /
+                <select id="{{ idMonth }}" style="width: 60px" ng-model="model.{{ modelNameMonth }}" ng-init="initWatch('{{ modelNameMonth }}')">
+                    <option value="">Mes</option>
+                    {% for i in 1..12 %}
+                        <option value="{{ strpadleft(i,2,"0") }}">{{ strpadleft(i,2,"0") }}</option>
+                    {% endfor %}
+                </select>
+                /
+                {% set date = date("now") %}
+                <select id="{{ idYear }}" style="width: 70px" ng-model="model.{{ modelNameYear }}" ng-init="initWatch('{{ modelNameYear }}')">
+                    <option value="">Año</option>
+                    {% for i in (date.format("Y"))..(date.format("Y") - 30) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <script>
+                $(document).ready(function () {
+        var selectDay = $("#{{ idDay }}");
+                selectDay.select2({
+                placeholder: "Día",
+                        dropdownAutoWidth: true,
+                });
+                var selectMonth = $("#{{ idMonth }}");
+                selectMonth.select2({
+                placeholder: "Mes",
+                        dropdownAutoWidth: true,
+                });
+                var selectYear = $("#{{ idYear }}");
+                selectYear.select2({
+                placeholder: "Año",
+                        dropdownAutoWidth: true,
+                });
+        });</script>
+    {% endmacro %}
+
+{% macro select(label,modelName,values) %}
+    {% set modelName = modelName|replace(".","__") %}
+
+    {% import _self as filters %}
+    {% set id = uniqueId() %}
+    {% set modeTODO = false %}
+    {% if modelName == "_TODO_"%}
+        {% set modeTODO = true %}
+    {% endif %}
+
+    <div {{ filters.divParameters() }} {% if modeTODO %} style="background-color: #ffff33" {% endif %}>
+        <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
+
+            {{ filters.label_filter(label,id,'select') }}
+            <div class="filters">
+                <select id="{{ id }}" style="width: 100px" ng-model="model.{{ modelName }}">
+                    <option value=""></option>
+                    {% for key,value in values %}
+                        <option value="{{ key }}">{{ value|trans({},"CoramerSigtecWebBundle") }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+                var select = $("#{{ id }}");
+                select.select2({
+                placeholder: "{% if modeTODO %}FALTA LISTA{% else %}Seleccione{% endif %}",
+                        dropdownAutoWidth: true,
+                });
+        });</script>
+    {% endmacro %}
+
+{% macro select2(label,route,property,modelName,master,groupBy,parameters) %}
+    {% set modelName = modelName|replace(".","__") %}
+
+    {% import _self as filters %}
+    {#    {% set property = "name" %}#}
+    {% set multiple = false %}
+    {% if master is null %}
+        {% set master = "" %}
+    {% endif %}
+    {% if parameters %}
+        {% if parameters["multiple"] is defined and parameters["multiple"] == true %}
+            {% set multiple = true %}
+        {% endif %}
+    {% endif %}
+
+    {% set id = uniqueId() %}
+
+    <div {{ filters.divParameters() }}>
+        <div class="with-mid-padding">
+            {{ filters.label_filter(label,id,'select2') }}
+
+            <div class="filters" ng-init="initWatch('{{ modelName }}')">
+                <select id="{{ id }}" style="width: 150px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}"></select>
+            </div>
+        </div>
+    </div>
+    <script>
+                $(document).ready(function () {
+        function formatRepo(repo) {
+        if (repo.loading)
+                return repo.text;
+                return repo.{{ property }};
+        }
+
+        function formatRepoSelection(repo) {
+        return repo.{{ property }} || repo.text;
+        }
+        var select = $("#{{ id }}");
+                select.select2({
+                placeholder: "Seleccione",{#                allowClear: true,#}
+                        width: 'resolve',
+                        dropdownAutoWidth: true,
+                        ajax: {
+                        url: "{{ path(route,{m: master}) }}",
+                                dataType: 'json',
+                                delay: 250,
+                                data: function (params) {
+                                return {
+                                q: params.term, // search term
+                                        page: params.page
+                                };
+                                },
+                                processResults: function (data, params) {
+                                // parse the results into the format expected by Select2
+                                // since we are using custom formatting functions we do not need to
+                                // alter the remote JSON data, except to indicate that infinite
+                                // scrolling can be used
+                                params.page = params.page || 1;
+                                        var queryResults = data._embedded.results;{% if groupBy is not null %}
+                                        var i = 0;
+                                        var newResult = [];
+                                        var groups = {};
+                                        var result;
+                                        var groupBy;
+                                        for (i = 0; i < data._embedded.results.length; i++){
+                                result = data._embedded.results[i];
+                                        groupBy = result.{{ groupBy }};
+                                        if (!groups[groupBy]){
+                                groups[groupBy] = {
+        {{ property }}: groupBy, children: []
+                                    };
+                                    }
+                                    groups[groupBy].children.push(result);
+                                    }
+                                    for (var key in groups) {
+                                    newResult.push(groups[key]);
+                                    }
+                                    queryResults = newResult;{% endif %}
+                                            return {
+                                            results: queryResults,
+                                                    pagination: {
+                                                    more: (data._embedded.paginator.getCurrentPage < data._embedded.paginator.getNbPages),
+                                                    }
+                                            };
+                                    },
+                                    cache: true
+                            },
+                            escapeMarkup: function (markup) {
+                            return markup;
+                            }, // let our custom formatter work
+                            minimumInputLength: 0,
+                            templateResult: formatRepo, // omitted for brevity, see the source of this page
+                            templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+                    });
+            });
+    </script>
+{% endmacro select2 %}
+
+{% macro todo(label) %}
+    {% import _self as filters %}
+    {{ filters.select(label,"_TODO_",[]) }}
+{% endmacro %}

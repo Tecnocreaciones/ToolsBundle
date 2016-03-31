@@ -19,23 +19,36 @@ use Twig_Extension;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInterface
+class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
 {
     private $container;
-    
+    private $config;
+
     public function getName() 
     {
-        return 'tecnocreaciones_tools_template_utils_extension';
+        return 'tecnocreaciones_tools_utils_extension';
     }
     
     public function getFunctions() 
     {
-        return array(
-            new \Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('print_intro', array($this,'renderIntro'), array('is_safe' => array('html'))),
-        );
+        $config = $this->config;
+        $functions = [];
+        
+        if($config['intro']['enable']  === true){
+            $functions[] = new \Twig_SimpleFunction('print_intro', array($this,'renderIntro'), array('is_safe' => array('html')));
+        }
+        if($config['twig'] != ''){
+            if($config['twig']['breadcrumb'] === true){
+                $functions[] = new \Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html')));
+            }
+            if($config['twig']['page_header'] === true){
+                $functions[] = new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
+            }
+        }
+        $functions[] = new \Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
+        $functions[] = new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
+        $functions[] = new \Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
+        return $functions;
     }
     
     public function breadcrumb()
@@ -136,6 +149,23 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
     {
         return $this->container->get('tecnocreaciones_tools.service.intro')->renderArea($area);
     }
+    
+    public function uniqueId() {
+        return md5(uniqid(rand(), true));
+    }
+    
+    /**
+     * Add the str_pad left php function
+     *
+     * @param  string $string
+     * @param  int $pad_lenght
+     * @param  string $pad_string
+     * @return mixed
+     */
+    public function strpadleft($string, $pad_lenght, $pad_string = " ")
+    {
+        return str_pad($string, $pad_lenght, $pad_string, STR_PAD_LEFT);
+    }
 
     private function trans($id,array $parameters = array(), $domain = 'messages')
     {
@@ -146,5 +176,8 @@ class TemplateUtilsExtension extends Twig_Extension implements ContainerAwareInt
     {
         $this->container = $container;
     }
-
+    public function setConfig($config) {
+        $this->config = $config;
+        return $this;
+    }
 }

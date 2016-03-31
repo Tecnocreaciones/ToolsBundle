@@ -223,21 +223,34 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setParameter('tecnocreaciones_tools.intro.config', $config['intro']);
         }
         
-        if($config['intro']['enable'] === true 
-                || ($config['twig'] != '' && ($config['twig']['breadcrumb'] === true || $config['twig']['page_header'] === true))
-            ){
-            
-            $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\TemplateUtilsExtension');
-                    $extensionToolsDefinition
-                            ->addMethodCall('setContainer',array(new Reference('service_container')))
-                            ->addTag('twig.extension')
-                            ;
-            $container->setDefinition('tecnocreaciones_tools.template_utils_extension', $extensionToolsDefinition);
-        }
+        $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\UtilsExtension');
+                $extensionToolsDefinition
+                        ->addMethodCall('setContainer',array(new Reference('service_container')))
+                        ->addMethodCall('setConfig',array($config))
+                        ->addTag('twig.extension')
+                        ;
+        $container->setDefinition('tecnocreaciones_tools.utils_extension', $extensionToolsDefinition);
         
         if($config['link_generator']['enable'] === true)
         {
             $loaderYml->load('services/link_generator.yml');
+        }
+        if($config['search']['enable'] === true)
+        {
+            $container->setParameter('tecnocreaciones_tools.search.config', $config['search']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_group', $config['search']['class']['filter_group']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_group_admin', $config['search']['class']['filter_group_admin']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter', $config['search']['class']['filter']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_admin', $config['search']['class']['filter_admin']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_block', $config['search']['class']['filter_block']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_block_admin', $config['search']['class']['filter_block_admin']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_added', $config['search']['class']['filter_added']);
+            $container->setParameter('tecnocreaciones_tools.search.config.class.filter_added_admin', $config['search']['class']['filter_added_admin']);
+            
+            $loaderYml->load('services/search.yml');
+            if($config['search']['admin'] === true){
+                $loaderYml->load('admin/search.yml');
+            }
         }
         
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
@@ -252,5 +265,6 @@ class TecnocreacionesToolsExtension extends Extension
         $container->setParameter('tecnocreaciones_tools.twig.extra_form_types.enable', $config['extra_form_types']['enable']);
         
         $container->setParameter('tecnocreaciones_tools.service.link_generator.enable', $config['link_generator']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.search.enable', $config['search']['enable']);
     }
 }
