@@ -54,7 +54,6 @@ abstract class MasterAdmin extends Admin
             $list->add('enabled',null,array('editable' => true));
         }
         $list
-//            ->add('createdAt')
             ->add('_action', 'show', array(
                 'template' => 'TecnocreacionesToolsBundle:SonataAdmin/CRUD:list__action.html.twig',
                 'actions' => array(
