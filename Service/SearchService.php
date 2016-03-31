@@ -128,6 +128,7 @@ class SearchService
     {
         $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
         $this->twig->addGlobal("currentFilter", $filter);
+        $this->twig->addGlobal("searchService", $this);
 //        $reflection = new \ReflectionClass($template);
         
 //        var_dump($reflection->getFileName());

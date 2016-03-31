@@ -58,9 +58,9 @@ class FilterAdmin extends MasterAdmin
     
     protected function configureListFields(ListMapper $list) {
         $list
+            ->addIdentifier("label")
             ->add("filterGroup")
             ->add("typeFilter")
-            ->add("label")
             ->add("modelName");
         parent::configureListFields($list);
     }

@@ -22,7 +22,7 @@ class FilterGroupAdmin extends MasterAdmin
 {
     protected function configureListFields(\Sonata\AdminBundle\Datagrid\ListMapper $list) {
         $list
-            ->add("description")
+            ->addIdentifier("description")
             ;
         parent::configureListFields($list);
     }

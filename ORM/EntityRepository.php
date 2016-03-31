@@ -140,7 +140,6 @@ class EntityRepository extends Base implements ContainerAwareInterface
             ->select($a.".id id")
             ->addSelect($a.".description ".$a."_description")
             ;
-        $this->addFieldDescription($criteria, $qb);
         $sqb = $this->createSearchQueryBuilder($qb, $criteria);
         $sqb->addFieldDescription();
         

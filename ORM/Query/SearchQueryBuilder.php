@@ -50,7 +50,10 @@ class SearchQueryBuilder
     {
         foreach ($fields as $field){
             $normalizeField = $this->normalizeField($this->getAlias(),$field);
-            $valueField = json_decode($this->criteria->remove($field),false);
+            $stringValue = $this->criteria->remove($field);
+            $valueField = json_decode(urldecode($stringValue),false);
+//            var_dump($normalizeField);
+//            die;
             if(count($valueField) > 0){
                 $this->qb
                     ->andWhere($this->qb->expr()->in($normalizeField, $valueField))

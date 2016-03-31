@@ -29,12 +29,11 @@ class DataController extends Controller
             throw new \InvalidArgumentException("El parametro 'm' es incorrecto.");
         }
         $criteria = [
-            'description' => $query,
+            'query' => $query,
         ];
         $paginator = $this->get($master)->findForSearch($criteria);
         $paginator->setCurrentPage($request->get("page",1));
-        $view = $this->view($paginator->toArray());
         
-        return $this->handleView($view);
+        return new \Symfony\Component\HttpFoundation\JsonResponse($paginator->toArray());
     }
 }
