@@ -86,7 +86,7 @@
         <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
             {{ filters.label_filter(label,id,'input') }}
             <div class="filters">
-                <input id="{{ id }}" style="width: 100px" class="input" ng-model="model.{{ modelName }}" />
+                <input id="{{ id }}" style="width: 200px" class="form-control input-sm" ng-model="model.{{ modelName }}" />
             </div>
         </div>
     </div>
@@ -103,11 +103,16 @@
     <div {{ filters.divParameters() }}>
         <div class="with-mid-padding">
             {{ filters.label_filter(label,[idFrom,idTo],'input') }}
-            <div class="filters">
-                {{ "filter.from"|trans({},"CoramerSigtecWebBundle") }}
-                <input id="{{ idFrom }}" style="width: 20px" class="input" ng-model="model.{{ modelNameFrom }}" ng-init="initWatch('{{ modelNameFrom }}')" />
-                {{ "filter.to"|trans({},"CoramerSigtecWebBundle") }}
-                <input id="{{ idTo }}" style="width: 20px" class="input" ng-model="model.{{ modelNameTo }}" ng-init="initWatch('{{ modelNameTo }}')" />
+            <style>
+                .fromTo > input {
+                    display: inline;
+                }
+            </style>
+            <div class="filters fromTo">
+                {{ "labels.filter.from"|trans({},"labels") }}
+                <input id="{{ idFrom }}" style="width: 60px" class="form-control input-sm" ng-model="model.{{ modelNameFrom }}" ng-init="initWatch('{{ modelNameFrom }}')" />
+                {{ "labels.filter.to"|trans({},"labels") }}
+                <input id="{{ idTo }}" style="width: 60px" class="form-control input-sm" ng-model="model.{{ modelNameTo }}" ng-init="initWatch('{{ modelNameTo }}')" />
             </div>
         </div>
     </div>
@@ -228,7 +233,7 @@
             {{ filters.label_filter(label,id,'select2') }}
 
             <div class="filters" ng-init="initWatch('{{ modelName }}')">
-                <select id="{{ id }}" style="width: 150px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}"></select>
+                <select id="{{ id }}" style="width: 200px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}"></select>
             </div>
         </div>
     </div>

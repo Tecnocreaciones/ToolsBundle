@@ -46,28 +46,14 @@
             {% for group in groups %}
                 {% set entityFilters = filterBlock.filtersByGroup(group) %}
                 <div id="tab-{{ loop.index }}" class="tab-pane{% if loop.first %} active{% endif %}">
-                    <div class="with-padding">
-                        <div class="columns">
+                    <div class="container-fluid">
+                        <div class="row">
                             {% for filter in entityFilters %}
                                 {% set typeFilter = filter.typeFilter %}
                                 {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
-                                {{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}
-{#                                {{ attribute(standardFilters, typeFilter,[filter.label,filter.modelName]) }}#}
-                                {#{% if typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_YES_NO') %}
-                                    {{ standardFilters.yesNo(filter.label,filter.modelName) }}
-                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_INPUT') %}
-                                    {{ standardFilters.input(filter.label,filter.modelName) }}
-                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_DATE') %}
-                                    {{ standardFilters.date(filter.label,filter.modelName) }}
-                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_SELECT') %}
-                                    {{ standardFilters.select(filter.label,filter.modelName,filter.getParameter('values')) }}
-                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_TODO') %}
-                                    {{ standardFilters.todo(filter.label) }}
-                                {% elseif typeFilter == constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Search\\ModelFilter::TYPE_INPUT_FROM_TO') %}
-                                    {{ filters.inputFromTo(filter.label,filter.modelName) }}
-                                {% endif  %}#}
-                                {#                                {{ customFilters.port(filter.modelName,filter) }}#}
+                                <div class="col-md-4">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>
                             {% endfor %}
+    {#                          <div class="col-md-4">.col-md-4</div>#}
                         </div>
                     </div>
                 </div>
