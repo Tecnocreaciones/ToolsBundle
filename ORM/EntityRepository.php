@@ -142,6 +142,7 @@ class EntityRepository extends Base implements ContainerAwareInterface
             ;
         $sqb = $this->createSearchQueryBuilder($qb, $criteria);
         $sqb->addFieldDescription();
+        $sqb->addQueryField("query",["description"]);
         
         $this->applyCriteria($qb, $criteria->toArray());
         $this->applySorting($qb, $orderBy);

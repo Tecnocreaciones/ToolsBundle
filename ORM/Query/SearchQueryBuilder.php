@@ -82,16 +82,31 @@ class SearchQueryBuilder
      * @param array $fields
      * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
      */
-    public function addFieldLike(array $fields)
+    public function addFieldLike(array $fields,$defaultValueField = null)
     {
         foreach ($fields as $field){
             $normalizeField = $this->normalizeField($this->getAlias(),$field);
             $valueField = $this->criteria->remove($field);
+            if($defaultValueField !== null){
+                $valueField = $defaultValueField;
+            }
             if($valueField !== null){
                 $this->qb->andWhere($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
         return $this;
+    }
+    
+    /**
+     * Añade un campo para realizar una busqueda plana por un valor
+     * @param type $queryField
+     * @param array $fields
+     */
+    public function addQueryField($queryField,array $fields) {
+        $valueField = $this->criteria->remove($queryField);
+        if($valueField !== null){
+            $this->addFieldLike($fields,$valueField);
+        }
     }
     /**
      * @param array $fields

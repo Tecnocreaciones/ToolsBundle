@@ -73,6 +73,9 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
             if($filter->getFilterGroup() !== $group){
                 continue;
             }
+            if($filterAdded->getModelName() !== null){
+                $filter->setModelName($filterAdded->getModelName());
+            }
             $filters[] = $filter;
         }
         return $filters;
