@@ -211,14 +211,20 @@
         });</script>
     {% endmacro %}
 
-{% macro select(label,modelName,values) %}
+{% macro select(label,modelName,values,parameters) %}
     {% set modelName = modelName|replace(".","__") %}
 
     {% import _self as filters %}
+    {% set multiple = false %}
     {% set id = uniqueId() %}
     {% set modeTODO = false %}
     {% if modelName == "_TODO_"%}
         {% set modeTODO = true %}
+    {% endif %}
+    {% if parameters %}
+        {% if parameters["multiple"] is defined and parameters["multiple"] == true %}
+            {% set multiple = true %}
+        {% endif %}
     {% endif %}
 
     <div {{ filters.divParameters() }} {% if modeTODO %} style="background-color: #ffff33" {% endif %}>
@@ -226,10 +232,10 @@
 
             {{ filters.label_filter(label,id,'select') }}
             <div class="filters">
-                <select id="{{ id }}" style="width: 100px" ng-model="model.{{ modelName }}">
+                <select id="{{ id }}" style="width: 200px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}">
                     <option value=""></option>
                     {% for key,value in values %}
-                        <option value="{{ key }}">{{ value|trans({},"CoramerSigtecWebBundle") }}</option>
+                        <option value="{{ key }}">{{ value|trans({},"choices") }}</option>
                     {% endfor %}
                 </select>
             </div>

@@ -48,6 +48,7 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         $functions[] = new \Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
         $functions[] = new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
         $functions[] = new \Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
+        $functions[] = new \Twig_SimpleFunction('staticCall', array($this, 'staticCall'));
         return $functions;
     }
     
@@ -165,6 +166,20 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
     public function strpadleft($string, $pad_lenght, $pad_string = " ")
     {
         return str_pad($string, $pad_lenght, $pad_string, STR_PAD_LEFT);
+    }
+    
+    /**
+     * Llama un metodo estatico de una clase
+     * @param type $class
+     * @param type $function
+     * @param type $args
+     * @return type
+     */
+    function staticCall($class, $function, $args = array())
+    {
+        if (class_exists($class) && method_exists($class, $function))
+            return call_user_func_array(array($class, $function), $args);
+        return null;
     }
 
     private function trans($id,array $parameters = array(), $domain = 'messages')
