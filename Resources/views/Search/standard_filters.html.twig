@@ -69,13 +69,17 @@
     <a id="{{ id }}" href="#" class="eraser-all with-tooltip" title="Limpiar todos los filtros">
         <i class="fa fa-eraser fa-2x"></i>
     </a>
+    <a ng-click="reloadData()" href="#" class="eraser-all with-tooltip" title="Refresca la data">
+        <i class="fa fa-refresh fa-2x"></i>
+    </a>
     <script>
-                $(document).ready(function(){
-        $("#{{ id }}").on("click", function () {
-        $(".eraser").click();
+        $(document).ready(function(){
+            $("#{{ id }}").on("click", function () {
+                $(".eraser").click();
+            });
         });
-        });</script>
-    {% endmacro %}
+    </script>
+{% endmacro %}
 
 {% macro eraser(ids,type) %}
     {% if ids is not iterable %}
