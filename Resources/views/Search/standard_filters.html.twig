@@ -72,12 +72,12 @@
     <script>
         var clearFilters = null;
         $(document).ready(function(){
-            $("#{{ id }}").on("click", function () {
-                $(".eraser").click();
-            });
             clearFilters = function () {
                 $(".eraser").click();
             };
+            $("#{{ id }}").on("click", function () {
+                clearFilters();
+            });
         });
     </script>
 {% endmacro %}
