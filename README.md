@@ -191,3 +191,17 @@ Configurar: link_generator
         class: Coramer\Sigtec\WebBundle\Service\MyLinkGeneratorItem
         tags:
             - { name: link_generator.item }
+
+    class MyLinkGeneratorItem extends LinkGeneratorItem
+    {
+        public static function getConfigObjects() 
+        {
+            return [
+                ['class' => 'Coramer\Sigtec\WebBundle\Entity\Indicator\Indicator','icon' => 'fa fa-line-chart','route' => 'coramer_indicator_show','labelMethod' => 'getRef'],
+                ['class' => 'Coramer\Sigtec\WebBundle\Entity\StrategicView\StrategicView','icon' => null,'route' => 'coramer_strategic_view_show','labelMethod' => 'getRef'],
+                ['class' => 'Coramer\Sigtec\WebBundle\Entity\TechnicalClaim\TechnicalClaim','icon' => null,'route' => 'coramer_technical_claim_show','labelMethod' => 'getRef'],
+                ['class' => 'Coramer\Sigtec\WebBundle\Entity\TechnicalAssistance\FormalTechnicalAssistance','icon' => null,'route' => 'coramer_formal_technical_assistance_show','labelMethod' => 'getRef'],
+                ['class' => 'Coramer\Sigtec\WebBundle\Entity\ReportTechnical\ReportTechnical','icon' => null,'route' => 'coramer_sigtec_backend_company_report_technical_show'],
+            ];
+        }
+    }

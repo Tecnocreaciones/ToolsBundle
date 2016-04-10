@@ -20,6 +20,7 @@ class LinkGeneratorService implements ContainerAwareInterface
      * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\LinkGenerator\LinkGeneratorItemInterface
      */
     private $linkGeneratorItems;
+    private $linkGeneratorItemsForClass = [];
     
     /**
      * Contenedor de dependencias
@@ -58,8 +59,18 @@ class LinkGeneratorService implements ContainerAwareInterface
     private function boot (){
         $this->init = true;
         $configsObjectsDeft = $iconsDefinition = [];
+        $this->linkGeneratorItemsForClass = [];
         foreach ($this->linkGeneratorItems as $linkGeneratorItem) {
-            $configsObjectsDeft = array_merge($configsObjectsDeft,$linkGeneratorItem->getConfigObjects());
+            $configObjects = $linkGeneratorItem->getConfigObjects();
+            foreach ($configObjects as $key => $configObject) {
+//                $configObject["linkGeneratorItem"] =  $linkGeneratorItem;
+                $configObjects[$key]["linkGeneratorItem"] =  $linkGeneratorItem;
+                $this->linkGeneratorItemsForClass[$configObject["class"]] = $linkGeneratorItem;
+            }
+//            var_dump($configObjects);
+//            die;
+            
+            $configsObjectsDeft = array_merge($configsObjectsDeft,$configObjects);
             $iconsDefinition = array_merge($iconsDefinition,$linkGeneratorItem->getIconsDefinition());
         }
         $this->iconsDefinition = $iconsDefinition;
@@ -68,12 +79,16 @@ class LinkGeneratorService implements ContainerAwareInterface
             'icon' => null,
             'method' => 'renderDefault',
             'routeParameters' => array(),
+            'buildUrl' => null,
             'labelMethod' => null,
             'translation_domain' => null,
+            'linkGeneratorItem' => null,
         );
         $configsObjects = array();
+//        var_dump($configsObjectsDeft);
         foreach ($configsObjectsDeft as $key => $configObject)
         {
+//            var_dump($key);
             $config = array_merge($defaultConfig,$configObject);
             if(!isset($config['class'])){
                 throw new LogicException(sprintf('The class for item "%s" not defined',$key));
@@ -94,6 +109,7 @@ class LinkGeneratorService implements ContainerAwareInterface
             
             $configsObjects[$class]['type'][$type] = $config;
         }
+//        throw new \Exception();
         
         $this->configsObjects = $configsObjects;
     }
@@ -139,7 +155,12 @@ class LinkGeneratorService implements ContainerAwareInterface
         if($entityConfig['icon'] !== null){
             $icon = sprintf('<i class="%s"></i>',$entityConfig['icon']);
         }
-        $href = $this->buildUrl($entity, $entityConfig);
+        $buildUrl = $entityConfig["buildUrl"];
+        if($buildUrl === null){
+            $href = $this->buildUrl($entity, $entityConfig);
+        }else{
+            $href = $entityConfig["linkGeneratorItem"]->$buildUrl($entity, $entityConfig);
+        }
         $entityConfig['url'] = $href;
         if(isset($parameters['_onlyUrl']) && $parameters['_onlyUrl'] === true){
             return $href;
@@ -268,7 +289,7 @@ class LinkGeneratorService implements ContainerAwareInterface
      *
      * @see UrlGeneratorInterface
      */
-    protected function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }

@@ -32,4 +32,9 @@ abstract class LinkGeneratorItem implements LinkGeneratorItemInterface
         $this->linkGeneratorService = $linkGeneratorService;
         return $this;
     }
+    
+    protected function generateUrl($route, $parameters = array(), $referenceType = \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        return $this->linkGeneratorService->generateUrl($route, $parameters, $referenceType);
+    }
 }
