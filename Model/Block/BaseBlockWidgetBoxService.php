@@ -33,6 +33,9 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
         ),$response);
     }
     
+    public function setDefaultSettings(OptionsResolverInterface $resolver) {
+        $this->configureSettings($resolver);
+    }
     
     public function configureSettings(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)
     {
