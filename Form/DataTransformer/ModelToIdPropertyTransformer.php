@@ -120,7 +120,7 @@ class ModelToIdPropertyTransformer implements DataTransformerInterface
             }
         }
 
-        if (empty($this->property)) {
+        if ($this->toStringCallback !== null && empty($this->property)) {
             throw new \RuntimeException('Please define "property" parameter.');
         }
 
