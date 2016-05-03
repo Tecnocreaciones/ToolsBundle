@@ -20,6 +20,7 @@ class AjaxAutocompleteJSONController extends Controller
         
         $entity_alias = $request->get('entity_alias');
         $entityInf = $entities[$entity_alias];
+        $repositoryMethod = $entityInf['repository_method'];
         $formTest = $this->createForm($entityInf['form']);
         $field = $request->get("field");
         
@@ -57,6 +58,13 @@ class AjaxAutocompleteJSONController extends Controller
                 }
             }
         }
+        if($repositoryMethod !== null){
+            $qb = $repository->$repositoryMethod();
+            if($qb === null || !($qb instanceof \Doctrine\ORM\QueryBuilder) ){
+                throw new \RuntimeException(sprintf("The repository method '%s' must be return a 'Doctrine\ORM\QueryBuilder' instance."));
+            }
+            $queryBuilder = $qb;
+        }
         
 
         if ($entityInf['role'] !== 'IS_AUTHENTICATED_ANONYMOUSLY'){
@@ -64,10 +72,8 @@ class AjaxAutocompleteJSONController extends Controller
                 throw new AccessDeniedException();
             }
         }
-
         $letters = $request->get('q');
         $maxRows = $request->get('maxRows',20);
-
         switch ($entityInf['search']){
             case "begins_with":
                 $like = $letters . '%';
@@ -82,15 +88,6 @@ class AjaxAutocompleteJSONController extends Controller
                 throw new \Exception('Unexpected value of parameter "search"');
         }
 
-//        if ($entityInf['case_insensitive']) {
-//                $where_clause_lhs = 'WHERE LOWER(e.' . $property . ')';
-//                $where_clause_rhs = 'LIKE LOWER(:like)';
-//        } else {
-//
-//                $where_clause_lhs = 'WHERE e.' . $property;
-//                $where_clause_rhs = 'LIKE :like';
-//        }
-        
         $alias = $queryBuilder->getRootAlias();
         if(is_array($property)){
             $orX = $queryBuilder->expr()->orX();
@@ -117,19 +114,9 @@ class AjaxAutocompleteJSONController extends Controller
         if($paginator->hasNextPage()){
             $more = true;
         }
-//            print_r($queryBuilder->getQuery()->getSQL());
-//        $results = $em->createQuery(
-//            'SELECT e.' . $property . '
-//             FROM ' . $entityInf['class'] . ' e ' .
-//             $where_clause_lhs . ' ' . $where_clause_rhs . ' ' .
-//            'ORDER BY e.' . $property)
-//            ->setParameter('like', $like )
-//            ->setMaxResults($maxRows)
-//            ->getScalarResult();
 
         $items = array();
         foreach ($results AS $entity){
-//            $res[] = $r[$entityInf['property']];
             $items[] = array(
                 'id'    => $entity->getId(),
                 'text' => (string)$entity,
@@ -137,8 +124,6 @@ class AjaxAutocompleteJSONController extends Controller
         }
 
         return new \Symfony\Component\HttpFoundation\JsonResponse(array(
-//            'status' => 'OK',
-//            'more'   => false,
             'items'  => $items,
             'total_count'  => $paginator->getNbResults(),
             'incomplete_results' => false,
