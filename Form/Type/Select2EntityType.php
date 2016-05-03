@@ -48,6 +48,7 @@ class Select2EntityType extends AbstractType
             'use_ajax' => false,
             
             'attr'                            => array(),
+            'choices'                            => array(),
             'compound'                        => $compound,
             'model_manager'                   => null,
             'class'                           => null,
@@ -109,10 +110,10 @@ class Select2EntityType extends AbstractType
         $builder->setAttribute('to_string_callback', $options['to_string_callback']);
         
         if ($options['multiple']) {
-            $resizeListener = new ResizeFormListener(
+            $resizeListener = new \Symfony\Component\Form\Extension\Core\EventListener\ResizeFormListener(
                 'hidden', array(), true, true, true
             );
-
+            
             $builder->addEventSubscriber($resizeListener);
         }
     }
@@ -121,6 +122,7 @@ class Select2EntityType extends AbstractType
 //       $view->vars['entity_alias'] = $form->getConfig()->getAttribute('entity_alias');
         
         $view->vars['placeholder'] = $options['placeholder'];
+        $view->vars['choices'] = $options['choices'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['minimum_input_length'] = $options['minimum_input_length'];
         $view->vars['items_per_page'] = $options['items_per_page'];
