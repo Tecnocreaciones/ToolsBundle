@@ -45,6 +45,7 @@ class Select2EntityType extends AbstractType
         
         $resolver->setDefaults(array(
             'entity_alias' => null,
+            'use_ajax' => false,
             
             'attr'                            => array(),
             'compound'                        => $compound,
@@ -126,6 +127,7 @@ class Select2EntityType extends AbstractType
         $view->vars['width'] = $options['width'];
 
         // ajax parameters
+        $view->vars['use_ajax'] = $options['use_ajax'];
         $view->vars['url'] = $options['url'];
         $view->vars['route'] = $options['route'];
         $view->vars['req_params'] = $options['req_params'];

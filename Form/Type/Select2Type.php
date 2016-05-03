@@ -23,15 +23,50 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class Select2Type extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver) {
+        $compound = function (\Symfony\Component\OptionsResolver\Options $options) {
+            return $options['multiple'];
+        };
+        
         $resolver->setDefaults(array(
-            'choices' => array(
-                'm' => 'Male',
-                'f' => 'Female',
-            )
+            'attr'                            => array(),
+            'compound'                        => $compound,
+            'callback'                        => null,
+            'multiple'                        => false,
+            'width'                           => '200px',
+            'placeholder'                     => '',
+            'to_string_callback'              => null,
+
+            'empty_value' => null,
         ));
+        
     }
     
+    public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder, array $options) {
+
+    }
+    
+    public function buildView(\Symfony\Component\Form\FormView $view, \Symfony\Component\Form\FormInterface $form, array $options) {
+//       $view->vars['entity_alias'] = $form->getConfig()->getAttribute('entity_alias');
+        
+        $view->vars['placeholder'] = $options['placeholder'];
+        $view->vars['multiple'] = $options['multiple'];
+        $view->vars['width'] = $options['width'];
+
+    }
+  
     public function getParent() {
-        return ChoiceType::class;
+        return \Symfony\Component\Form\Extension\Core\Type\FormType::class;
+    }
+
+    public function getBlockPrefix() {
+        return 'select2';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 }
