@@ -188,6 +188,7 @@ class SearchQueryBuilder
             $addFieldDateDay = function($condition,$fieldValue) use ($fieldDateNormalize){
                 $this->qb->andWhere(sprintf("DAY(%s) %s %s",$fieldDateNormalize,$condition,$fieldValue));
             };
+            
             if($dateTimeFrom !== null && $dateTimeTo !== null){
                 //Se debe hacer un desde hasta completo
 
@@ -198,7 +199,8 @@ class SearchQueryBuilder
                 
                 if($dateTimeFrom !== null){
                     //Se debe hacer un desde
-                    $this->qb->andWhere($this->qb->expr()->gte($fieldDateNormalize,$dateTimeFrom->format($formatDate.$completeDateFrom)));
+                    $this->qb->andWhere($this->qb->expr()->gte(
+                            $fieldDateNormalize,$this->qb->expr()->literal($dateTimeFrom->format($formatDate.$completeDateFrom))));
                 }else{
                     //Se debe filtar individual desde
                     if($fieldDateYearFrom !== null){
