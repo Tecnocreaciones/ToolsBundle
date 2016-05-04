@@ -220,15 +220,15 @@
     {% set modelName = modelName|replace(".","__") %}
 
     {% import _self as filters %}
-    {% set multiple = false %}
+    {% set multiple = true %}
     {% set id = uniqueId() %}
     {% set modeTODO = false %}
     {% if modelName == "_TODO_"%}
         {% set modeTODO = true %}
     {% endif %}
     {% if parameters %}
-        {% if parameters["multiple"] is defined and parameters["multiple"] == true %}
-            {% set multiple = true %}
+        {% if parameters["multiple"] is defined and parameters["multiple"] == false %}
+            {% set multiple = false %}
         {% endif %}
     {% endif %}
     <div {{ filters.divParameters() }} {% if modeTODO %} style="background-color: #ffff33" {% endif %}>
