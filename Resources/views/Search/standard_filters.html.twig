@@ -260,13 +260,13 @@
 
     {% import _self as filters %}
     {#    {% set property = "name" %}#}
-    {% set multiple = false %}
+    {% set multiple = true %}
     {% if master is null %}
         {% set master = "" %}
     {% endif %}
     {% if parameters %}
-        {% if parameters["multiple"] is defined and parameters["multiple"] == true %}
-            {% set multiple = true %}
+        {% if parameters["multiple"] is defined and parameters["multiple"] == false %}
+            {% set multiple = false %}
         {% endif %}
     {% endif %}
 
