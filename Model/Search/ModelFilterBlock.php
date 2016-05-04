@@ -70,7 +70,7 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         $filters = [];
         foreach ($this->filterAddeds as $filterAdded) {
             $filter = $filterAdded->getFilter();
-            if($filter->getFilterGroup() !== $group){
+            if($filterAdded->getFilterGroup() !== $group){
                 continue;
             }
             if($filterAdded->getModelName() !== null){
@@ -84,7 +84,7 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
     public function getGroupsFilters() {
         $groups = [];
         foreach ($this->filterAddeds as $filterAdded) {
-            $group = $filterAdded->getFilter()->getFilterGroup();
+            $group = $filterAdded->getFilterGroup();
             if(in_array($group, $groups)){
                 continue;
             }
