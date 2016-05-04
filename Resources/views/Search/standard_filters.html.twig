@@ -1,7 +1,7 @@
 {% macro label_filter(label,id,type) %}
     {% import _self as filters %}
     <label class="label-filter">
-        {{ label|trans({},searchService.labelTransDefaultDomain) }}
+        {{ label|trans({},searchService.transDefaultDomains["labels"]) }}
     </label>
     {{ filters.eraser(id,type) }}
 {% endmacro %}
@@ -231,7 +231,6 @@
             {% set multiple = true %}
         {% endif %}
     {% endif %}
-
     <div {{ filters.divParameters() }} {% if modeTODO %} style="background-color: #ffff33" {% endif %}>
         <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
 
@@ -240,7 +239,7 @@
                 <select id="{{ id }}" style="width: 200px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}">
                     <option value=""></option>
                     {% for key,value in values %}
-                        <option value="{{ key }}">{{ value|trans({},"choices") }}</option>
+                        <option value="{{ key }}">{{ value|trans({},searchService.transDefaultDomains["choices"]) }}</option>
                     {% endfor %}
                 </select>
             </div>

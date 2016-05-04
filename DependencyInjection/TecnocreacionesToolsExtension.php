@@ -43,7 +43,7 @@ class TecnocreacionesToolsExtension extends Extension
                     ;
             $container->setDefinition('tecnocreaciones_tools.table_prefix_subscriber', $tablePrefixListerner);
         }
-        
+
         if($config['sequence_generator']['enable'] === true){
            $loader->load('services/sequence_generator.xml');
            

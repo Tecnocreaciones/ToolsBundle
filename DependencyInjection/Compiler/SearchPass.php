@@ -31,7 +31,7 @@ class SearchPass implements CompilerPassInterface
         
         $definition->addMethodCall("setStandardFilters",[$config["standard_filters"]]);
         $definition->addMethodCall("setTemplateFilters",[$config["template_filters"]]);
-        $definition->addMethodCall("setLabelTransDefaultDomain",[$config["label_trans_default_domain"]]);
+        $definition->addMethodCall("setTransDefaultDomains",[$config["trans_default_domain"]]);
         $filters = $container->findTaggedServiceIds("search.filter");
         
         foreach ($filters as $filterId => $value) {

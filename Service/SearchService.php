@@ -50,7 +50,7 @@ class SearchService
      *
      * @var type 
      */
-    private $labelTransDefaultDomain;
+    private $transDefaultDomains;
     
     public function __construct() {
         $this->groupFilters = [];
@@ -144,12 +144,15 @@ class SearchService
 //        var_dump($filter);
         return (string)$template->$filterName($filter->getLabel(),$filter->getModelName());
     }
-    public function setLabelTransDefaultDomain($labelTransDefaultDomain) {
-        $this->labelTransDefaultDomain = $labelTransDefaultDomain;
+
+    public function getTransDefaultDomains() {
+        return $this->transDefaultDomains;
+    }
+
+    public function setTransDefaultDomains(array $transDefaultDomains) {
+        $this->transDefaultDomains = $transDefaultDomains;
         return $this;
     }
-    
-    public function getLabelTransDefaultDomain() {
-        return $this->labelTransDefaultDomain;
-    }
+
+
 }
