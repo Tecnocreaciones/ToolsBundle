@@ -20,20 +20,33 @@ class ToolsUtils
 {
     public static function addFilters($manager,$filters,$filterBlock,$filterAddedClass,$context) {
         $i = 1;
+        $orderDefault = 10;
         foreach ($filters as $key => $filter) {
+            $filterId = $filter;
+            if(is_array($filterId)){
+                $filterId = $key;
+            }
             $modelName = null;
-            $filterInstance = $context->getReference("filter-".$filter);
+            $orderFilter = null;
+            $filterInstance = $context->getReference("filter-".$filterId);
             $filterGroup = $filterInstance->getFilterGroup();
             if(is_array($filter)){
-                $modelName = $filter["modelName"];
+                if(isset($filter["modelName"])){
+                    $modelName = $filter["modelName"];
+                }
+                if(isset($filter["orderFilter"])){
+                    $orderFilter = $filter["orderFilter"];
+                }
                 if(isset($filter["filterGroup"])){
                     $filterGroup = $context->getReference("filterGroup-".$filter["filterGroup"]);
                 }
-                $filter = $key;
+            }
+            if($orderFilter === null){
+                $orderFilter = $orderDefault;
             }
             $filterAdded = new $filterAddedClass();
             $filterAdded
-                ->setOrderFilter($i)
+                ->setOrderFilter($orderFilter)
                 ->setFilterGroup($filterGroup)
                 ->setFilter($filterInstance);
                 if($modelName !== null){
@@ -42,6 +55,7 @@ class ToolsUtils
             $manager->persist($filterAdded);
             $filterBlock->addFilterAdded($filterAdded);
             $i++;
+            $orderDefault += 10;
         }
         $manager->persist($filterBlock);
     }
