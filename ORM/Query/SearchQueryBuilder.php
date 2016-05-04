@@ -9,7 +9,7 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\ORM\Query;
 
 /**
- * Description of SearchQueryBuilder
+ * Query builder para las busquedas
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
@@ -134,6 +134,28 @@ class SearchQueryBuilder
             }
         }
         return $this;
+    }
+    /**
+     * Añade busquedas de fechas desde, hasta
+     * @param array $fieldDates
+     */
+    public function addFieldDateFromTo(array $fieldDates) 
+    {
+        foreach ($fieldDates as $fieldDate) {
+            $fieldDateDayFrom = $this->criteria->remove("day_from_".$fieldDate);
+            $fieldDateMonthFrom = $this->criteria->remove("month_from_".$fieldDate);
+            $fieldDateYearFrom = $this->criteria->remove("year_from_".$fieldDate);
+            
+            $fieldDateDayTo = $this->criteria->remove("day_to_".$fieldDate);
+            $fieldDateMonthTo = $this->criteria->remove("month_to_".$fieldDate);
+            $fieldDateYearTo = $this->criteria->remove("year_to_".$fieldDate);
+            
+            if(empty($fieldDateDayFrom) && empty($fieldDateMonthFrom) && empty($fieldDateYearFrom) ){
+                continue;
+            }
+            
+            
+        }
     }
     /**
      * @param array $fieldDates

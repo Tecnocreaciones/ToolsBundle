@@ -223,9 +223,9 @@
         });</script>
 {% endmacro %}
 
-{% macro dateFromTo(modelName) %}
-    {% set modelNameFrom = modelName ~ "_from" %}
-    {% set modelNameTo = modelName ~ "_to" %}
+{% macro dateFromTo(label,modelName) %}
+    {% set modelNameFrom = "from_"~modelName %}
+    {% set modelNameTo = "to_" ~ modelName %}
     
     {% import _self as filters %}
     {% set idFrom = uniqueId() %}
@@ -241,7 +241,7 @@
             </style>#}
             <div class="filters fromTo">
                 {{ filters.date("labels.filter.from",modelNameFrom,{commonClass: idFrom}) }}
-                {{ filters.date("labels.filter.to",modelNameFrom,{commonClass: idTo}) }}
+                {{ filters.date("labels.filter.to",modelNameTo,{commonClass: idTo}) }}
             </div>
         </div>
     </div>
