@@ -65,7 +65,7 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         return $this;
     }
     
-    public function getFiltersByGroup(\Pandco\Bundle\AppBundle\Entity\Core\Search\FilterGroup $group)
+    public function getFiltersByGroup(ModelFilterGroup $group)
     {
         $filters = [];
         foreach ($this->filterAddeds as $filterAdded) {
