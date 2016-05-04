@@ -141,7 +141,11 @@ class SearchQueryBuilder
      */
     public function addFieldDateFromTo(array $fieldDates) 
     {
+        $formatDate = "Y-m-d";
+        $completeDateFrom = " 00:00:00";
+        $completeDateTo = " 23:59:59";
         foreach ($fieldDates as $fieldDate) {
+            $fieldDateNormalize = $this->normalizeField($this->getAlias(), $fieldDate);
             $fieldDateDayFrom = $this->criteria->remove("day_from_".$fieldDate);
             $fieldDateMonthFrom = $this->criteria->remove("month_from_".$fieldDate);
             $fieldDateYearFrom = $this->criteria->remove("year_from_".$fieldDate);
@@ -154,8 +158,76 @@ class SearchQueryBuilder
                 continue;
             }
             
+            $dateTimeFrom = null;
+            $dateTimeTo = null;
+            if($fieldDateDayFrom !== null && $fieldDateMonthFrom !== null && $fieldDateYearFrom !== null){
+                $fieldDateDayFrom = str_pad($fieldDateDayFrom, 2,"0",STR_PAD_LEFT);
+                $fieldDateMonthFrom = str_pad($fieldDateMonthFrom, 2,"0",STR_PAD_LEFT);
+                $fieldDateValue = sprintf("%s/%s/%s",$fieldDateDayFrom,$fieldDateMonthFrom,$fieldDateYearFrom);
+                $dateTimeFrom = \DateTime::createFromFormat("d/m/Y", $fieldDateValue);
+            }
             
+            if($fieldDateDayTo !== null && $fieldDateMonthTo !== null && $fieldDateYearTo !== null){
+                $fieldDateDayTo = str_pad($fieldDateDayTo, 2,"0",STR_PAD_LEFT);
+                $fieldDateMonthTo = str_pad($fieldDateMonthTo, 2,"0",STR_PAD_LEFT);
+                $fieldDateValue = sprintf("%s/%s/%s",$fieldDateDayTo,$fieldDateMonthTo,$fieldDateYearTo);
+                $dateTimeTo = \DateTime::createFromFormat("d/m/Y", $fieldDateValue);
+            }
+            $addFieldDateYear = function($condition,$fieldValue) use ($fieldDateNormalize){
+                $this->qb->andWhere(sprintf("YEAR(%s) %s %s",$fieldDateNormalize,$condition,$fieldValue));
+            };
+            $addFieldDateMonth = function($condition,$fieldValue) use ($fieldDateNormalize){
+                $this->qb->andWhere(sprintf("MONTH(%s) %s %s",$fieldDateNormalize,$condition,$fieldValue));
+            };
+            $addFieldDateDay = function($condition,$fieldValue) use ($fieldDateNormalize){
+                $this->qb->andWhere(sprintf("DAY(%s) %s %s",$fieldDateNormalize,$condition,$fieldValue));
+            };
+            if($dateTimeFrom !== null && $dateTimeTo !== null){
+                //Se debe hacer un desde hasta completo
+
+                $this->qb->andWhere($this->qb->expr()->between($fieldDateNormalize,
+                        $this->qb->expr()->literal($dateTimeFrom->format($formatDate.$completeDateFrom)), 
+                        $this->qb->expr()->literal($dateTimeFrom->format($formatDate.$completeDateTo))));
+            }else{
+                
+                if($dateTimeFrom !== null){
+                    //Se debe hacer un desde
+                    $this->qb->andWhere($this->qb->expr()->gte($fieldDateNormalize,$dateTimeFrom->format($formatDate.$completeDateFrom)));
+                }else{
+                    //Se debe filtar individual desde
+                    if($fieldDateYearFrom !== null){
+                        $addFieldDateYear(">=",$fieldDateYearFrom);
+                    }
+                    if($fieldDateMonthFrom !== null){
+                        $addFieldDateMonth(">=",$fieldDateMonthFrom);
+                    }
+                    if($fieldDateDayFrom !== null){
+                        $addFieldDateDay(">=",$fieldDateDayFrom);
+                    }
+                }
+                if($dateTimeTo !== null){
+                    //Se debe hacer un hasta
+                    $this->qb->andWhere(
+                            $this->qb->expr()->lte($fieldDateNormalize,
+                                    $this->qb->expr()->literal($dateTimeTo->format($formatDate.$completeDateTo))));
+                }else{
+                    //Se debe filtar individual hasta
+                    if($fieldDateYearTo !== null){
+                        $addFieldDateYear("<=",$fieldDateYearTo);
+                    }
+                    if($fieldDateMonthTo !== null){
+                        $addFieldDateMonth("<=",$fieldDateMonthTo);
+                    }
+                    if($fieldDateDayTo !== null){
+                        $addFieldDateDay("<=",$fieldDateDayTo);
+                    }
+                }
+            }
+//            var_dump($dateTimeFrom);
+//            var_dump($dateTimeTo);
         }
+//        var_dump($this->qb->getQuery()->getSQL());
+//        die;
     }
     /**
      * @param array $fieldDates
