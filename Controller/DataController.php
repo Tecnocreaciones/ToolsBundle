@@ -33,7 +33,7 @@ class DataController extends Controller
         ];
         $paginator = $this->get($master)->findForSearch($criteria);
         $paginator->setCurrentPage($request->get("page",1));
-        
+        $paginator->setDefaultFormat(\Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator::FORMAT_ARRAY_STANDARD);
         return new \Symfony\Component\HttpFoundation\JsonResponse($paginator->toArray());
     }
 }
