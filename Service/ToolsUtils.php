@@ -18,7 +18,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
  */
 class ToolsUtils 
 {
-    public static function addFilters($manager,$filters,$filterBlock) {
+    public static function addFilters($manager,$filters,$filterBlock,$filterAddedClass,$context) {
         $i = 1;
         foreach ($filters as $key => $filter) {
             $modelName = null;
@@ -26,10 +26,10 @@ class ToolsUtils
                 $modelName = $filter["modelName"];
                 $filter = $key;
             }
-            $filterAdded = new FilterAdded();
+            $filterAdded = new $filterAddedClass();
             $filterAdded
                 ->setOrderFilter($i)
-                ->setFilter($this->getReference("filter-".$filter));
+                ->setFilter($context->getReference("filter-".$filter));
                 if($modelName !== null){
                     $filterAdded->setModelName($modelName);
                 }
