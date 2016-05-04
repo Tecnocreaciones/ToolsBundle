@@ -22,6 +22,13 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Model\Base\BaseModelMaster
 {
     /**
+     * Etiqueta
+     * @var string
+     * @ORM\Column(name="label",type="string",length=200,nullable=true)
+     */
+    protected $label;
+    
+    /**
      * Orden del filtro dentro del grupo
      * @var integer
      * @ORM\Column(name="order_filter",type="integer")
@@ -62,7 +69,7 @@ abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         return $this;
     }
     
-    public function setFilterGroup(ModelFilterGroup $filterGroup) {
+    public function setFilterGroup(ModelFilterGroup $filterGroup = null) {
         $this->filterGroup = $filterGroup;
         return $this;
     }
@@ -80,7 +87,15 @@ abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         return $this->filterGroup;
     }
     
-    
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function setLabel($label) {
+        $this->label = $label;
+        return $this;
+    }
+        
     public function __toString() {
         return $this->getFilter()?(string)$this->getFilter():"-";
     }

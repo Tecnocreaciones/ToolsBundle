@@ -70,11 +70,20 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         $filters = [];
         foreach ($this->filterAddeds as $filterAdded) {
             $filter = $filterAdded->getFilter();
-            if($filterAdded->getFilterGroup() !== $group){
+            if($filterAdded->getFilterGroup() !== null){
+                $filterGroup = $filterAdded->getFilterGroup();
+            }else{
+                $filterGroup = $filter->getFilterGroup();
+            }
+            if($filterGroup !== $group){
                 continue;
             }
+            //Reemplazar los filtros locales
             if($filterAdded->getModelName() !== null){
                 $filter->setModelName($filterAdded->getModelName());
+            }
+            if($filterAdded->getLabel() !== null){
+                $filter->setLabel($filterAdded->getLabel());
             }
             $filters[] = $filter;
         }
@@ -84,7 +93,11 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
     public function getGroupsFilters() {
         $groups = [];
         foreach ($this->filterAddeds as $filterAdded) {
-            $group = $filterAdded->getFilterGroup();
+            if($filterAdded->getFilterGroup() !== null){
+                $group = $filterAdded->getFilterGroup();
+            }else{
+                $group = $filterAdded->getFilter()->getFilterGroup();
+            }
             if(in_array($group, $groups)){
                 continue;
             }

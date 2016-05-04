@@ -29,7 +29,8 @@ class ToolsUtils
             $modelName = null;
             $orderFilter = null;
             $filterInstance = $context->getReference("filter-".$filterId);
-            $filterGroup = $filterInstance->getFilterGroup();
+            $filterGroup = null;
+            $label = null;
             if(is_array($filter)){
                 if(isset($filter["modelName"])){
                     $modelName = $filter["modelName"];
@@ -46,6 +47,7 @@ class ToolsUtils
             }
             $filterAdded = new $filterAddedClass();
             $filterAdded
+                ->setLabel($label)
                 ->setOrderFilter($orderFilter)
                 ->setFilterGroup($filterGroup)
                 ->setFilter($filterInstance);
