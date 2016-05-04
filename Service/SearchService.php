@@ -131,6 +131,9 @@ class SearchService
     
     public function renderFilter($groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
     {
+        if(empty($groupFilter)){
+            return "Error de filtro: ".$filterName;
+        }
         $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
         $this->twig->addGlobal("currentFilter", $filter);
         $this->twig->addGlobal("searchService", $this);

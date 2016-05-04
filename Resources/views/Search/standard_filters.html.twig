@@ -148,9 +148,9 @@
                 }
             </style>
             <div class="filters fromTo">
-                {{ "labels.filter.from"|trans({},"labels") }}
+                {{ "labels.filter.from"|trans({},searchService.transDefaultDomains["labels"]) }}
                 <input id="{{ idFrom }}" style="width: 60px" class="form-control input-sm" ng-model="model.{{ modelNameFrom }}" ng-init="initWatch('{{ modelNameFrom }}')" />
-                {{ "labels.filter.to"|trans({},"labels") }}
+                {{ "labels.filter.to"|trans({},searchService.transDefaultDomains["labels"]) }}
                 <input id="{{ idTo }}" style="width: 60px" class="form-control input-sm" ng-model="model.{{ modelNameTo }}" ng-init="initWatch('{{ modelNameTo }}')" />
             </div>
         </div>
