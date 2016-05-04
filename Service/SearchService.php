@@ -129,7 +129,7 @@ class SearchService
         return $foundGroupFilter;
     }
     
-    public function renderFilter(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface $groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
+    public function renderFilter($groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
     {
         $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
         $this->twig->addGlobal("currentFilter", $filter);
