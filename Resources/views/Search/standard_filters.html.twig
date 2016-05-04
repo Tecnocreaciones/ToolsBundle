@@ -1,7 +1,7 @@
 {% macro label_filter(label,id,type) %}
     {% import _self as filters %}
     <label class="label-filter">
-        {{ label|trans({},'labels') }}
+        {{ label|trans({},searchService.labelTransDefaultDomain) }}
     </label>
     {{ filters.eraser(id,type) }}
 {% endmacro %}

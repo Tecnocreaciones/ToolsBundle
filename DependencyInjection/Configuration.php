@@ -225,6 +225,7 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
                             ->booleanNode('admin')->defaultFalse()->cannotBeEmpty()->end()
                             ->scalarNode('standard_filters')->defaultValue('TecnocreacionesToolsBundle:Search:standard_filters.html.twig')->end()
+                            ->scalarNode('label_trans_default_domain')->defaultValue('labels')->end()
                             ->scalarNode('additional_filters')->defaultNull()->end()
                             ->scalarNode('template_filters')->defaultValue('TecnocreacionesToolsBundle:Search:template_filters.html.twig')->end()
                             ->arrayNode('class')

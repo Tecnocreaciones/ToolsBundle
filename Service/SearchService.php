@@ -46,6 +46,11 @@ class SearchService
      * @var \Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface
      */
     private $groupFilters;
+    /**
+     *
+     * @var type 
+     */
+    private $labelTransDefaultDomain;
     
     public function __construct() {
         $this->groupFilters = [];
@@ -138,5 +143,13 @@ class SearchService
 //        $subject = $template->renderBlock($filterName,[]);
 //        var_dump($filter);
         return (string)$template->$filterName($filter->getLabel(),$filter->getModelName());
+    }
+    public function setLabelTransDefaultDomain($labelTransDefaultDomain) {
+        $this->labelTransDefaultDomain = $labelTransDefaultDomain;
+        return $this;
+    }
+    
+    public function getLabelTransDefaultDomain() {
+        return $this->labelTransDefaultDomain;
     }
 }
