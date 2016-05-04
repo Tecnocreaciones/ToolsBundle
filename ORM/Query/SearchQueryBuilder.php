@@ -145,10 +145,10 @@ class SearchQueryBuilder
         $completeDateFrom = " 00:00:00";
         $completeDateTo = " 23:59:59";
         
-        $emConfig = $this->qb->getEntityManager()->getConfiguration();
-        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
-        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
-        $emConfig->addCustomDatetimeFunction('DAY', 'DoctrineExtensions\Query\Mysql\Day');
+//        $emConfig = $this->qb->getEntityManager()->getConfiguration();
+//        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
+//        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
+//        $emConfig->addCustomDatetimeFunction('DAY', 'DoctrineExtensions\Query\Mysql\Day');
         
         foreach ($fieldDates as $fieldDate) {
             $fieldDateNormalize = $this->normalizeField($this->getAlias(), $fieldDate);
