@@ -160,9 +160,9 @@ class SearchQueryBuilder
             $fieldDateMonthTo = $this->criteria->remove("month_to_".$fieldDate);
             $fieldDateYearTo = $this->criteria->remove("year_to_".$fieldDate);
             
-            if(empty($fieldDateDayFrom) && empty($fieldDateMonthFrom) && empty($fieldDateYearFrom) ){
-                continue;
-            }
+//            if(empty($fieldDateDayFrom) && empty($fieldDateMonthFrom) && empty($fieldDateYearFrom) ){
+//                continue;
+//            }
             
             $dateTimeFrom = null;
             $dateTimeTo = null;
