@@ -233,8 +233,8 @@ class SearchQueryBuilder
 //            var_dump($dateTimeTo);
         }
 //        var_dump($this->qb->getDQL());
-        var_dump($this->qb->getQuery()->getSQL());
-        die;
+//        var_dump($this->qb->getQuery()->getSQL());
+//        die;
     }
     /**
      * @param array $fieldDates
