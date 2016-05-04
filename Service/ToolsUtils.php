@@ -22,14 +22,20 @@ class ToolsUtils
         $i = 1;
         foreach ($filters as $key => $filter) {
             $modelName = null;
+            $filterInstance = $context->getReference("filter-".$filter);
+            $filterGroup = $filterInstance->getFilterGroup();
             if(is_array($filter)){
                 $modelName = $filter["modelName"];
+                if(isset($filter["filterGroup"])){
+                    $filterGroup = $context->getReference("filterGroup-".$filter["filterGroup"]);
+                }
                 $filter = $key;
             }
             $filterAdded = new $filterAddedClass();
             $filterAdded
                 ->setOrderFilter($i)
-                ->setFilter($context->getReference("filter-".$filter));
+                ->setFilterGroup($filterGroup)
+                ->setFilter($filterInstance);
                 if($modelName !== null){
                     $filterAdded->setModelName($modelName);
                 }

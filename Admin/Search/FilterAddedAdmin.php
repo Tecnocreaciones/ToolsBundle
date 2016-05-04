@@ -30,6 +30,7 @@ class FilterAddedAdmin extends MasterAdmin
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
+            ->add("filterGroup")
             ;
         parent::configureShowFields($show);
     }
@@ -39,6 +40,7 @@ class FilterAddedAdmin extends MasterAdmin
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
+            ->add("filterGroup")
             ;
         parent::configureFormFields($form);
     }
@@ -48,6 +50,7 @@ class FilterAddedAdmin extends MasterAdmin
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
+            ->add("filterGroup")
             ;
         parent::configureDatagridFilters($filter);
     }
@@ -58,6 +61,7 @@ class FilterAddedAdmin extends MasterAdmin
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
+            ->add("filterGroup")
             ;
         parent::configureListFields($list);
     }

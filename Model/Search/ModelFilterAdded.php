@@ -54,6 +54,12 @@ abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         $this->filterBlock = $filterBlock;
         return $this;
     }
+    
+    public function setFilterGroup(ModelFilterGroup $filterGroup) {
+        $this->filterGroup = $filterGroup;
+        return $this;
+    }
+    
     public function __toString() {
         return $this->getFilter()?(string)$this->getFilter():"-";
     }
