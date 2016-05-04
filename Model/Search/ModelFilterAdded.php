@@ -27,6 +27,13 @@ abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
      * @ORM\Column(name="order_filter",type="integer")
      */
     protected $orderFilter = 0;
+    
+    /**
+     * Nombre del modelo
+     * @var string
+     * @ORM\Column(name="model_name",type="string",length=200,nullable=true)
+     */
+    protected $modelName;
 
     public function getOrderFilter() {
         return $this->orderFilter;
@@ -59,6 +66,20 @@ abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         $this->filterGroup = $filterGroup;
         return $this;
     }
+    
+    public function getModelName() {
+        return $this->modelName;
+    }
+
+    public function setModelName($modelName) {
+        $this->modelName = $modelName;
+        return $this;
+    }
+    
+    public function getFilterGroup() {
+        return $this->filterGroup;
+    }
+    
     
     public function __toString() {
         return $this->getFilter()?(string)$this->getFilter():"-";

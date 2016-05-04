@@ -61,7 +61,7 @@ class FilterAddedAdmin extends MasterAdmin
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
-            ->add("filterGroup")
+//            ->add("filterGroup")
             ;
         parent::configureListFields($list);
     }
