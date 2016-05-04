@@ -96,6 +96,15 @@ class SearchQueryBuilder
         }
         return $this;
     }
+    /**
+     * @param array $fields
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
+     */
+    public function addFieldTextAreaLike(array $fields,$defaultValueField = null)
+    {
+        $this->addFieldLike($fields,$defaultValueField);
+        return $this;
+    }
     
     /**
      * Añade un campo para realizar una busqueda plana por un valor
@@ -237,6 +246,7 @@ class SearchQueryBuilder
 //        var_dump($this->qb->getDQL());
 //        var_dump($this->qb->getQuery()->getSQL());
 //        die;
+        return $this;
     }
     /**
      * @param array $fieldDates
