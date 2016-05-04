@@ -17,6 +17,7 @@ class StandardFilters implements GroupFilterInterface
 {
     const TYPE_INPUT= "input";
     const TYPE_INPUT_FROM_TO = "inputFromTo";
+    const TYPE_TEXT_AREA = "textArea";
     const TYPE_YES_NO = "yesNo";
     const TYPE_DATE = "date";
     const TYPE_DATE_FROM_TO = "dateFromTo";
@@ -38,6 +39,7 @@ class StandardFilters implements GroupFilterInterface
         return [
             self::TYPE_INPUT => 'choice.filter.input',
             self::TYPE_INPUT_FROM_TO => 'choice.filter.inputFromTo',
+            self::TYPE_TEXT_AREA => 'choice.filter.text_area',
             self::TYPE_YES_NO => 'choice.filter.yesNo',
             self::TYPE_DATE => 'choice.filter.date',
             self::TYPE_DATE_FROM_TO => 'choice.filter.date.from_to',

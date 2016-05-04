@@ -400,3 +400,20 @@
     {% import _self as filters %}
     {{ filters.input(currentFilter.label|default("filter.year"),currentFilter.modelName) }}
 {% endmacro %}
+
+{% macro textArea(label,modelName,id) %}
+    {% set modelName = modelName|replace(".","__") %}
+    {% import _self as filters %}
+    {% if id is null %}
+        {% set id = uniqueId() %}
+    {% endif %}
+
+    <div {{ filters.divParameters() }}>
+        <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
+            {{ filters.label_filter(label,id,'input') }}
+            <div class="filters">
+                <textarea id="{{ id }}" style="width: 200px" rows="5" cols="5" class="form-control input-sm" ng-model="model.{{ modelName }}"></textarea>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
