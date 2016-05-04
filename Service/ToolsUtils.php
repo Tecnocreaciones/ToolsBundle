@@ -38,6 +38,9 @@ class ToolsUtils
                 if(isset($filter["orderFilter"])){
                     $orderFilter = $filter["orderFilter"];
                 }
+                if(isset($filter["label"])){
+                    $label = $filter["label"];
+                }
                 if(isset($filter["filterGroup"])){
                     $filterGroup = $context->getReference("filterGroup-".$filter["filterGroup"]);
                 }
