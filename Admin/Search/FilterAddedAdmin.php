@@ -27,6 +27,8 @@ class FilterAddedAdmin extends MasterAdmin
     protected function configureShowFields(ShowMapper $show) {
         $show
             ->add("id")
+            ->add("label")
+            ->add("modelName")
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
@@ -37,6 +39,8 @@ class FilterAddedAdmin extends MasterAdmin
     
     protected function configureFormFields(FormMapper $form) {
         $form
+            ->add("label")
+            ->add("modelName")
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
@@ -47,6 +51,8 @@ class FilterAddedAdmin extends MasterAdmin
     
     protected function configureDatagridFilters(DatagridMapper $filter) {
         $filter
+            ->add("label")
+            ->add("modelName")
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
@@ -58,6 +64,8 @@ class FilterAddedAdmin extends MasterAdmin
     protected function configureListFields(ListMapper $list) {
         $list
             ->addIdentifier("id")
+            ->add("label")
+            ->add("modelName")
             ->add("orderFilter")
             ->add("filter")
             ->add("filterBlock")
