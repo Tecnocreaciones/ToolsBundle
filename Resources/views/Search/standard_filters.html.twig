@@ -361,3 +361,8 @@
     {% import _self as filters %}
     {{ filters.select(label,"_TODO_",[]) }}
 {% endmacro %}
+
+{% macro year() %}
+    {% import _self as filters %}
+    {{ filters.input(currentFilter.label|default("filter.year"),currentFilter.modelName) }}
+{% endmacro %}
