@@ -262,6 +262,9 @@
             {% set multiple = false %}
         {% endif %}
     {% endif %}
+    {% if values is null %}
+        {% set values = currentFilter.parameter('values',[]) %}
+    {% endif %}
     <div {{ filters.divParameters() }} {% if modeTODO %} style="background-color: #ffff33" {% endif %}>
         <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
 

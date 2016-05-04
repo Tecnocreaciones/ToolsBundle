@@ -53,8 +53,11 @@ abstract class BaseFilter extends ModelFilter
         $this->parameters[$key] = $value;
         return $this;
     }
-    public function getParameter($key) {
-        return $this->parameters[$key];
+    public function getParameter($key,$default = null) {
+        if(isset($this->parameters[$key])){
+            return $this->parameters[$key];
+        }
+        return $default;
     }
 
     /**
