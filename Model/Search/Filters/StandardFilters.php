@@ -19,6 +19,7 @@ class StandardFilters implements GroupFilterInterface
     const TYPE_INPUT_FROM_TO = "inputFromTo";
     const TYPE_YES_NO = "yesNo";
     const TYPE_DATE = "date";
+    const TYPE_DATE_FROM_TO = "dateFromTo";
     const TYPE_SELECT = "select";
     const TYPE_TODO = "todo";
     const TYPE_YEAR = "year";
@@ -39,6 +40,7 @@ class StandardFilters implements GroupFilterInterface
             self::TYPE_INPUT_FROM_TO => 'choice.filter.inputFromTo',
             self::TYPE_YES_NO => 'choice.filter.yesNo',
             self::TYPE_DATE => 'choice.filter.date',
+            self::TYPE_DATE_FROM_TO => 'choice.filter.date.from_to',
             self::TYPE_SELECT => 'choice.filter.select',
             self::TYPE_TODO => 'choice.filter.todo',
             self::TYPE_YEAR => 'choice.filter.year',

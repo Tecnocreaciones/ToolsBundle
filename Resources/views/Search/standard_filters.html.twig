@@ -94,18 +94,19 @@
                 $(document).ready(function(){
         showHover();
                 $("#{{ id2 }}").on("click", function () {
-        {% for id in ids %}
-            var input = $("#{{ id }}");{% if type == "select" %}
-                    input.select2("val", "");
-                    input.trigger("change");{% elseif type == "select2" %}
-                    input.select2("val", "");
-                    input.html("");
-                    input.trigger("change");{% elseif type == "input" %}
-                    input.val("");
-                    input.val(null);
-                    input.trigger("change");{% endif %}        {% endfor %}
+                    {% for id in ids %}
+                        var input = $("#{{ id }},.{{ id }}");{% if type == "select" %}
+                                input.select2("val", "");
+                                input.trigger("change");{% elseif type == "select2" %}
+                                input.select2("val", "");
+                                input.html("");
+                                input.trigger("change");{% elseif type == "input" %}
+                                input.val("");
+                                input.val(null);
+                                input.trigger("change");{% endif %}        {% endfor %}
+                                    });
                         });
-                        });</script>
+        </script>
     {% endmacro %}
 
 {% macro yesNo(label,modelName) %}
@@ -157,7 +158,7 @@
     </div>
 {% endmacro %}
 
-{% macro date(label,modelName) %}
+{% macro date(label,modelName,parameters) %}
     {% set modelName = modelName|replace(".","__") %}
 
     {% set modelNameDay = "day_" ~ modelName %}
@@ -167,19 +168,25 @@
     {% set idDay = uniqueId() %}
     {% set idMonth = uniqueId() %}
     {% set idYear = uniqueId() %}
+    {% set commonClass = "" %}
+    {% if parameters %}
+        {% if parameters["commonClass"] %}
+            {% set commonClass = parameters["commonClass"] %}
+        {% endif %}
+    {% endif %}
 
     <div {{ filters.divParameters() }}>
         <div class="with-mid-padding">
             {{ filters.label_filter(label,[idDay,idMonth,idYear],'select') }}
             <div class="filters">
-                <select id="{{ idDay }}" style="width: 60px" ng-model="model.{{ modelNameDay }}" ng-init="initWatch('{{ modelNameDay }}')">
+                <select id="{{ idDay }}" style="width: 60px" ng-model="model.{{ modelNameDay }}" ng-init="initWatch('{{ modelNameDay }}')" class="{{ commonClass }}">
                     <option value="">Día</option>
                     {% for i in 1..31 %}
                         <option value="{{ strpadleft(i,2,"0") }}">{{ strpadleft(i,2,"0") }}</option>
                     {% endfor %}
                 </select>
                 /
-                <select id="{{ idMonth }}" style="width: 60px" ng-model="model.{{ modelNameMonth }}" ng-init="initWatch('{{ modelNameMonth }}')">
+                <select id="{{ idMonth }}" style="width: 60px" ng-model="model.{{ modelNameMonth }}" ng-init="initWatch('{{ modelNameMonth }}')" class="{{ commonClass }}">
                     <option value="">Mes</option>
                     {% for i in 1..12 %}
                         <option value="{{ strpadleft(i,2,"0") }}">{{ strpadleft(i,2,"0") }}</option>
@@ -187,7 +194,7 @@
                 </select>
                 /
                 {% set date = date("now") %}
-                <select id="{{ idYear }}" style="width: 70px" ng-model="model.{{ modelNameYear }}" ng-init="initWatch('{{ modelNameYear }}')">
+                <select id="{{ idYear }}" style="width: 70px" ng-model="model.{{ modelNameYear }}" ng-init="initWatch('{{ modelNameYear }}')" class="{{ commonClass }}">
                     <option value="">Año</option>
                     {% for i in (date.format("Y"))..(date.format("Y") - 30) %}
                         <option value="{{ i }}">{{ i }}</option>
@@ -214,7 +221,31 @@
                         dropdownAutoWidth: true,
                 });
         });</script>
-    {% endmacro %}
+{% endmacro %}
+
+{% macro dateFromTo(modelName) %}
+    {% set modelNameFrom = modelName ~ "_from" %}
+    {% set modelNameTo = modelName ~ "_to" %}
+    
+    {% import _self as filters %}
+    {% set idFrom = uniqueId() %}
+    {% set idTo = uniqueId() %}
+    
+    <div {{ filters.divParameters() }}>
+        <div class="with-mid-padding">
+            {{ filters.label_filter(currentFilter.label,[idFrom,idTo],'select') }}
+            {#<style>
+                .fromTo > input {
+                    display: inline;
+                }
+            </style>#}
+            <div class="filters fromTo">
+                {{ filters.date("labels.filter.from",modelNameFrom,{commonClass: idFrom}) }}
+                {{ filters.date("labels.filter.to",modelNameFrom,{commonClass: idTo}) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 
 {% macro select(label,modelName,values,parameters) %}
     {% set modelName = modelName|replace(".","__") %}
