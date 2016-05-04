@@ -270,7 +270,7 @@
 
             {{ filters.label_filter(label,id,'select') }}
             <div class="filters">
-                <select id="{{ id }}" style="width: 200px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}">
+                <select id="{{ id }}" style="width: 260px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}">
                     <option value=""></option>
                     {% for key,value in values %}
                         <option value="{{ key }}">{{ value|trans({},searchService.transDefaultDomains["choices"]) }}</option>
@@ -315,7 +315,7 @@
             {{ filters.label_filter(label,id,'select2') }}
 
             <div class="filters" ng-init="initWatch('{{ modelName }}')">
-                <select id="{{ id }}" style="width: 200px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}"></select>
+                <select id="{{ id }}" style="width: 260px" {% if multiple %}multiple="multiple"{% endif %} ng-model="model.{{ modelName }}"></select>
             </div>
         </div>
     </div>
