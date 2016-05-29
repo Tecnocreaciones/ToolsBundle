@@ -25,11 +25,16 @@ class SearchQueryBuilder
      */
     private $criteria;
     private $alias;
+    private $orderBy;
     
-    function __construct(\Doctrine\ORM\QueryBuilder $qb, \Doctrine\Common\Collections\ArrayCollection $criteria, $alias) {
+    function __construct(\Doctrine\ORM\QueryBuilder $qb, \Doctrine\Common\Collections\ArrayCollection $criteria, $alias,$orderBy = null) {
         $this->qb = $qb;
         $this->criteria = $criteria;
         $this->alias = $alias;
+        if(is_array($orderBy)){
+            $orderBy = new \Doctrine\Common\Collections\ArrayCollection($orderBy);
+        }
+        $this->orderBy = $orderBy;
     }
 
     /**
@@ -310,6 +315,28 @@ class SearchQueryBuilder
                 ;
         }
         return $this;
+    }
+    
+    public function applySorting(array $fields)
+    {
+        if($this->orderBy === null){
+            return;
+        }
+        foreach ($fields as $field) {
+            $valueFiled = strtoupper($this->orderBy->remove($field));
+            if($valueFiled === null){
+                continue;
+            }
+            if($valueFiled !== "DESC" && $valueFiled !== "ASC"){
+                continue;
+            }
+            $fieldNormalize = $this->normalizeField($this->getAlias(), $field);
+            $this->qb->addOrderBy($fieldNormalize, $valueFiled);
+//            var_dump($fieldNormalize);
+        }
+//        die;
+//        echo($this->qb->getDQL());
+//        die;
     }
     
     private function getAlias()

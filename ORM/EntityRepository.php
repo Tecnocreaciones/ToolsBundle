@@ -154,9 +154,9 @@ class EntityRepository extends Base implements ContainerAwareInterface
      * @param type $criteria
      * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
      */
-    protected function createSearchQueryBuilder($qb, $criteria) 
+    protected function createSearchQueryBuilder($qb, $criteria,array $orderBy = []) 
     {
-        return new Query\SearchQueryBuilder($qb, $criteria, $this->getAlias());
+        return new Query\SearchQueryBuilder($qb, $criteria, $this->getAlias(),$orderBy);
     }
     
     /**
