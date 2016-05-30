@@ -317,11 +317,12 @@ class SearchQueryBuilder
         return $this;
     }
     
-    public function applySorting(array $fields)
+    public function applySorting(array $fields,array $default = [])
     {
         if($this->orderBy === null){
             return;
         }
+        $orderByCount = $this->orderBy->count();
         foreach ($fields as $field) {
             $valueFiled = strtoupper($this->orderBy->remove($field));
             if($valueFiled === null){
@@ -333,6 +334,12 @@ class SearchQueryBuilder
             $fieldNormalize = $this->normalizeField($this->getAlias(), $field);
             $this->qb->addOrderBy($fieldNormalize, $valueFiled);
 //            var_dump($fieldNormalize);
+        }
+        if($orderByCount == 0 && count($default) > 0){
+            foreach ($default as $field => $order) {
+                $fieldNormalize = $this->normalizeField($this->getAlias(), $field);
+                $this->qb->addOrderBy($fieldNormalize, $order);
+            }
         }
 //        die;
 //        echo($this->qb->getDQL());
