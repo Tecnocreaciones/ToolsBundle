@@ -50,7 +50,8 @@ abstract class MasterAdmin extends Admin
     
     protected function configureListFields(ListMapper $list) 
     {
-        if($this->hasProperty("enabled")){
+        if($this->hasProperty("enabled") && !$list->has("enabled")){
+            
             $list->add('enabled',null,array('editable' => true));
         }
         $list
