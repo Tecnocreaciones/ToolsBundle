@@ -56,11 +56,11 @@ function fnCreateGridster(isMobile,page)
     var widget_base_y = 60;
 //    console.log(base_size);
     // Calculate a height for each of the blocks.
-    $(".gridster .widget-box").each(function (i, value) {
-        var height = $(this).actual('height');
-        var units = Math.ceil(height / (widget_base_y + 5));
-        $(this).parent().attr('data-sizey', units);
-    });
+//    $(".gridster .widget-box").each(function (i, value) {
+//        var height = $(this).actual('height');
+//        var units = Math.ceil(height / (widget_base_y + 5));
+//        $(this).parent().attr('data-sizey', units);
+//    });
     var initPostSerialize = false;
     /* start gridster */
     var listWidgets =$(".gridster > ul");
