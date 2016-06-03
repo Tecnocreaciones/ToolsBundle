@@ -53,8 +53,12 @@ class SearchQueryBuilder
      */
     public function addFieldIn(array $fields)
     {
-        foreach ($fields as $field){
-            $normalizeField = $this->normalizeField($this->getAlias(),$field);
+        foreach ($fields as $key => $field){
+            $fieldToNormalize = $field;
+            if(is_string($key)){
+                $fieldToNormalize = $key;
+            }
+            $normalizeField = $this->normalizeField($this->getAlias(),$fieldToNormalize);
             $stringValue = $this->criteria->remove($field);
             $valueField = json_decode(urldecode($stringValue),false);
 //            var_dump($normalizeField);
