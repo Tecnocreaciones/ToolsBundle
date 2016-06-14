@@ -11,18 +11,22 @@
                 {%- if required %} required="required"{% endif %}
                     >
                     {% if multiple -%}
-                        {%- for idx, val in value['selected'] -%}
-                        <option {%- if disabled %} disabled="disabled"{% endif %} selected="selected" value="{{ val["id"] }}" >{{ val["text"] }}</option>
-                        {%- endfor -%}
+                        {% if value %}
+                            {%- for idx, val in value['selected'] -%}
+                                <option {%- if disabled %} disabled="disabled"{% endif %} selected="selected" value="{{ val["id"] }}" >{{ val["text"] }}</option>
+                            {%- endfor -%}
+                        {% endif %}
                     {% else -%}
                         <option {%- if disabled %} disabled="disabled"{% endif %} value="{{ value['selected'][0]['id']|default('') }}" selected="selected" >{{ value['selected'][0]['text']|default('') }}</option>
                     {% endif -%}
                 </select>
                 <div id="{{ id }}_hidden_inputs_wrap">
                     {% if multiple -%}
-                        {%- for idx, val in value['selected'] -%}
-                        <input type="hidden" name="{{ full_name }}[]" {%- if disabled %} disabled="disabled"{% endif %} value="{{ val["id"] }}">
-                        {%- endfor -%}
+                        {% if value %}
+                            {%- for idx, val in value['selected'] -%}
+                                <input type="hidden" name="{{ full_name }}[]" {%- if disabled %} disabled="disabled"{% endif %} value="{{ val["id"] }}">
+                            {%- endfor -%}
+                        {% endif %}
                     {% else -%}
                         <input type="hidden" name="{{ full_name }}" {%- if disabled %} disabled="disabled"{% endif %} value="{{ value['selected'][0]['id']|default('') }}">
                     {% endif -%}
