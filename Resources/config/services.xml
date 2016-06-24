@@ -21,6 +21,9 @@
             <argument type="service" id="security.context" />
             <argument type="service" id="security.encoder_factory" />
         </service>
+        <service id="tecno.service.time_ago" class="Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService">
+            <argument type="service" id="translator" />
+        </service>
         
     </services>
 </container>
