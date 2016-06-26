@@ -167,7 +167,7 @@ class SearchQueryBuilder
 //        $emConfig->addCustomDatetimeFunction('YEAR', 'DoctrineExtensions\Query\Mysql\Year');
 //        $emConfig->addCustomDatetimeFunction('MONTH', 'DoctrineExtensions\Query\Mysql\Month');
 //        $emConfig->addCustomDatetimeFunction('DAY', 'DoctrineExtensions\Query\Mysql\Day');
-        
+
         foreach ($fieldDates as $fieldDate) {
             $fieldDateNormalize = $this->normalizeField($this->getAlias(), $fieldDate);
             $fieldDateDayFrom = $this->criteria->remove("day_from_".$fieldDate);
@@ -197,6 +197,10 @@ class SearchQueryBuilder
                 $fieldDateValue = sprintf("%s/%s/%s",$fieldDateDayTo,$fieldDateMonthTo,$fieldDateYearTo);
                 $dateTimeTo = \DateTime::createFromFormat("d/m/Y", $fieldDateValue);
             }
+            
+//            var_dump($dateTimeFrom);
+//            var_dump($dateTimeTo);
+//            die;
             $addFieldDateYear = function($condition,$fieldValue) use ($fieldDateNormalize){
                 $this->qb->andWhere(sprintf("YEAR(%s) %s %s",$fieldDateNormalize,$condition,$fieldValue));
             };
@@ -212,7 +216,7 @@ class SearchQueryBuilder
 
                 $this->qb->andWhere($this->qb->expr()->between($fieldDateNormalize,
                         $this->qb->expr()->literal($dateTimeFrom->format($formatDate.$completeDateFrom)), 
-                        $this->qb->expr()->literal($dateTimeFrom->format($formatDate.$completeDateTo))));
+                        $this->qb->expr()->literal($dateTimeTo->format($formatDate.$completeDateTo))));
             }else{
                 
                 if($dateTimeFrom !== null){
@@ -253,7 +257,7 @@ class SearchQueryBuilder
 //            var_dump($dateTimeTo);
         }
 //        var_dump($this->qb->getDQL());
-//        var_dump($this->qb->getQuery()->getSQL());
+//        echo($this->qb->getQuery()->getSQL());
 //        die;
         return $this;
     }
