@@ -93,9 +93,13 @@ class SearchQueryBuilder
      */
     public function addFieldLike(array $fields,$defaultValueField = null)
     {
-        foreach ($fields as $field){
+        foreach ($fields as $key => $field){
+            $fieldValue = $field;
+            if(is_string($key)){
+                $fieldValue = $key;
+            }
             $normalizeField = $this->normalizeField($this->getAlias(),$field);
-            $valueField = $this->criteria->remove($field);
+            $valueField = $this->criteria->remove($fieldValue);
             if($defaultValueField !== null){
                 $valueField = $defaultValueField;
             }

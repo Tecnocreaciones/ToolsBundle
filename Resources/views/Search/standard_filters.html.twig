@@ -111,7 +111,7 @@
 
 {% macro yesNo(label,modelName) %}
     {% import _self as filters %}
-    {% set values = ["choice.no","choice.yes"] %}
+    {% set values = {1:"choice.yes",0:"choice.no"} %}
     {{ filters.select(label,modelName,values) }}
 {% endmacro %}
 
