@@ -42,6 +42,9 @@ class LinkGeneratorExtension extends Twig_Extension
      * @return type
      */
     function pathObject($entity, $type = LinkGeneratorService::TYPE_LINK_DEFAULT, array $parameters = array()) {
+        if($entity === null){
+            return "";
+        }
         return $this->linkGeneratorService->generate($entity, $type, $parameters);
     }
 
@@ -53,6 +56,9 @@ class LinkGeneratorExtension extends Twig_Extension
      * @return type
      */
     function pathObjectUrl($entity, $type = LinkGeneratorService::TYPE_LINK_DEFAULT, array $parameters = array()) {
+        if($entity === null){
+            return "";
+        }
         return $this->linkGeneratorService->generateOnlyUrl($entity, $type, $parameters);
     }
     
