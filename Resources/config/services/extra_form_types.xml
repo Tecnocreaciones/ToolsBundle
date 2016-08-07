@@ -15,5 +15,12 @@
                 <argument type="service" id="service_container" />
             </call>
         </service>
+        
+        <service id="tecnocreaciones.user.form.type.security_roles" class="Tecnocreaciones\Bundle\ToolsBundle\Form\Type\TreeSecurityRolesType">
+            <tag name="form.type" alias="tecno_security_roles" />
+
+            <argument type="service" id="sonata.user.editable_role_builder" />
+        </service>
+        
     </services>
 </container>
