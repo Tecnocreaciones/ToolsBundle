@@ -21,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Description of TreeSecurityRolesType
+ * Roles tipo arbol en sonata admin
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
@@ -145,5 +145,21 @@ class TreeSecurityRolesType extends AbstractType
     public function getName()
     {
         return $this->getBlockPrefix();
+    }
+    
+    public static function buildStandardRoles($roles,$group) {
+        $build = [];
+        foreach ($roles as $rol) {
+            $ready = [
+                $rol => 'value',
+                $group => 'data-section',
+            ];
+            $length = strlen($rol);
+            if(substr($rol, $length - 5,$length ) === "ADMIN"){
+                $ready["admin.alert"] = "data-description";
+            }
+            $build[] = $ready;
+        }
+        return $build;
     }
 }
