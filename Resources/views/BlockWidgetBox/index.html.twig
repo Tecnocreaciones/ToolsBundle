@@ -10,7 +10,7 @@
     
     {% for definitionBlockGrid in definitionsBlockGrid %}
         <details class="details margin-bottom" open="">
-            <summary role="button" aria-expanded="true">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;{{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.names|length) })|raw }}</summary>
+            <summary role="button" aria-expanded="true">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;{{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.countWidgets()) })|raw }}</summary>
             <div class="with-padding">
                 <table border="1" class="table table-bordered" style="width: 100%;">
                     <tr>

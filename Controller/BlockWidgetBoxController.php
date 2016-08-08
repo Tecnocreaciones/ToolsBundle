@@ -30,14 +30,7 @@ class BlockWidgetBoxController extends Controller
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
         $definitionsBlockGrid = $gridWidgetBoxService->getDefinitionsBlockGrid();
         
-        $definitionsBlockGridFilter = array();
-        foreach ($definitionsBlockGrid as $definitionBlockGrid)
-        {
-            if($definitionBlockGrid->hasPermission() === false){
-                continue;
-            }
-            $definitionsBlockGridFilter[] = $definitionBlockGrid;
-        }
+        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
         
         return $this->render(
             'TecnocreacionesToolsBundle:BlockWidgetBox:index.html.twig',array(

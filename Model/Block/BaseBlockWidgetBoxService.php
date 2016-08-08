@@ -23,6 +23,8 @@ use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInter
  */
 abstract class BaseBlockWidgetBoxService extends BaseBlockService implements DefinitionBlockWidgetBoxInterface
 {
+    protected $cachePermission = null;
+    
     public function execute(BlockContextInterface $blockContext, Response $response = null) {
         // merge settings
         $settings = $blockContext->getSettings();
@@ -67,13 +69,27 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
         return 'widgetBox';
     }
     
+    public function countWidgets() {
+        $count = 0;
+        foreach ($this->getNames() as $name => $values) {
+            if($this->hasPermission($name)){
+                $count++;
+            }
+        }
+        return $count;
+    }
+    
     public function hasPermission($name = null) 
     {
+        if($this->cachePermission !== null){
+            return $this->cachePermission;
+        }
         $isGranted = true;
         if($name != null){
             $names = $this->getNames();
             if(isset($names[$name]['rol'])){
                 $isGranted = $this->isGranted($names[$name]['rol']);
+                $this->cachePermission = $isGranted;
             }
         }
         return $isGranted;
