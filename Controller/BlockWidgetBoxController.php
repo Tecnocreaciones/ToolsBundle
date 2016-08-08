@@ -99,40 +99,8 @@ class BlockWidgetBoxController extends Controller
     function addAllAction(Request $request) 
     {
         $type = $request->get('type');
-        $name = $request->get('name');
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        
-        $definitionBlockGrid = $gridWidgetBoxService->getDefinitionBlockGrid($type);
-        if($definitionBlockGrid->hasPermission() == false){
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
-        }
-        $events = $definitionBlockGrid->getEvents();
-        $names = array();
-        if($name != null){
-            $names[$name] = $name;
-        }else{
-            $names = $definitionBlockGrid->getNames();
-        }
-        
-        $templates = $definitionBlockGrid->getTemplates();
-        
-        $templatesKeys = array_keys($templates);
-        $widgetBoxManager = $this->getWidgetBoxManager();
-        $i = 0;
-        foreach ($names as $name => $value) {
-            if($definitionBlockGrid->hasPermission($name) === false){
-                continue;
-            }
-            $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
-            $blockWidgetBox->setType($type);
-            $blockWidgetBox->setName($name);
-            $blockWidgetBox->setSetting('template',$templatesKeys[0]);
-            $blockWidgetBox->setEvent($events[0]);
-            $blockWidgetBox->setCreatedAt(new \DateTime());
-            $blockWidgetBox->setEnabled(true);
-            $widgetBoxManager->save($blockWidgetBox);
-            $i++;
-        }
+        $i = $gridWidgetBoxService->addAll($type);
         $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all',array(
             '%num%' => $i,
         )));

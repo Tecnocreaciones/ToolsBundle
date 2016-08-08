@@ -90,6 +90,11 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $this->event = $event;
     }
     
+    /**
+     * Añades todos los widgets disponibles del usuario por el evento
+     * @param BlockEvent $event
+     * @param type $eventName
+     */
     public function addAllPublishedByEvent(BlockEvent &$event, $eventName)
     {
         $this->setEvent($event);
@@ -98,6 +103,16 @@ class GridWidgetBoxService implements ContainerAwareInterface
             $widgetBox->setSetting('name',$widgetBox->getName());
             $this->addBlock($widgetBox);
         }
+    }
+    /**
+     * Cuenta los widgets publicados por un evento
+     * @param type $eventName
+     * @return type
+     */
+    public function countPublishedByEvent($eventName)
+    {
+        $widgetsBox = $this->getWidgetBoxManager()->findAllPublishedByEvent($eventName);
+        return count($widgetsBox);
     }
     
     function addDefinitionsBlockGrid(DefinitionBlockWidgetBoxInterface $definitionsBlockGrid) 
@@ -140,5 +155,36 @@ class GridWidgetBoxService implements ContainerAwareInterface
     
     public function setContainer(ContainerInterface $container = null) {
         $this->container = $container;
+    }
+    
+    public function addAll($type) {
+        $definitionBlockGrid = $this->getDefinitionBlockGrid($type);
+        if($definitionBlockGrid->hasPermission() == false){
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+        $events = $definitionBlockGrid->getEvents();
+        $names = array();
+        $names = $definitionBlockGrid->getNames();
+        
+        $templates = $definitionBlockGrid->getTemplates();
+        
+        $templatesKeys = array_keys($templates);
+        $widgetBoxManager = $this->getWidgetBoxManager();
+        $i = 0;
+        foreach ($names as $name => $value) {
+            if($definitionBlockGrid->hasPermission($name) === false){
+                continue;
+            }
+            $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
+            $blockWidgetBox->setType($type);
+            $blockWidgetBox->setName($name);
+            $blockWidgetBox->setSetting('template',$templatesKeys[0]);
+            $blockWidgetBox->setEvent($events[0]);
+            $blockWidgetBox->setCreatedAt(new \DateTime());
+            $blockWidgetBox->setEnabled(true);
+            $widgetBoxManager->save($blockWidgetBox);
+            $i++;
+        }
+        return $i;
     }
 }
