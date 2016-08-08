@@ -157,6 +157,12 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $this->container = $container;
     }
     
+    /**
+     * Añade todos los widgets de un tipo
+     * @param type $type
+     * @return int
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
     public function addAll($type) {
         $definitionBlockGrid = $this->getDefinitionBlockGrid($type);
         if($definitionBlockGrid->hasPermission() == false){
