@@ -91,10 +91,8 @@
             
 
             autocompleteInput.on("select2:select", function(e) {
-                console.log("select2:unselect");
                 //console.log("change "+JSON.stringify({val:e.val, added:e.added, removed:e.removed}));
                 var addedItems = e.params.data;
-                console.log(addedItems);
                 // add new input
                 var el = null;
                 if (undefined !== addedItems) {
@@ -117,7 +115,6 @@
                 }
             });
             autocompleteInput.on("select2:unselect", function(e) {
-                console.log("select2:unselect");
                 var removedItems = e.params.data;
                 // remove input
                 if (undefined !== removedItems && null !== removedItems) {
@@ -135,7 +132,6 @@
             });
 
             if (undefined==data.length || 0<data.length) { // Leave placeholder if no data set
-                console.log(data);
                 if($.isArray(data)){
                     $.each(data,function(index,value){
                         autocompleteInput.append('<option selected="selected" value="' + value.id + '">' + value.label + '</option>');
@@ -143,9 +139,6 @@
                 }else{
                     autocompleteInput.append('<option selected="selected" value="' + data.id + '">' + data.label + '</option>');
                 }
-                //autocompleteInput.select2('data', data);
-                //autocompleteInput.select2("val",data);
-                //console.log(data);
             }
         });
     </script>
