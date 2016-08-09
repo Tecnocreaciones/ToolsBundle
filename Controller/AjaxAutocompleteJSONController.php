@@ -105,9 +105,11 @@ class AjaxAutocompleteJSONController extends Controller
             ->orderBy($alias.".".$property)
 //            ->setMaxResults($maxRows)
             ;
+        $currentPage = $request->get("page",1);
         $paginator = new \Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator(new \Pagerfanta\Adapter\DoctrineORMAdapter($queryBuilder));
         $paginator
                 ->setMaxPerPage($maxRows)
+                ->setCurrentPage($currentPage)
                 ;
         $results = $paginator->getCurrentPageResults();
         $more = false;
@@ -120,6 +122,7 @@ class AjaxAutocompleteJSONController extends Controller
             $items[] = array(
                 'id'    => $entity->getId(),
                 'text' => (string)$entity,
+                'label' => (string)$entity,
             );
         }
 
