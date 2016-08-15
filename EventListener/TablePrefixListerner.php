@@ -47,10 +47,11 @@ class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
                 if(is_array($mappedTableName)){
                     continue;
                 }
+                $mappedTableName = $this->prefix . $mappedTableName;
                 if($this->tableNameLowercase === true){
                     $mappedTableName = mb_strtolower($mappedTableName);
                 }
-                $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $this->prefix . $mappedTableName;
+                $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $mappedTableName;
             }
         }
     }
