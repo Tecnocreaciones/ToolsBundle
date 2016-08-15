@@ -11,11 +11,14 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
  */
 class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
     protected $prefix = '';
+    protected $tableNameLowercase = false;
     
-    public function __construct($prefix)
-    {
+    
+    function __construct($prefix, $tableNameLowercase) {
         $this->prefix = (string) $prefix;
+        $this->tableNameLowercase = (bool)$tableNameLowercase;
     }
+
     
     public function getSubscribedEvents() {
         return array('loadClassMetadata');
@@ -28,8 +31,11 @@ class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
                             // if we are in an inheritance hierarchy, only apply this once
             return;
         }
-
-        $classMetadata->setTableName($this->prefix . $classMetadata->getTableName());
+        $nameTable = $this->prefix . $classMetadata->getTableName();
+        if($this->tableNameLowercase === true){
+           $nameTable = mb_strtolower($nameTable);
+        }
+        $classMetadata->setTableName($nameTable);
 
         foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
             if ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY) {

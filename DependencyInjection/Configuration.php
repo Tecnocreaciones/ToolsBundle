@@ -26,6 +26,7 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->booleanNode('enable')->defaultFalse()->cannotBeEmpty()->end()
+                            ->booleanNode('table_name_lowercase')->defaultFalse()->cannotBeEmpty()->end()
                             ->scalarNode('prefix')->defaultValue('abc')->cannotBeEmpty()->end()
                             ->scalarNode('prefix_separator')->defaultValue('_')->cannotBeEmpty()->end()
                             ->scalarNode('listerner_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\EventListener\TablePrefixListerner')->cannotBeEmpty()->end()

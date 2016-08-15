@@ -36,9 +36,11 @@ class TecnocreacionesToolsExtension extends Extension
         if($config['table_prefix']['enable'] === true )
         {
             $tablePrefix = $config['table_prefix']['prefix'].$config['table_prefix']['prefix_separator'];
+            $tableNameLowercase = $config['table_prefix']['table_name_lowercase'];
             $tablePrefixListerner = new Definition($config['table_prefix']['listerner_class']);
             $tablePrefixListerner
                     ->addArgument($tablePrefix)
+                    ->addArgument($tableNameLowercase)
                     ->addTag('doctrine.event_subscriber')
                     ;
             $container->setDefinition('tecnocreaciones_tools.table_prefix_subscriber', $tablePrefixListerner);
