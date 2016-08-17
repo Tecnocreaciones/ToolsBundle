@@ -16,7 +16,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Dumper;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-abstract class PhpFixturesDumper
+abstract class AbstractPhpFixturesDumper
 {
     protected $container;
     /**
