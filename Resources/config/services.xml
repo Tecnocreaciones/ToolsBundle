@@ -24,6 +24,10 @@
         <service id="tecno.service.time_ago" class="Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService">
             <argument type="service" id="translator" />
         </service>
-        
+        <service id="tecno.service.fixtures_dumper" class="Tecnocreaciones\Bundle\ToolsBundle\Service\FixturesDumperService">
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
     </services>
 </container>
