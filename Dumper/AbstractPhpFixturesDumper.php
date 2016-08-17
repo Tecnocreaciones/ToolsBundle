@@ -48,7 +48,14 @@ abstract class AbstractPhpFixturesDumper
             'baseClass' => 'AbstractFixture implements OrderedFixtureInterface',
         ));
 
-        $resolver->setRequired(["namespace","fixturesDir","fileName","order","nameFixture"]);
+        $resolver->setRequired([
+            "namespace",
+            "fixturesDir",
+            "fileName",
+            "order",
+            "nameFixture",
+            "entity"
+        ]);
     }
     
     public function __construct($container) {
@@ -101,6 +108,7 @@ abstract class AbstractPhpFixturesDumper
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+{$this->parameters["entity"]};
 $uses
                 
 /**
