@@ -108,7 +108,7 @@ abstract class AbstractPhpFixturesDumper
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-{$this->parameters["entity"]};
+use {$this->parameters["entity"]};
 $uses
                 
 /**
