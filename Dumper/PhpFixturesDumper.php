@@ -104,11 +104,10 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 $uses
                 
 /**
- * {$classDumper}.
  *
  * This class has been auto-generated
- * by the Fixtures importer.
- * Dumper at {$dateDumper}.
+ * by the fixtures importer "{$classDumper}"
+ * dumper at {$dateDumper}.
  */
 class {$this->parameters['nameFixture']} extends {$this->parameters['baseClass']}
 {
