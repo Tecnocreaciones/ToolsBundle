@@ -37,7 +37,7 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
      */
     public function getConfigurationManager() {
         return $this->container->get($this->container->getParameter("tecnocreaciones_tools.configuration_manager.name"));
-    }    
+    }
     
     public function setContainer(ContainerInterface $container = null) {
         $this->container = $container;
