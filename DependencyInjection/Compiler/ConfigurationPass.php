@@ -27,8 +27,13 @@ class ConfigurationPass implements CompilerPassInterface
         }
         $manager = $container->getDefinition($container->getParameter("tecnocreaciones_tools.configuration_manager.name"));
         $tags = $container->findTaggedServiceIds('configuration.wrapper');
+        $serviceContainer = new \Symfony\Component\DependencyInjection\Reference("service_container");
         foreach ($tags as $id => $params) {
             $definition = $container->findDefinition($id);
+            $reflection = new \ReflectionClass($definition->getClass());
+            if($reflection->isSubclassOf("Symfony\Component\DependencyInjection\ContainerAwareInterface")){
+                $definition->addMethodCall("setContainer",[$serviceContainer]);
+            }
             $manager->addMethodCall("addWrapper",[$definition]);
         }
     }
