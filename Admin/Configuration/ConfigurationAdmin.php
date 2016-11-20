@@ -42,7 +42,7 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
      * @return \Tecnocreaciones\Bundle\ToolsBundle\Service\ConfigurationService
      */
     public function getConfigurationManager() {
-        return $this->container->get('tecnocreaciones_tools.configuration_service');
+        return $this->container->get($this->container->getParameter("tecnocreaciones_tools.configuration_manager.name"));
     }    
     
     public function setContainer(ContainerInterface $container = null) {
@@ -58,6 +58,8 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
             ))
             ->add('value')
             ->add('nameWrapper', 'text',array(
+                "disabled" => true,
+                "read_only" => true,
             ))
             ->add('description', 'text',array(
             ))
@@ -90,7 +92,6 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
     
     public function postUpdate($object) {
         $this->getConfigurationManager()->clearCache();
-        
     }
     
     public function postPersist($object) {
@@ -99,5 +100,9 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
     
     public function postRemove($object) {
         $this->getConfigurationManager()->clearCache();
+    }
+    protected function configureRoutes(\Sonata\AdminBundle\Route\RouteCollection $collection) {
+        $collection->remove("delete");
+        $collection->remove("create");
     }
 }
