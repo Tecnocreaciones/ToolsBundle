@@ -25,7 +25,7 @@ class DoctrineORMAdapter extends Base {
     }
 
     public function find($key) {
-        return $this->em->getRepository("Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration")->findBy([
+        return $this->em->getRepository("Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration")->findOneBy([
             "key" => $key,
         ]);
     }
