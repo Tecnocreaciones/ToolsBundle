@@ -20,6 +20,7 @@ use Sonata\AdminBundle\Form\FormMapper;
  * Grupo de configuracion
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
+ * @deprecated since version number
  */
 class GroupAdmin extends Admin
 {

@@ -22,7 +22,7 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
     private $container;
 
     public function getGlobals() {
-        return array('appConfiguration' => $this->container->get($this->container->getParameter('tecnocreaciones_tools.configuration_service.name')));
+        return array('appConfiguration' => $this->container->get($this->container->getParameter('tecnocreaciones_tools.configuration_manager.name')));
     }
 
     public function getName() 

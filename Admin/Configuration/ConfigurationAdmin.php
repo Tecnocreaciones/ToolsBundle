@@ -57,13 +57,13 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
                 'disabled' => true,
             ))
             ->add('value')
+            ->add('nameWrapper', 'text',array(
+            ))
             ->add('description', 'text',array(
-                'disabled' => true,
             ))
-            ->add('group',null,array(
-                'disabled' => true,
-            ))
-            ->add('active')
+            ->add('enabled',null,[
+                "required" => false,
+            ])
         ;
     }
 
@@ -73,7 +73,7 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
         $datagridMapper
             ->add('key')
             ->add('value')
-            ->add('group')
+            ->add('nameWrapper')
         ;
     }
 
@@ -83,8 +83,8 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
         $listMapper
             ->addIdentifier('description')
             ->add('value')
-            ->add('group')
-            ->add('active',null,array('editable' => true))
+            ->add('nameWrapper')
+            ->add('enabled')
         ;
     }
     

@@ -65,20 +65,13 @@ class TecnocreacionesToolsExtension extends Extension
         if($config['configuration_manager']['enable'] === true){
             $loaderYml->load('services/configuration_manager.yml');
             
-            if($config['configuration_manager']['configuration_class'] === null){
-                throw new InvalidArgumentException(
-                    'The "configuration_class" option must be set in tecnocreaciones_tools.configuration_manager'
-                );
-            }
-            
-            $configurationClass = $config['configuration_manager']['configuration_class'];
+            $configurationClass = \Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration::class;
             $configurationManagerClass = $config['configuration_manager']['configuration_manager_class'];
             $configurationManagerNameService = $config['configuration_manager']['configuration_name_service'];
-            $configurationGroupClass = $config['configuration_manager']['configuration_group_class'];
             $reflectionConfigurationClass = new ReflectionClass($configurationClass);
-            if($reflectionConfigurationClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration') === false){
+            if($reflectionConfigurationClass->isSubclassOf('Tecnoready\Common\Model\Configuration\BaseEntity\DoctrineORMConfiguration') === false){
                 throw new LogicException(
-                    'The "'.$reflectionConfigurationClass->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration\\Configuration'
+                    'The "'.$reflectionConfigurationClass->getName().'" must inherit from Tecnoready\\Common\\Model\\Configuration\\BaseEntity\\DoctrineORMConfiguration'
                 );
             }
             if(isset($config['configuration_manager']['debug'])){
@@ -86,28 +79,16 @@ class TecnocreacionesToolsExtension extends Extension
             }else{
                 $debug = $container->getParameter('kernel.debug');
             }
-            $configurationService = new Definition($container->getParameter('tecnocreaciones_tools.configuration_service.class'));
-            $configurationService->addArgument(array(
-                'configuration_class' => $configurationClass,
-                'cache_dir' => $container->getParameter('kernel.cache_dir'),
-                'debug' => $debug,
-            ));
-            $configurationService->addMethodCall('setContainer',array(new Reference('service_container')));
-            $container->setDefinition('tecnocreaciones_tools.configuration_service', $configurationService);
+            $configurationManager = new Definition($configurationManagerClass,[
+                $container->getDefinition("configuration.adapter.doctrine_orm"),[
+                    "cache_dir" => $container->getParameter('kernel.cache_dir'),
+                    "add_default_wrapper" => true,
+                    "debug" => $debug,
+                ]
+            ]);
             
-            
-            
-            $reflectionConfigurationManagerClass = new ReflectionClass($configurationManagerClass);
-            if($reflectionConfigurationManagerClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager') === false){
-                throw new LogicException(
-                    'The "'.$reflectionConfigurationManagerClass->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Configuration\\ConfigurationManager'
-                );
-            }
-            $configurationManager = new Definition($configurationManagerClass);
-            $configurationManager->addMethodCall('setContainer',array(new Reference('service_container')));
             $container->setDefinition($configurationManagerNameService, $configurationManager);
-            
-            $container->setParameter('tecnocreaciones_tools.configuration_service.name', $configurationManagerNameService);
+            $container->setParameter('tecnocreaciones_tools.configuration_manager.name', $configurationManagerNameService);
             
             $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\GlobalConfExtension');
             $extensionToolsDefinition
@@ -117,7 +98,6 @@ class TecnocreacionesToolsExtension extends Extension
             $container->setDefinition('tecnocreaciones_tools.global_config_extension', $extensionToolsDefinition);
                     
             $container->setParameter('tecnocreaciones_tools.configuration_class.class', $configurationClass);
-            $container->setParameter('tecnocreaciones_tools.configuration_group_class.class', $configurationGroupClass);
         }
         
         if($config['widget_block_grid']['enable'] === true)

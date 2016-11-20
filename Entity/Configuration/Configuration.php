@@ -11,7 +11,7 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration;
 
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\Configuration as BaseConfiguration;
+use Tecnoready\Common\Model\Configuration\BaseEntity\DoctrineORMConfiguration as BaseConfiguration;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,8 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  * 
- * @ORM\Table()
  * @ORM\Entity()
+ * @ORM\Table(name="configuration",uniqueConstraints={@ORM\UniqueConstraint(name="config_idx", columns={"key", "name_wrapper"})})
  */
 class Configuration extends BaseConfiguration
 {
