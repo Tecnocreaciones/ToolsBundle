@@ -165,8 +165,12 @@ class TecnocreacionesToolsExtension extends Extension
         
         if($config['twig'] != ''){
             if($config['twig']['breadcrumb'] === true || $config['twig']['page_header'] === true){
-
-                $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.template', $config['twig']['breadcrumb_template']);
+                $loaderYml->load('services/breadcrumb.yml');
+//                var_dump($config['twig']['breadcrumb_template']);
+//                die;
+                $path = realpath($config['twig']['breadcrumb_template']);
+                $path = $config['twig']['breadcrumb_template'];
+                $container->setParameter('tecnocreaciones_tools.twig.breadcrumb.template',$path);
                 $container->setParameter('tecnocreaciones_tools.twig.page_header.template', $config['twig']['page_header_template']);
             }
         }

@@ -40,6 +40,7 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         if($config['twig'] != ''){
             if($config['twig']['breadcrumb'] === true){
                 $functions[] = new \Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html')));
+                $functions[] = new \Twig_SimpleFunction('breadcrumb_render', array($this,'breadcrumbRender'), array('is_safe' => array('html')));
             }
             if($config['twig']['page_header'] === true){
                 $functions[] = new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
@@ -180,6 +181,10 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         if (class_exists($class) && method_exists($class, $function))
             return call_user_func_array(array($class, $function), $args);
         return null;
+    }
+    
+    public function breadcrumbRender($idService = "tecno.service.breadcrumb"){
+        return $this->container->get($idService)->breadcrumbRender();
     }
 
     private function trans($id,array $parameters = array(), $domain = 'messages')
