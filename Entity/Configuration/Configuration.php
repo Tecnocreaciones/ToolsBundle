@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  * 
  * @ORM\Entity()
- * @ORM\Table(name="configuration",uniqueConstraints={@ORM\UniqueConstraint(name="config_idx", columns={"item_key", "name_wrapper"})})
+ * @ORM\Table(uniqueConstraints={@ORM\UniqueConstraint(name="config_idx", columns={"item_key", "name_wrapper"})})
  */
 class Configuration extends BaseConfiguration
 {
