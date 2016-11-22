@@ -334,9 +334,14 @@ class SearchQueryBuilder
         if($this->orderBy === null){
             return;
         }
+//        var_dump($fields);
+//        var_dump($this->orderBy);
         $orderByCount = $this->orderBy->count();
-        foreach ($fields as $field) {
-            $valueFiled = strtoupper($this->orderBy->remove($field));
+        foreach ($this->orderBy as $field => $value) {
+            if(!in_array($field, $fields)){
+                continue;
+            }
+            $valueFiled = strtoupper($value);
             if($valueFiled === null){
                 continue;
             }
@@ -353,7 +358,6 @@ class SearchQueryBuilder
                 $this->qb->addOrderBy($fieldNormalize, $order);
             }
         }
-//        die;
 //        echo($this->qb->getDQL());
 //        die;
     }
