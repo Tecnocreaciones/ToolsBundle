@@ -16,47 +16,47 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class ToolsUtils 
-{
-    public static function addFilters($manager,$filters,$filterBlock,$filterAddedClass,$context) {
+class ToolsUtils {
+
+    public static function addFilters($manager, $filters, $filterBlock, $filterAddedClass, $context) {
         $i = 1;
         $orderDefault = 10;
         foreach ($filters as $key => $filter) {
             $filterId = $filter;
-            if(is_array($filterId)){
+            if (is_array($filterId)) {
                 $filterId = $key;
             }
+            $filterInstance = $context->getReference("filter-" . $filterId);
             $modelName = null;
             $orderFilter = null;
-            $filterInstance = $context->getReference("filter-".$filterId);
             $filterGroup = null;
             $label = null;
-            if(is_array($filter)){
-                if(isset($filter["modelName"])){
+            if (is_array($filter)) {
+                if (isset($filter["modelName"])) {
                     $modelName = $filter["modelName"];
                 }
-                if(isset($filter["orderFilter"])){
+                if (isset($filter["orderFilter"])) {
                     $orderFilter = $filter["orderFilter"];
                 }
-                if(isset($filter["label"])){
+                if (isset($filter["label"])) {
                     $label = $filter["label"];
                 }
-                if(isset($filter["filterGroup"])){
-                    $filterGroup = $context->getReference("filterGroup-".$filter["filterGroup"]);
+                if (isset($filter["filterGroup"])) {
+                    $filterGroup = $context->getReference("filterGroup-" . $filter["filterGroup"]);
                 }
             }
-            if($orderFilter === null){
+            if ($orderFilter === null) {
                 $orderFilter = $orderDefault;
             }
             $filterAdded = new $filterAddedClass();
             $filterAdded
-                ->setLabel($label)
-                ->setOrderFilter($orderFilter)
-                ->setFilterGroup($filterGroup)
-                ->setFilter($filterInstance);
-                if($modelName !== null){
-                    $filterAdded->setModelName($modelName);
-                }
+                    ->setLabel($label)
+                    ->setOrderFilter($orderFilter)
+                    ->setFilterGroup($filterGroup)
+                    ->setFilter($filterInstance);
+            if ($modelName !== null) {
+                $filterAdded->setModelName($modelName);
+            }
             $manager->persist($filterAdded);
             $filterBlock->addFilterAdded($filterAdded);
             $i++;
@@ -64,4 +64,48 @@ class ToolsUtils
         }
         $manager->persist($filterBlock);
     }
+
+    public static function addFilters2($manager,$filterAddedClass,$filterBlock, array $filters, array $allFilters) {
+        $orderDefault = 10;
+        foreach ($filters as $key => $filter) {
+            $filterId = $filter;
+            if (is_array($filterId)) {
+                $filterId = $key;
+            }
+            $modelName = null;
+            $orderFilter = null;
+            $filterGroup = null;
+            $label = null;
+            if (is_array($filter)) {
+                if (isset($filter["modelName"])) {
+                    $modelName = $filter["modelName"];
+                }
+                if (isset($filter["orderFilter"])) {
+                    $orderFilter = $filter["orderFilter"];
+                }
+                if (isset($filter["label"])) {
+                    $label = $filter["label"];
+                }
+//                if (isset($filter["filterGroup"])) {
+//                    $filterGroup = $context->getReference("filterGroup-" . $filter["filterGroup"]);
+//                }
+            }
+            if ($orderFilter === null) {
+                $orderFilter = $orderDefault;
+            }
+            $filterAdded = new $filterAddedClass();
+            $filterAdded
+                    ->setLabel($label)
+                    ->setOrderFilter($orderFilter)
+                    ->setFilterGroup($filterGroup)
+                    ->setFilter($allFilters[$filterId]);
+            if ($modelName !== null) {
+                $filterAdded->setModelName($modelName);
+            }
+            $manager->persist($filterAdded);
+            $filterBlock->addFilterAdded($filterAdded);
+            $orderDefault += 10;
+        }
+    }
+
 }
