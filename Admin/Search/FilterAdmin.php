@@ -57,8 +57,15 @@ class FilterAdmin extends MasterAdmin
     }
     
     protected function configureListFields(ListMapper $list) {
-        $list
-            ->addIdentifier("label")
+        if($this->hasProperty("ref")){
+            $list->addIdentifier("ref");
+            $list
+            ->add("label");
+        }else{
+            $list
+            ->addIdentifier("label");
+        }
+            $list
             ->add("filterGroup")
             ->add("typeFilter")
             ->add("modelName");

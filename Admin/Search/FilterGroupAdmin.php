@@ -21,9 +21,14 @@ use Tecnocreaciones\Bundle\ToolsBundle\Admin\MasterAdmin;
 class FilterGroupAdmin extends MasterAdmin
 {
     protected function configureListFields(\Sonata\AdminBundle\Datagrid\ListMapper $list) {
-        $list
-            ->addIdentifier("description")
-            ;
+        if($this->hasProperty("ref")){
+            $list->addIdentifier("ref");
+            $list
+            ->add("description");
+        }else{
+            $list
+            ->addIdentifier("description");
+        }
         parent::configureListFields($list);
     }
 }
