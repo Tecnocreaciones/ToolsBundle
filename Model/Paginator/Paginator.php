@@ -191,9 +191,9 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
     protected function getLinks($route,array $parameters = array()){
         $links = array();
         if($route != null){
-            if(isset($_GET['expand'])){
-                $parameters['expand'] = $_GET['expand'];
-            }
+            $baseParams = $_GET;
+            unset($baseParams["page"]);
+            $parameters = array_merge($parameters,$baseParams);
             $links['first']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => 1)));
             $links['self']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getCurrentPage())));
             $links['last']['href'] = $this->generateUrl($route, array_merge($parameters, array('page' => $this->getNbPages())));
