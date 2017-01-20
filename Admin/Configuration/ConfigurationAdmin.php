@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Administracion del sistema
+ * Administracion del sistema (sonata.admin.configuration)
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
@@ -96,7 +96,17 @@ class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyI
         $this->getConfigurationManager()->clearCache()->warmUp();
     }
     protected function configureRoutes(\Sonata\AdminBundle\Route\RouteCollection $collection) {
+        $collection->add('clear_cache');
         $collection->remove("delete");
         $collection->remove("create");
     }
+    
+    public function getTemplate($name) {
+        if ($name === 'list') {
+            return 'TecnocreacionesToolsBundle:Admin/Configuration:list.html.twig';
+        }
+        
+        return parent::getTemplate($name);
+    }
+    
 }

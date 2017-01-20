@@ -1,0 +1,14 @@
+{% extends 'SonataAdminBundle:CRUD:list.html.twig' %}
+
+{% block actions %}
+    {% spaceless %}
+        <li>
+            <a class="sonata-action-element" href="{{ admin.generateUrl('clear_cache') }}">
+                <i class="fa fa-refresh"></i>{{ 'action.clear_cache'|trans({}, 'admin') }}
+            </a>
+        </li>
+        {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
+            <li>{% include 'SonataAdminBundle:Core:create_button.html.twig' %}</li>
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}

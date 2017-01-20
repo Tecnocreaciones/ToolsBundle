@@ -10,7 +10,7 @@ services:
         arguments:
             - ~
             - "%tecnocreaciones_tools.configuration_class.class%"
-            - ~
+            - TecnocreacionesToolsBundle:Admin/ConfigurationAdmin
         calls:
             - [ setTranslationDomain, [admin]]
             - [ setContainer, [@service_container]]
