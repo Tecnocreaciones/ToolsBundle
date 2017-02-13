@@ -112,6 +112,8 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->booleanNode('breadcrumb')->defaultFalse()->cannotBeEmpty()->end()
+                            ->scalarNode('main_icon')->defaultNull()->end()
+                            ->scalarNode('prefix_icon')->defaultNull()->end()
                             ->booleanNode('page_header')->defaultFalse()->cannotBeEmpty()->end()
                             ->scalarNode('breadcrumb_template')->defaultValue("%kernel.root_dir%/../vendor/tecnoready/common/Resources/views/Breadcrumb/breadcrumb.twig")->cannotBeEmpty()->end()
 //                            ->scalarNode('breadcrumb_template')->defaultValue('/Users/inhack20/www/mpandco/pandco_app_client/vendor/tecnoready/common/Resources/views/Breadcrumb/breadcrumb.twig')->cannotBeEmpty()->end()

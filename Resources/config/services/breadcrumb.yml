@@ -1,4 +1,4 @@
 services:
     tecno.service.breadcrumb:
         class: Tecnoready\Common\Service\Breadcrumb\BreadcrumbManager
-        arguments: [@twig,{ twig_breadcrumb_template: "%tecnocreaciones_tools.twig.breadcrumb.template%" }]
+        arguments: [@twig,%tecnocreaciones_tools.twig.breadcrumb.options%]
