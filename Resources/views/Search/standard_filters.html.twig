@@ -342,7 +342,7 @@
                         ajax: {
                         url: "{{ path(route,{m: master,'extra':extraParameters,type: type})|raw }}",
                                 dataType: 'json',
-                                delay: 250,
+                                delay: 500,
                                 data: function (params) {
                                 return {
                                 q: params.term, // search term
