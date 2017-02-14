@@ -299,12 +299,16 @@
         {% set master = "" %}
     {% endif %}
     {% set extraParameters = [] %}
+    {% set type = null %}
     {% if parameters %}
         {% if parameters["multiple"] is defined and parameters["multiple"] == false %}
             {% set multiple = false %}
         {% endif %}
         {% if parameters["extraParameters"] is defined %}
             {% set extraParameters = parameters["extraParameters"] %}
+        {% endif %}
+        {% if parameters["type"] is defined %}
+            {% set type = parameters["type"] %}
         {% endif %}
     {% endif %}
 
@@ -336,7 +340,7 @@
                         width: 'resolve',
                         dropdownAutoWidth: true,
                         ajax: {
-                        url: "{{ path(route,{m: master,'extra':extraParameters})|raw }}",
+                        url: "{{ path(route,{m: master,'extra':extraParameters,type: type})|raw }}",
                                 dataType: 'json',
                                 delay: 250,
                                 data: function (params) {

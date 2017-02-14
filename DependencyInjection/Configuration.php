@@ -228,6 +228,7 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('admin')->defaultFalse()->cannotBeEmpty()->end()
                             ->scalarNode('standard_filters')->defaultValue('TecnocreacionesToolsBundle:Search:standard_filters.html.twig')->end()
                             ->scalarNode('additional_filters')->defaultNull()->end()
+                            ->scalarNode('data_manager_service')->defaultNull()->end()
                             ->arrayNode('trans_default_domain')
                                 ->addDefaultsIfNotSet()
                                 ->children()

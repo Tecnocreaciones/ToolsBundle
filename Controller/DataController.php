@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class DataController extends Controller
+class DataController extends \FOS\RestBundle\Controller\FOSRestController
 {
     public function searchAction(Request $request) 
     {
@@ -28,12 +28,23 @@ class DataController extends Controller
         if(empty($master)){
             throw new \InvalidArgumentException("El parametro 'm' es incorrecto.");
         }
-        $criteria = [
-            'query' => $query,
-        ];
-        $paginator = $this->get($master)->findForSearch($criteria);
-        $paginator->setCurrentPage($request->get("page",1));
-        $paginator->setDefaultFormat(\Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator::FORMAT_ARRAY_STANDARD);
-        return new \Symfony\Component\HttpFoundation\JsonResponse($paginator->toArray());
+        $useDataManager = false;
+        if($master == "data_manager"){
+            $useDataManager = true;
+        }
+        if(!$useDataManager){
+            $criteria = [
+                'query' => $query,
+            ];
+            $paginator = $this->get($master)->findForSearch($criteria);
+            $paginator->setCurrentPage($request->get("page",1));
+            $paginator->setDefaultFormat(\Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator::FORMAT_ARRAY_STANDARD);
+            return new \Symfony\Component\HttpFoundation\JsonResponse($paginator->toArray());
+        }else {
+            $config = $this->container->getParameter("tecnocreaciones_tools.search.config");
+            $view = $this->view();
+            $this->get($config['data_manager_service'])->search($request,$view);
+            return $this->handleView($view);
+        }
     }
 }
