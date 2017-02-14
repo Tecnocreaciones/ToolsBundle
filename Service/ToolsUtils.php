@@ -107,5 +107,9 @@ class ToolsUtils {
             $orderDefault += 10;
         }
     }
-
+    public static function addNewFilters(&$filtersArray,array $news) {
+        foreach ($news as $new) {
+            $filtersArray[$new->getRef()] = $new;
+        }
+    }
 }
