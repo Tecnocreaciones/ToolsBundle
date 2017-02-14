@@ -69,7 +69,7 @@ abstract class ModelFilterBlock extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
     {
         $filters = [];
         foreach ($this->filterAddeds as $filterAdded) {
-            $filter = $filterAdded->getFilter();
+            $filter = clone($filterAdded->getFilter());
             if($filterAdded->getFilterGroup() !== null){
                 $filterGroup = $filterAdded->getFilterGroup();
             }else{
