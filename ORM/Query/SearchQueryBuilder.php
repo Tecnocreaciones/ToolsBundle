@@ -93,6 +93,7 @@ class SearchQueryBuilder
      */
     public function addFieldLike(array $fields,$defaultValueField = null)
     {
+        $orX = $this->qb->expr()->orX();
         foreach ($fields as $key => $field){
             $fieldValue = $field;
             if(is_string($key)){
@@ -104,9 +105,10 @@ class SearchQueryBuilder
                 $valueField = $defaultValueField;
             }
             if($valueField !== null){
-                $this->qb->andWhere($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
+                $orX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
+        $this->qb->andWhere($orX);
         return $this;
     }
     /**

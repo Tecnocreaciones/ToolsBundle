@@ -295,6 +295,7 @@
     {% import _self as filters %}
     {#    {% set property = "name" %}#}
     {% set multiple = true %}
+    {% set maximumSelectionLength = null %}
     {% if master is null %}
         {% set master = "" %}
     {% endif %}
@@ -309,6 +310,9 @@
         {% endif %}
         {% if parameters["type"] is defined %}
             {% set type = parameters["type"] %}
+        {% endif %}
+        {% if parameters["maximumSelectionLength"] is defined %}
+            {% set maximumSelectionLength = parameters["maximumSelectionLength"] %}
         {% endif %}
     {% endif %}
 
@@ -339,6 +343,7 @@
                 placeholder: "Seleccione",{#                allowClear: true,#}
                         width: 'resolve',
                         dropdownAutoWidth: true,
+                        {% if maximumSelectionLength is not null %}maximumSelectionLength: {{ maximumSelectionLength }},{% endif %}
                         ajax: {
                         url: "{{ path(route,{m: master,'extra':extraParameters,type: type})|raw }}",
                                 dataType: 'json',
