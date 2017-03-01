@@ -130,7 +130,7 @@ class SearchService
     }
     
     public function renderFilter($groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
-    {
+    {                  
         if(empty($groupFilter)){
             return "Error de filtro: ".$filterName;
         }
@@ -141,6 +141,7 @@ class SearchService
         
 //        var_dump($reflection->getFileName());
 //        var_dump($template);
+                
         
         $filterName = "get".$filterName;
 //        $subject = $template->renderBlock($filterName,[]);

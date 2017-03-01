@@ -31,6 +31,7 @@ class FilterAdmin extends MasterAdmin
             ->add("typeFilter")
             ->add("label")
             ->add("modelName")
+            ->add("rol")
 //            ->add("parameters")
             ;
         parent::configureShowFields($show);
@@ -42,6 +43,7 @@ class FilterAdmin extends MasterAdmin
             ->add("typeFilter")
             ->add("label")
             ->add("modelName")
+            ->add("rol")
 //            ->add("parameters")
             ;
         parent::configureFormFields($form);

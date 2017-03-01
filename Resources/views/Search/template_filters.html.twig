@@ -40,7 +40,7 @@
                 {% endif %}
             {% endfor %}
         </ul>
-
+        
         <div class="tab-content" {{ style|raw }}>
 
             {% for group in groups %}
@@ -51,13 +51,16 @@
                             {% for filter in entityFilters %}
                                 {% set typeFilter = filter.typeFilter %}
                                 {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
-                                <div class="col-md-4">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>
+                                {% if is_granted([filter.rol]) %}
+                                    <div class="col-md-4">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>  
+                                {% endif %}
+                                                                  
                             {% endfor %}
-    {#                          <div class="col-md-4">.col-md-4</div>#}
+                            {#                          <div class="col-md-4">.col-md-4</div>#}
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+            {% endfor %}            
         </div>
     </div>
 
