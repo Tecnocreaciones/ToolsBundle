@@ -20,9 +20,22 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
 {
 
     private $container;
-
+    
+    /**
+     * @return \Tecnoready\Common\Service\ConfigurationService\ConfigurationManager
+     */
+    protected function getConfigurationManager() {
+        return $this->container->get($this->container->getParameter('tecnocreaciones_tools.configuration_manager.name'));
+    }
+    
     public function getGlobals() {
-        return array('appConfiguration' => $this->container->get($this->container->getParameter('tecnocreaciones_tools.configuration_manager.name')));
+        return array('appConfiguration' => $this->getConfigurationManager());
+    }
+    
+    public function getFunctions() 
+    {
+        $functions[] = new \Twig_SimpleFunction('getAppConfig', array($this, 'getAppConfig'));
+        return $functions;
     }
 
     public function getName() 
@@ -36,7 +49,14 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
             new \Twig_SimpleFilter('clearString', array($this, 'clearString')),
         );
     }
-
+    
+    public function getAppConfig($method,$wrapperName) {
+        $configurationManager = $this->getConfigurationManager();
+        $wrapper = $configurationManager->getWrapper($wrapperName);
+        
+        return call_user_func_array(array($wrapper,$method),array());
+    }
+    
     /**
      * Reemplaza todos los acentos por sus equivalentes sin ellos
      *
