@@ -108,7 +108,9 @@ class SearchQueryBuilder
                 $orX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
-        $this->qb->andWhere($orX);
+        if($orX->count() > 0){
+            $this->qb->andWhere($orX);
+        }
         return $this;
     }
     /**
