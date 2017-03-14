@@ -1,0 +1,15 @@
+parameters:
+    tecnoready.swiftmailer_db.spool.class: Tecnoready\Common\Spool\ORM\DatabaseSpool
+    
+services:
+    tecnoready.repository.email:
+        class: Tecnoready\Common\Model\Email\ORM\EmailRepository
+        factory: ['@doctrine.orm.default_entity_manager',getRepository]
+        arguments: [%tecnoready.swiftmailer_db.spool.entity_class%]
+    tecnoready.swiftmailer_db.spool:
+        class: %tecnoready.swiftmailer_db.spool.class%
+        arguments: ["@tecnoready.repository.email",%tecnoready.swiftmailer_db.spool.entity_class%,%kernel.environment%,%tecnoready.swiftmailer_db.spool.keep_sent_messages%]
+    swiftmailer.spool.db:
+        alias: tecnoready.swiftmailer_db.spool
+    swiftmailer.mailer.default.spool.db:
+        alias: tecnoready.swiftmailer_db.spool

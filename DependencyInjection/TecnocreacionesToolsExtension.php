@@ -243,6 +243,13 @@ class TecnocreacionesToolsExtension extends Extension
             }
         }
         
+        if($config['database_spool']['enable'] === true){
+           $loaderYml->load('services/database_spool.yml');
+           
+           $container->setParameter("tecnoready.swiftmailer_db.spool.entity_class", $config['database_spool']["entity_class"]);
+           $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
+        }
+        
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
