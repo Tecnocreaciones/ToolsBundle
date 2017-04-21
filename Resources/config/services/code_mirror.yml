@@ -1,7 +1,7 @@
 services:
     code_mirror.asset_manager:
         class: Tecnocreaciones\Bundle\ToolsBundle\Asset\AssetManager
-        arguments: [@file_locator, %code_mirror.mode_dirs%, %code_mirror.themes_dirs%,%code_mirror.codemirror_compressed%,  %kernel.cache_dir%, %kernel.environment%]
+        arguments: ['@file_locator', %code_mirror.mode_dirs%, %code_mirror.themes_dirs%,%code_mirror.codemirror_compressed%,  %kernel.cache_dir%, %kernel.environment%]
 
     code_mirror.form.type:
         class: %code_mirror.form_type%
@@ -11,6 +11,6 @@ services:
 
     code_mirror.twig.extension:
         class: Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\CodeMirrorExtension
-        arguments: [@code_mirror.asset_manager]
+        arguments: ['@code_mirror.asset_manager']
         tags:
             - { name: twig.extension }

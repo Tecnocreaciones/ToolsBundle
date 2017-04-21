@@ -2,10 +2,10 @@ services:
     tecnocreaciones_tools.service.link_generator:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService
         calls:
-            - [ setContainer, [@service_container]]
+            - [ setContainer, ['@service_container']]
     link_generator.twig.extension:
         class: Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\LinkGeneratorExtension
         tags:
             - { name: twig.extension }        
         calls:
-            - [ setLinkGeneratorService, [@tecnocreaciones_tools.service.link_generator]]
+            - [ setLinkGeneratorService, ['@tecnocreaciones_tools.service.link_generator']]

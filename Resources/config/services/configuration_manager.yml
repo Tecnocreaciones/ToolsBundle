@@ -13,7 +13,7 @@ services:
             - TecnocreacionesToolsBundle:Admin/ConfigurationAdmin
         calls:
             - [ setTranslationDomain, [admin]]
-            - [ setContainer, [@service_container]]
+            - [ setContainer, ['@service_container']]
 #    sonata.admin.configuration_group:
 #        class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\GroupAdmin
 #        tags:

@@ -4,16 +4,16 @@ services:
     tecnocreaciones_tools.search:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\SearchService
         calls:
-            - [ setFilterBlockRepository, [@app.repository.search.filter_block]]
-            - [ setTwig, [@twig]]
-            - [ addGroupFilter, [@tecnocreaciones_tools.search.standard]]
+            - [ setFilterBlockRepository, ['@app.repository.search.filter_block']]
+            - [ setTwig, ['@twig']]
+            - [ addGroupFilter, ['@tecnocreaciones_tools.search.standard']]
     tools.search.twig.extension:
         class: Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\SearchExtension
         tags:
             - { name: twig.extension }        
         calls:
-            - [ setContainer, [@service_container]]
-            - [ setSearchService, [@tecnocreaciones_tools.search]]
+            - [ setContainer, ['@service_container']]
+            - [ setSearchService, ['@tecnocreaciones_tools.search']]
     app.repository.search.filter_block:
         class: Tecnocreaciones\Bundle\ToolsBundle\Model\Search\FilterBlockRepository
         tags:
