@@ -29,6 +29,7 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('table_name_lowercase')->defaultFalse()->end()
                             ->scalarNode('prefix')->defaultValue('abc')->cannotBeEmpty()->end()
                             ->scalarNode('prefix_separator')->defaultValue('_')->cannotBeEmpty()->end()
+                            ->scalarNode('on_delete')->defaultNull()->end()
                             ->scalarNode('listerner_class')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\EventListener\TablePrefixListerner')->cannotBeEmpty()->end()
                         ->end()
                     ->end()

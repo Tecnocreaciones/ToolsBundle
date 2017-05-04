@@ -12,14 +12,18 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
     protected $prefix = '';
     protected $tableNameLowercase = false;
-    
-    
+    private $config;
+            
     function __construct($prefix, $tableNameLowercase) {
         $this->prefix = (string) $prefix;
         $this->tableNameLowercase = (bool)$tableNameLowercase;
     }
 
-    
+    public function setConfig(array $config) {
+        $this->config = $config;
+        return $this;
+    }
+        
     public function getSubscribedEvents() {
         return array('loadClassMetadata');
     }
@@ -38,6 +42,13 @@ class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
         $classMetadata->setTableName($nameTable);
 
         foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
+            if ($this->config['on_delete'] !== null &&
+                    ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE || $mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_ONE)
+                    && $classMetadata->associationMappings[$fieldName]['isOwningSide']) {
+                foreach ($classMetadata->associationMappings[$fieldName]['joinColumns'] as $key => $joinColumn) {
+                    $classMetadata->associationMappings[$fieldName]['joinColumns'][$key]['onDelete'] = $this->config['on_delete'];
+                }
+            }
             if ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY) {
                 if(isset($classMetadata->associationMappings[$fieldName]['joinTable']['name'])){
                     $mappedTableName = $classMetadata->associationMappings[$fieldName]['joinTable']['name'];
@@ -52,6 +63,7 @@ class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
                     $mappedTableName = mb_strtolower($mappedTableName);
                 }
                 $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $mappedTableName;
+                
             }
         }
     }
