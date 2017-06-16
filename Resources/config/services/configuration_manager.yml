@@ -1,8 +1,4 @@
 services:
-    configuration.adapter.doctrine_orm:
-        class: Tecnocreaciones\Bundle\ToolsBundle\Service\ConfigurationService\Adapter\DoctrineORMAdapter
-        arguments: ["@doctrine.orm.entity_manager"]
-        
     sonata.admin.configuration:
         class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\ConfigurationAdmin
         tags:

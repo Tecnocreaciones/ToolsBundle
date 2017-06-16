@@ -181,7 +181,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         if(!isset($this->cacheMemoryMasks[$maskMd5])){
             $this->cacheMemoryMasks[$maskMd5] = 0;
         }else{
-            $this->cacheMemoryMasks[$maskMd5] = (integer)$this->cacheMemoryMasks[$maskMd5] + 1;
+//            $this->cacheMemoryMasks[$maskMd5] = (integer)$this->cacheMemoryMasks[$maskMd5] + 1;
         }
         $counter+=$maskOffSetAdd;
         $counter-=$maskOffSetSubtract;

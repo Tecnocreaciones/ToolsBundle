@@ -33,6 +33,11 @@ class EntityRepository extends Base implements ContainerAwareInterface
     protected $securityContext;
     
     protected $container;
+    /**
+     * 
+     * @param QueryBuilder $queryBuilder
+     * @return Paginator
+     */
     public function getPaginator(QueryBuilder $queryBuilder)
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
