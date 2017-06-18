@@ -11,7 +11,7 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -22,7 +22,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-abstract class MasterAdmin extends Admin
+abstract class MasterAdmin extends AbstractAdmin
 {
     const FORMAT_DATE_TIME = 'Y-m-d h:i:s a';
     private $reflectionClass;

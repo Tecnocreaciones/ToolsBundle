@@ -11,7 +11,7 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration;
 
-use Sonata\AdminBundle\Admin\Admin;
+use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class ConfigurationAdmin extends Admin implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
+class ConfigurationAdmin extends AbstractAdmin implements \Symfony\Component\DependencyInjection\ContainerAwareInterface
 {
     /**
      *
