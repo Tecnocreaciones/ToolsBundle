@@ -39,7 +39,7 @@ abstract class SequenceGeneratorBase implements SequenceGeneratorBaseInterface
         $field = $config['field'];
         $qb = $this->sequenceGenerator->createQueryBuilder();
         $qb->from($className,'p');
-        return $this->sequenceGenerator->generateNext($qb, $mask,$field);
+        return $this->sequenceGenerator->generateNext($qb, $mask,$field,[],$config["options"]);
     }
     
     /**
@@ -59,6 +59,7 @@ abstract class SequenceGeneratorBase implements SequenceGeneratorBaseInterface
         $defaultConfig = [
             'method' => 'buildRef',
             'field' => 'ref',
+            'options' => array()
         ];
         $config = array_merge($defaultConfig,$classMap[$className]);
         $config['className'] = $className;

@@ -95,7 +95,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      * @return type
      * @throws \InvalidArgumentException
      */
-    protected function generate(\Doctrine\ORM\QueryBuilder $qb, $mask,$field,$mode = self::MODE_NEXT,$parameters = array()) 
+    protected function generate(\Doctrine\ORM\QueryBuilder $qb, $mask,$field,$mode = self::MODE_NEXT,$parameters = array(),array $options = []) 
     {
         $aliases = $qb->getRootAliases();
         $alias = $aliases[0];
@@ -181,7 +181,9 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         if(!isset($this->cacheMemoryMasks[$maskMd5])){
             $this->cacheMemoryMasks[$maskMd5] = 0;
         }else{
-//            $this->cacheMemoryMasks[$maskMd5] = (integer)$this->cacheMemoryMasks[$maskMd5] + 1;
+            if(isset($options["use_cache"]) && $options["use_cache"] === true){
+                $this->cacheMemoryMasks[$maskMd5] = (integer)$this->cacheMemoryMasks[$maskMd5] + 1;
+            }
         }
         $counter+=$maskOffSetAdd;
         $counter-=$maskOffSetSubtract;
@@ -236,9 +238,9 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
      * @param type $parameters Values of additional masks array('miMask' => 'Value')
      * @return type
      */
-    function generateNext(\Doctrine\ORM\QueryBuilder $qb,$mask,$field,$parameters = array())
+    function generateNext(\Doctrine\ORM\QueryBuilder $qb,$mask,$field,$parameters = array(),array $options = array())
     {
-        return $this->generate($qb, $mask,$field,self::MODE_NEXT,$parameters);
+        return $this->generate($qb, $mask,$field,self::MODE_NEXT,$parameters,$options);
     }
     
     /**
