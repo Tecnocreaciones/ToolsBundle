@@ -347,7 +347,7 @@
                         ajax: {
                         url: "{{ path(route,{m: master,'extra':extraParameters,type: type})|raw }}",
                                 dataType: 'json',
-                                delay: 500,
+                                delay: 1200,
                                 data: function (params) {
                                 return {
                                 q: params.term, // search term
@@ -392,7 +392,7 @@
                             escapeMarkup: function (markup) {
                             return markup;
                             }, // let our custom formatter work
-                            minimumInputLength: 0,
+                            minimumInputLength: 1,
                             templateResult: formatRepo, // omitted for brevity, see the source of this page
                             templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
                     });

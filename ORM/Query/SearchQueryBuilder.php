@@ -60,9 +60,11 @@ class SearchQueryBuilder
             }
             $normalizeField = $this->normalizeField($this->getAlias(),$fieldToNormalize);
             $stringValue = $this->criteria->remove($field);
-            $valueField = json_decode(urldecode($stringValue),false);
-//            var_dump($normalizeField);
-//            die;
+            if(is_array($stringValue)){
+                $valueField = $stringValue;
+            }else{
+                $valueField = json_decode(urldecode($stringValue),false);
+            }
             if(count($valueField) > 0){
                 $this->qb
                     ->andWhere($this->qb->expr()->in($normalizeField, $valueField))
@@ -133,6 +135,7 @@ class SearchQueryBuilder
         if($valueField !== null){
             $this->addFieldLike($fields,$valueField);
         }
+        return $this;
     }
     /**
      * @param array $fields
