@@ -91,21 +91,33 @@
         <i class="fa fa-eraser"></i>
     </a>
     <script>
-                $(document).ready(function(){
-        showHover();
+        $(document).ready(function(){
+            showHover();
                 $("#{{ id2 }}").on("click", function () {
                     {% for id in ids %}
-                        var input = $("#{{ id }},.{{ id }}");{% if type == "select" %}
-                                input.select2("val", "");
-                                input.trigger("change");{% elseif type == "select2" %}
-                                input.select2("val", "");
-                                input.html("");
-                                input.trigger("change");{% elseif type == "input" %}
-                                input.val("");
-                                input.val(null);
-                                input.trigger("change");{% endif %}        {% endfor %}
-                                    });
-                        });
+                        var input = $("#{{ id }},.{{ id }}");
+                        {% if type == "select" %}
+                            input.select2("val", "");
+                            var html = input.html();
+                            input.html("");
+                            input.html(html);
+                            input.each(function(){
+                                $(this).prop('selectedIndex', 0);
+                                $('option', this).removeAttr('selected');
+                            });
+                            input.trigger("change");
+                        {% elseif type == "select2" %}
+                            input.select2("val", "");
+                            input.html("");
+                            input.trigger("change");
+                        {% elseif type == "input" %}
+                            input.val("");
+                            input.val(null);
+                            input.trigger("change");
+                        {% endif %}        
+                    {% endfor %}
+                });
+            });
         </script>
     {% endmacro %}
 
