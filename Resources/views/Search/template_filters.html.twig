@@ -49,7 +49,14 @@
                     <div class="container-fluid">
                         <div class="row">
                             {% for filter in entityFilters %}
-                                {% if searchService.isHidden(filter) == false %}
+                                {% set render = true %}
+                                {% if filter.rol is not null and is_granted(filter.rol) == false %}
+                                    {% set render = false %}
+                                {% endif %}
+                                {% if searchService.isHidden(filter) == true %}
+                                    {% set render = false %}
+                                {% endif %}
+                                {% if render %}
                                     {% set typeFilter = filter.typeFilter %}
                                     {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
                                     {% if filter.rol is not null%}
