@@ -52,8 +52,15 @@ class SearchService
      */
     private $transDefaultDomains;
     
+    /**
+     * Filtros a ocultar en la renderizacion
+     * @var array
+     */
+    private $hideFilters;
+
     public function __construct() {
         $this->groupFilters = [];
+        $this->hideFilters = [];
     }
     
     public function renderFilterArea($areaName) {
@@ -129,10 +136,17 @@ class SearchService
         return $foundGroupFilter;
     }
     
+    /**
+     * Renderiza un filtro
+     * @param type $groupFilter
+     * @param string $filterName
+     * @param \Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter
+     * @return type
+     */
     public function renderFilter($groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
-    {                  
+    { 
         if(empty($groupFilter)){
-            return "Error de filtro: ".$filterName;
+            return "Error de filtro: ".$filterName." - ref: ".$filter->getRef();
         }
         $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
         $this->twig->addGlobal("currentFilter", $filter);
@@ -157,6 +171,27 @@ class SearchService
         $this->transDefaultDomains = $transDefaultDomains;
         return $this;
     }
-
-
+    
+    /**
+     * Añade la referencia de un filtro para ignorarlo en la renderizacion
+     * @param type $filterRef
+     * @return $this
+     */
+    public function addHideFilters($filterRef) {
+        $this->hideFilters[$filterRef] = $filterRef;
+        return $this;
+    }
+    
+    /**
+     * ¿Esta oculto?
+     * @param \Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter
+     * @return type
+     */
+    public function isHidden(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter) {
+        return isset($this->hideFilters[$filter->getRef()]);
+    }
+    
+    public function finish() {
+        $this->hideFilters = [];
+    }
 }

@@ -49,15 +49,17 @@
                     <div class="container-fluid">
                         <div class="row">
                             {% for filter in entityFilters %}
-                                {% set typeFilter = filter.typeFilter %}
-                                {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
-                                {% if filter.rol is not null%}
-                                    {% if is_granted([filter.rol]) %}
-                                        <div class="col-md-4">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>  
-                                    {% endif %}
-                                {% else %}
-                                    <div class="col-md-4">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>  
-                                {%endif%}
+                                {% if searchService.isHidden(filter) == false %}
+                                    {% set typeFilter = filter.typeFilter %}
+                                    {% set groupFilter = searchService.getFilterGroupByFilter(typeFilter) %}
+                                    {% if filter.rol is not null%}
+                                        {% if is_granted([filter.rol]) %}
+                                            <div class="col-md-4" title="{{ filter.ref }}">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>  
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="col-md-4" title="{{ filter.ref }}">{{ searchService.renderFilter(groupFilter,typeFilter,filter)|raw }}</div>  
+                                    {%endif%}
+                                {% endif %}
                                                                   
                             {% endfor %}
                             {#                          <div class="col-md-4">.col-md-4</div>#}
@@ -67,5 +69,5 @@
             {% endfor %}            
         </div>
     </div>
-
+    {{ searchService.finish() }}
 {% endfor %}

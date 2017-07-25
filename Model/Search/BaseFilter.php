@@ -160,6 +160,8 @@ abstract class BaseFilter extends ModelFilter
         return $this->filterGroup;
     }
     
+    public abstract function getRef();
+    
     public function __toString() {
         return $this->getLabel()?:"-";
     }

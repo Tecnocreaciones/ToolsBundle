@@ -305,7 +305,7 @@
     {% set modelName = modelName|replace(".","__") %}
 
     {% import _self as filters %}
-    {#    {% set property = "name" %}#}
+    {% set custom_property = null %}
     {% set multiple = true %}
     {% set maximumSelectionLength = null %}
     {% if master is null %}
@@ -326,6 +326,9 @@
         {% if parameters["maximumSelectionLength"] is defined %}
             {% set maximumSelectionLength = parameters["maximumSelectionLength"] %}
         {% endif %}
+        {% if parameters["custom_property"] is defined %}
+            {% set custom_property = parameters["custom_property"] %}
+        {% endif %}
     {% endif %}
 
     {% set id = uniqueId() %}
@@ -344,11 +347,11 @@
         function formatRepo(repo) {
         if (repo.loading)
                 return repo.text;
-                return repo.{{ property }};
+                return {% if custom_property is not null %}{{ custom_property|raw }}{% else %}repo.{{ property }}{% endif %};
         }
 
         function formatRepoSelection(repo) {
-        return repo.{{ property }} || repo.text;
+            return {% if custom_property is not null %}{{ custom_property|raw }}{% else %}repo.{{ property }}{% endif %} || repo.text;
         }
         var select = $("#{{ id }}");
                 select.select2({
