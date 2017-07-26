@@ -181,7 +181,13 @@ class LinkGeneratorService implements ContainerAwareInterface
         return $link;
     }
     
-    private function buildUrl($entity,$entityConfig) {
+    /**
+     * Genera la url
+     * @param type $entity
+     * @param type $entityConfig
+     * @return type
+     */
+    public function buildUrl($entity,$entityConfig) {
         $route = $entityConfig['route'];
         $routeParameters = $entityConfig['routeParameters'];
         $href = '';
@@ -226,7 +232,12 @@ class LinkGeneratorService implements ContainerAwareInterface
     private function generateFromConfig($entity,array $entityConfig,$type,$parameters = array())
     {
         $method = $entityConfig['type'][$type]['method'];
-        return call_user_func_array(array($this,$method), array($entity,$entityConfig['type'][$type],$type,$parameters));
+        if($method === "renderDefault"){
+            return call_user_func_array(array($this,$method), array($entity,$entityConfig['type'][$type],$type,$parameters));
+        }else{
+            $object = $entityConfig['type'][$type]["linkGeneratorItem"];
+            return call_user_func_array(array($object,$method), array($entity,$entityConfig['type'][$type],$type,$parameters));
+        }
     }
 
     /**
@@ -294,7 +305,7 @@ class LinkGeneratorService implements ContainerAwareInterface
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
     
-    protected function trans($id, $parameters = array(), $domain = 'message')
+    public function trans($id, $parameters = array(), $domain = 'message')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
     }
