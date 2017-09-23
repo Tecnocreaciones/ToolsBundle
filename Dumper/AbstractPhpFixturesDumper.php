@@ -45,7 +45,8 @@ abstract class AbstractPhpFixturesDumper
         $resolver->setDefaults(array(
             'rootDir' => $rootDir,
             'baseDirXls' => dirname($rootDir).$ds.'importar',
-            'baseClass' => 'AbstractFixture implements OrderedFixtureInterface',
+            'baseClass' => 'AbstractFixture implements OrderedFixtureInterface,ContainerAwareInterface',
+            'uses' => ["Symfony\Component\DependencyInjection\ContainerAwareInterface"],
         ));
 
         $resolver->setRequired([
@@ -80,8 +81,9 @@ abstract class AbstractPhpFixturesDumper
      */
     public function dump(array $options = array())
     {
+        $usesArray = array_merge($this->parameters['uses'],$this->getUses());
         $uses = '';
-        foreach ($this->getUses() as $use) {
+        foreach ($usesArray as $use) {
             $uses .= sprintf("use %s;",$use);
         }
         $flush = "\$manager->flush();";
@@ -119,6 +121,12 @@ $uses
  */
 class {$this->parameters['nameFixture']} extends {$this->parameters['baseClass']}
 {
+    use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
+    
+    protected function get(\$id){
+        return \$this->container->get(\$id);
+    }
+
     public function getOrder() {
         return {$this->parameters['order']};
     }
