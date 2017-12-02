@@ -441,3 +441,12 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro choice(label,modelName) %}
+    {% import searchService.standardFilters as standardFilters %}    
+    {% set values = staticCall(currentFilter.getParameter("staticCallClass"),currentFilter.getParameter("staticCallMethod")) %}
+    {{ standardFilters.select(label,modelName,values,{
+            multiple: true
+        }) 
+    }}
+{% endmacro %}

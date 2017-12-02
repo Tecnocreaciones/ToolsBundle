@@ -16,6 +16,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters;
 class StandardFilters implements GroupFilterInterface 
 {
     const TYPE_INPUT= "input";
+    const TYPE_CHOICE = "choice";
     const TYPE_INPUT_FROM_TO = "inputFromTo";
     const TYPE_TEXT_AREA = "textArea";
     const TYPE_YES_NO = "yesNo";
@@ -46,6 +47,7 @@ class StandardFilters implements GroupFilterInterface
             self::TYPE_SELECT => 'choice.filter.select',
             self::TYPE_TODO => 'choice.filter.todo',
             self::TYPE_YEAR => 'choice.filter.year',
+            self::TYPE_CHOICE => 'choice.generic',
         ];
     }
 }

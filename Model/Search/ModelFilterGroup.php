@@ -21,4 +21,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class ModelFilterGroup extends \Tecnocreaciones\Bundle\ToolsBundle\Model\Base\BaseMaster
 {
+    /**
+     * Orden del grupo dentro del area
+     * @var integer
+     * @ORM\Column(name="order_group",type="integer")
+     */
+    protected $orderGroup = 0;
+    
+    public function getOrderGroup() {
+        return $this->orderGroup;
+    }
+
+    public function setOrderGroup($orderGroup) {
+        $this->orderGroup = $orderGroup;
+        return $this;
+    }
 }
