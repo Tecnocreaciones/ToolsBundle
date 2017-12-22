@@ -95,6 +95,8 @@ abstract class ModelFilterAdded extends \Tecnocreaciones\Bundle\ToolsBundle\Mode
         $this->label = $label;
         return $this;
     }
+    
+    public abstract function getRef();
         
     public function __toString() {
         return $this->getFilter()?(string)$this->getFilter():"-";

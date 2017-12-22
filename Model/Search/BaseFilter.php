@@ -46,6 +46,12 @@ abstract class BaseFilter extends ModelFilter
      */
     protected $parameters;
     
+    /**
+     * Filtro anadido
+     * @var ModelFilterAdded
+     */
+    private $filterAdded;
+
     public function __construct() {
         $this->parameters = [];
     }
@@ -162,6 +168,15 @@ abstract class BaseFilter extends ModelFilter
     
     public abstract function getRef();
     
+    public function getFilterAdded() {
+        return $this->filterAdded;
+    }
+
+    public function setFilterAdded(ModelFilterAdded $filterAdded) {
+        $this->filterAdded = $filterAdded;
+        return $this;
+    }
+        
     public function __toString() {
         return $this->getLabel()?:"-";
     }

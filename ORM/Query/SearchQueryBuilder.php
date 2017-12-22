@@ -28,13 +28,34 @@ class SearchQueryBuilder
     private $orderBy;
     
     function __construct(\Doctrine\ORM\QueryBuilder $qb, \Doctrine\Common\Collections\ArrayCollection $criteria, $alias,$orderBy = null) {
-        $this->qb = $qb;
+        $this->qb = new ProxyQuery($alias,$qb);
         $this->criteria = $criteria;
         $this->alias = $alias;
         if(is_array($orderBy)){
             $orderBy = new \Doctrine\Common\Collections\ArrayCollection($orderBy);
         }
         $this->orderBy = $orderBy;
+        $this->joinsAdded = [];
+    }
+    
+    /**
+     * Agrega los joins
+     * @param array $joins
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
+     */
+    public function leftJoins(array $joins) {
+        $this->qb->leftJoins($joins);
+        return $this;
+    }
+    
+    /**
+     * Agrega los joins
+     * @param array $joins
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
+     */
+    public function innerJoins(array $joins) {
+        $this->qb->innerJoins($joins);
+        return $this;
     }
 
     /**
@@ -101,7 +122,7 @@ class SearchQueryBuilder
             if(is_string($key)){
                 $fieldValue = $key;
             }
-            $normalizeField = $this->normalizeField($this->getAlias(),$field);
+            $normalizeField = $this->normalizeField($this->getAlias(),$field);            
             $valueField = $this->criteria->remove($fieldValue);
             if($defaultValueField !== null){
                 $valueField = $defaultValueField;
@@ -383,5 +404,11 @@ class SearchQueryBuilder
             $fieldResponse = sprintf("%s.".$fieldExplode[0],$alias);
         }
         return $fieldResponse;
+    }
+    
+    public function __call($name, $args)
+    {
+        call_user_func_array([$this->qb, $name], $args);
+        return $this;
     }
 }

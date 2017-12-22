@@ -51,6 +51,7 @@ class FilterAddedAdmin extends MasterAdmin
     
     protected function configureDatagridFilters(DatagridMapper $filter) {
         $filter
+            ->add("ref")
             ->add("label")
             ->add("modelName")
             ->add("orderFilter")
@@ -63,14 +64,27 @@ class FilterAddedAdmin extends MasterAdmin
     
     protected function configureListFields(ListMapper $list) {
         $list
-            ->addIdentifier("id")
+            ->addIdentifier("ref")
+            ->add("filter")
             ->add("label")
             ->add("modelName")
             ->add("orderFilter")
-            ->add("filter")
             ->add("filterBlock")
             ->add("filterGroup")
             ;
         parent::configureListFields($list);
+    }
+    
+    public function createQuery($context = 'list') {
+        $query = parent::createQuery($context);
+        $query
+                ->addSelect("o_f")
+                ->addSelect("o_fb")
+                ->addSelect("o_fg")
+                ->innerJoin("o.filter","o_f")
+                ->innerJoin("o.filterBlock","o_fb")
+                ->leftJoin("o.filterGroup","o_fg")
+                ;
+        return $query;
     }
 }
