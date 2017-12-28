@@ -408,7 +408,17 @@ class SearchQueryBuilder
     
     public function __call($name, $args)
     {
+        if($name === "expr"){
+            return $this->qb->expr();
+        }
         call_user_func_array([$this->qb, $name], $args);
         return $this;
+    }
+    /**
+    * 
+    * @return \Doctrine\ORM\QueryBuilder
+    */
+    public function getQb() {
+        return $this->qb->getQueryBuilder();
     }
 }

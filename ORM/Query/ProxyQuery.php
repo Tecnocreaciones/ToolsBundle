@@ -86,8 +86,18 @@ class ProxyQuery
                 $this->resolveJoin($arg);
             }
         }
-//        var_dump($name);
-//        var_dump($args);
+        if($name === "expr"){
+            return $this->queryBuilder->expr();
+        }
+        if($name === "innerJoin" && count($args) == 2){
+            
+            if($this->hasJoinAdded($args[1])){
+                return;
+            }else {
+                $this->joinsAdded[] = $args[1];
+            }
+        }
+            
         return call_user_func_array([$this->queryBuilder, $name], $args);
     }
     
@@ -101,6 +111,7 @@ class ProxyQuery
 //                        var_dump($namePoint[0]);
             }
         }
+//        var_dump($resolves);
         foreach ($resolves as $join) {
             $this->resolveJoins($join);
         }
@@ -126,6 +137,7 @@ class ProxyQuery
             return;
         }
 //        var_dump($join." : $property");
+//        var_dump($this->$property[$join]);
         if(isset($this->$property[$join])){
             $found = $this->$property[$join];
             
@@ -135,7 +147,7 @@ class ProxyQuery
             }else {
                 $valueJoin = $found;
             }
-//            var_dump("agregando ".$property." ".$valueJoin." ".$join);
+//            var_dump("agregando ".$property." ".$join." ".$valueJoin);
             $this->joinsAdded[] = $join;
             if($property === "leftJoins"){
                 $this->queryBuilder->leftJoin($valueJoin, $join);
@@ -146,9 +158,17 @@ class ProxyQuery
         
 //        var_dump($found);
     }
+    
+    private function hasJoinAdded($join) {
+        return in_array($join, $this->joinsAdded);
+    }
 
     public function __get($name)
     {
         return $this->queryBuilder->$name;
+    }
+    
+    public function getQueryBuilder() {
+        return $this->queryBuilder;
     }
 }
