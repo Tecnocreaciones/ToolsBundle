@@ -34,10 +34,12 @@ class CodeMirrorExtension extends \Twig_Extension
 
     public function parametersRender($paramters)
     {
+        $params = $paramters;
         if (isset($paramters['mode'])) {
-            $paramters['mode'] = new Expr('"' . $paramters['mode'] . '"');
+            $params['mode'] = new Expr('"' . $paramters['mode'] . '"');
         }
-        $params = Json::encode($paramters, false, array('enableJsonExprFinder' => true));
+      
+        $params = Json::encode($params, false, array('enableJsonExprFinder' => true));
 
         $this->isFirstCall = false;
 
@@ -46,7 +48,10 @@ class CodeMirrorExtension extends \Twig_Extension
 
     public function code_mirror_get_js_mode($parameters)
     {
-        return $this->assetManager->getMode($parameters['mode']);
+        $result = $this->assetManager->getAddonsParsed();
+        $result = array_merge($result, $this->assetManager->getExtraModes());
+        $result = array_merge($result, (array)$this->assetManager->getMode($parameters['mode']));
+        return $result;
     }
 
     public function code_mirror_get_lib()
@@ -56,6 +61,9 @@ class CodeMirrorExtension extends \Twig_Extension
 
     public function code_mirror_get_css_theme($parameters)
     {
+        if(!isset($parameters['theme'])){
+            return;
+        }
         $am = new AssetManager();
         $am->set('theme', new FileAsset($parameters['theme']));
         $am->get('theme');

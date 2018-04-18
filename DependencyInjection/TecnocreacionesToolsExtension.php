@@ -165,8 +165,7 @@ class TecnocreacionesToolsExtension extends Extension
                 $container->setParameter('code_mirror.form_type', $codeMirror['form_type']);
                 $container->setParameter('code_mirror.parameters', $codeMirror['parameters']);
                 $container->setParameter('code_mirror.twig.extension', $codeMirror['twig_extension']);
-                $container->setParameter('code_mirror.mode_dirs', $codeMirror['mode_dirs']);
-                $container->setParameter('code_mirror.themes_dirs', $codeMirror['themes_dirs']);
+                $container->setParameter('code_mirror', $codeMirror);
 
                 $loaderYml->load('services/code_mirror.yml');
             }
