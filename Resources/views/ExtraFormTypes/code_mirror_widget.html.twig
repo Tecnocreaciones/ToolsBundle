@@ -11,9 +11,9 @@
         {% endfor %}
 
         {% if code_mirror_get_css_theme(parameters) %}
-            {% set theme = code_mirror_get_css_theme(parameters) %}
-
-            <link type="text/css" rel="stylesheet" media="all" href="{{ asset("/bundles/tecnocreacionestools/codemirror/css/theme/"~parameters['theme']) }}.css" />
+            {% if parameters.theme is defined %}
+                <link type="text/css" rel="stylesheet" media="all" href="{{ asset("/bundles/tecnocreacionestools/codemirror/css/theme/"~parameters.theme) }}.css" />
+            {% endif %}
             {% stylesheets '@TecnocreacionesToolsBundle/Resources/public/codemirror/css/codemirror.css' %}
             <link type="text/css" rel="stylesheet" media="all" href="{{ asset_url }}" />
             {% endstylesheets %}

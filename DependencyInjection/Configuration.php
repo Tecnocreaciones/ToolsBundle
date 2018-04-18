@@ -174,6 +174,12 @@ class Configuration implements ConfigurationInterface
 //                                    ->requiresAtLeastOneElement()
                                      ->prototype('scalar')->end()
                                   ->end()
+                                  ->arrayNode('addons')->isRequired()
+                                     ->prototype('scalar')->end()
+                                  ->end()
+                                  ->arrayNode('modes')->isRequired()
+                                     ->prototype('scalar')->end()
+                                  ->end()
                                 ->end()
                             ->end()
                 
