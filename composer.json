@@ -19,6 +19,6 @@
         "zendframework/zend-json": "*"
     },
     "autoload": {
-        "psr-4": { "Tecnocreaciones\\Bundle\\ToolsBundle": "" }
+        "psr-4": { "Tecnocreaciones\\Bundle\\ToolsBundle\\": "" }
     }
 }
