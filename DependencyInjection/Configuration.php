@@ -125,7 +125,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('extra_form_types')
                         ->addDefaultsIfNotSet()
                         ->children()
-                            ->booleanNode('enable')->end()
+                            ->booleanNode('enable')->defaultFalse()->end()
                             
                             ->arrayNode('autocomplete_entities')
                                 ->useAttributeAsKey('id')
@@ -234,6 +234,9 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('enable')->defaultFalse()->end()
                             ->scalarNode('entity_class')->defaultNull()->end()
                             ->booleanNode('keep_sent_messages')->defaultTrue()->end()
+                            ->scalarNode('email_queue_class')->defaultNull()->end()
+                            ->scalarNode('email_template_class')->defaultNull()->end()
+                            ->scalarNode('email_component_class')->defaultNull()->end()
                         ->end()
                     ->end()
                     ->arrayNode('search')
