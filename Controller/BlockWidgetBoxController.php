@@ -30,7 +30,7 @@ class BlockWidgetBoxController extends Controller
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
         $definitionsBlockGrid = $gridWidgetBoxService->getDefinitionsBlockGrid();
         
-        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
+//        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
         
         return $this->render(
             'TecnocreacionesToolsBundle:BlockWidgetBox:index.html.twig',array(
@@ -68,7 +68,7 @@ class BlockWidgetBoxController extends Controller
                 $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
                 
                 $data = $form->getData();
-                $events = $definitionBlockGrid->getEvents();
+                $events = $definitionBlockGrid->getParseEvents();
                 $name = $data['name'];
                 if($definitionBlockGrid->hasPermission($name) === false){
                     throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
@@ -210,7 +210,7 @@ class BlockWidgetBoxController extends Controller
     {
         $templatesData = $eventsData = $nameData = null;
         $names = $definitionBlockGrid->getNames();
-        $events = $definitionBlockGrid->getEvents();
+        $events = $definitionBlockGrid->getParseEvents();
         $templates = $definitionBlockGrid->getTemplates();
         
         if(count($names) == 1){

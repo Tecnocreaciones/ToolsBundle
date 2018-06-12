@@ -75,7 +75,7 @@ class TecnocreacionesToolsExtension extends Extension
         
         if($config['widget_block_grid']['enable'] === true)
         {
-           $loader->load('services/widget_block_grid.xml');
+           $loaderYml->load('services/widget_block_grid.yml');
             
            $blockGridConfig = $config['widget_block_grid']; 
            $blockGridClass = $blockGridConfig['widget_block_grid_class'];

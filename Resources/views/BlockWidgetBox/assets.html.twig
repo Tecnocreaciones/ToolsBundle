@@ -1,0 +1,22 @@
+{% stylesheets 
+     
+            '@TecnocreacionesToolsBundle/Resources/public/ducksboard-gridster.js/dist/jquery.gridster.css'
+            '@TecnocreacionesToolsBundle/Resources/public/widget_box/widget_box.css'
+
+            filter='uglifycss' filter='cssrewrite'
+            output='compiled/css_widgets.min.css'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+
+
+{% javascripts
+        '@TecnocreacionesToolsBundle/Resources/public/ducksboard-gridster.js/dist/jquery.gridster.js'
+        '@TecnocreacionesToolsBundle/Resources/public/ducksboard-gridster.js/dist/jquery.gridster.responsive.js'
+        '@TecnocreacionesToolsBundle/Resources/public/widget_box/widget_box.js'
+
+        filter='?uglifyjs2'
+        output='compiled/javascript_widgets.min.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}

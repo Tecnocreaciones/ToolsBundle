@@ -168,7 +168,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
         if($definitionBlockGrid->hasPermission() == false){
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
-        $events = $definitionBlockGrid->getEvents();
+        $events = $definitionBlockGrid->getParseEvents();
         $names = array();
         $names = $definitionBlockGrid->getNames();
         

@@ -46,6 +46,11 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
                 $functions[] = new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
             }
         }
+        if($config['widget_block_grid']['enable']  === true){
+            $functions[] = new \Twig_SimpleFunction('widgets_render_area', array($this,'widgetsRenderArea'), array('is_safe' => array('html')));
+            $functions[] = new \Twig_SimpleFunction('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
+            $functions[] = new \Twig_SimpleFunction('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
+        }
         $functions[] = new \Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
         $functions[] = new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
         $functions[] = new \Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
@@ -122,6 +127,30 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         return $this->container->get('templating')->render($template, 
             array(
                 'page_headers' => $parameters,
+            )
+        );
+    }
+    
+    public function widgetsRenderArea($areaName,$renderAssets = true)
+    {
+        return $this->container->get('templating')->render("TecnocreacionesToolsBundle:BlockWidgetBox:area.html.twig", 
+            array(
+                'name_area' => $areaName,
+                'render_assets' => $renderAssets,
+            )
+        );
+    }
+    public function widgetsRenderAssets()
+    {
+        return $this->container->get('templating')->render("TecnocreacionesToolsBundle:BlockWidgetBox:assets.html.twig", 
+            array(
+            )
+        );
+    }
+    public function widgetsInitGrid()
+    {
+        return $this->container->get('templating')->render("TecnocreacionesToolsBundle:BlockWidgetBox:initGrid.html.twig", 
+            array(
             )
         );
     }

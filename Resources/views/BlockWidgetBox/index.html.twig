@@ -48,7 +48,7 @@
                                     <tr>
                                         <td>
                                             <div>{{ 'widget_box.events'|trans({'%quantity%': (definitionBlockGrid.events|length) })|raw }}:</div>
-                                            {% for key,event in definitionBlockGrid.events %}
+                                            {% for key,event in definitionBlockGrid.parseEvents %}
                                                 {{ event|trans({},definitionBlockGrid.translationDomain) }}{% if loop.last %}.{% else %},{% endif %}
                                             {% endfor %}
                                         </td>

@@ -48,7 +48,7 @@ interface DefinitionBlockWidgetBoxInterface
     function hasPermission($name = null);
     
     /**
-     * Eventos que escucha el widget para renderizarse
+     * Transforma los eventos su forma parseada
      */
-    function getEvents();
+    function getParseEvents();
 }

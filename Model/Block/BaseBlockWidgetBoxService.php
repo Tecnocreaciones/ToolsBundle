@@ -15,15 +15,19 @@ use Sonata\BlockBundle\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+use Sonata\BlockBundle\Block\Service\AbstractBlockService;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent;
 
 /**
  * Base de un bloque en un widget box
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-abstract class BaseBlockWidgetBoxService extends BaseBlockService implements DefinitionBlockWidgetBoxInterface
+abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements DefinitionBlockWidgetBoxInterface
 {
     protected $cachePermission = null;
+    
+    use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
     
     public function execute(BlockContextInterface $blockContext, Response $response = null) {
         // merge settings
@@ -38,6 +42,20 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
     public function setDefaultSettings(OptionsResolverInterface $resolver) {
         $this->configureSettings($resolver);
     }
+    
+    /**
+     * Eventos que escucha el widget para renderizarse
+     */
+    protected abstract function getEvents();
+    
+    public function getParseEvents() {
+        $events = [];
+        foreach ($this->getEvents() as $event) {
+            $events[] = MainSummaryBlockEvent::EVENT_BASE.$event;
+        }
+        return $events;
+    }
+
     
     public function configureSettings(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)
     {
@@ -66,7 +84,7 @@ abstract class BaseBlockWidgetBoxService extends BaseBlockService implements Def
     }
     
     public function getTranslationDomain() {
-        return 'widgetBox';
+        return 'widgets';
     }
     
     public function countWidgets() {
