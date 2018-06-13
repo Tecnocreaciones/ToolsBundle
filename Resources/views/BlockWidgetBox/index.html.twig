@@ -1,8 +1,8 @@
-{% extends "base.html.twig" %}
+{% extends "::layout.html.twig" %}
 
 {% trans_default_domain 'widgetBox' %}
 
-{% block body %}
+{% block pageBody %}
     
     <hgroup id="main-title" class="thin">
         <h1>{{ 'widget_box.header'|trans }}</h1>
@@ -10,14 +10,13 @@
     
     {% for definitionBlockGrid in definitionsBlockGrid %}
         <details class="details margin-bottom" open="">
-            <summary role="button" aria-expanded="true">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;{{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.countWidgets()) })|raw }}</summary>
+            <summary role="button" aria-expanded="true" class="table table-bordered">
+                <span class="green underline font-120 bold">
+                {{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;{{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.countWidgets()) })|raw }}
+                </span>
+            </summary>
             <div class="with-padding">
                 <table border="1" class="table table-bordered" style="width: 100%;">
-                    <tr>
-                        <th colspan="2">
-                            <h4 class="green underline">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;({{ definitionBlockGrid.description|trans({},definitionBlockGrid.translationDomain) }})</h4>
-                        </th>
-
                     <tr>
                         <td style="width: 60%" rowspan="2">
 
@@ -74,4 +73,4 @@
         
         <div>&nbsp;</div>
     {% endfor %}
-{% endblock body %}
+{% endblock pageBody %}

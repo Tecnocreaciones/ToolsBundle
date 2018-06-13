@@ -43,6 +43,10 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
         $this->configureSettings($resolver);
     }
     
+    public function getDescription() {
+        return $this->getType()."_desc";
+    }
+    
     /**
      * Eventos que escucha el widget para renderizarse
      */
@@ -80,6 +84,8 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             'isTransparent' => false,//Transparente
             'isColorable' => true,//Se puede cambiar el color del wiget
             'widgetColor' => null,//Color del widget
+            'renderTitle' => true,//¿Renderizar el titulo del widget?
+            'translationDomain' => $this->getTranslationDomain(),//Color del widget
         ));
     }
     

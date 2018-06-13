@@ -99,8 +99,9 @@ class BlockWidgetBoxController extends Controller
     function addAllAction(Request $request) 
     {
         $type = $request->get('type');
+        $name = $request->get('name');
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $i = $gridWidgetBoxService->addAll($type);
+        $i = $gridWidgetBoxService->addAll($type,$name);
         $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all',array(
             '%num%' => $i,
         )));

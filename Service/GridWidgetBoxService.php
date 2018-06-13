@@ -163,13 +163,12 @@ class GridWidgetBoxService implements ContainerAwareInterface
      * @return int
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function addAll($type) {
+    public function addAll($type,$nameFilter = null) {
         $definitionBlockGrid = $this->getDefinitionBlockGrid($type);
         if($definitionBlockGrid->hasPermission() == false){
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
         $events = $definitionBlockGrid->getParseEvents();
-        $names = array();
         $names = $definitionBlockGrid->getNames();
         
         $templates = $definitionBlockGrid->getTemplates();
@@ -179,6 +178,9 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $i = 0;
         foreach ($names as $name => $value) {
             if($definitionBlockGrid->hasPermission($name) === false){
+                continue;
+            }
+            if($nameFilter !== null && $name !== $nameFilter){
                 continue;
             }
             $blockWidgetBox = $widgetBoxManager->buildBlockWidget();

@@ -3,14 +3,16 @@
         {% block block %}
 
             <div class="widget-header">
-                <h5 class="widget-title">
-                {% if settings.icon != null %}
-                    {{ settings.icon|trans|raw }}
+                {% if settings.renderTitle %}
+                    <h5 class="widget-title">
+                    {% if settings.icon != null %}
+                        {{ settings.icon|trans|raw }}
+                    {% endif %}
+                    {% block title %}
+                        {{ settings.title|trans({},settings.translationDomain)|raw }}
+                    {% endblock title %}
+                    </h5>
                 {% endif %}
-                {% block title %}
-                    {{ settings.title|trans|raw }}
-                {% endblock title %}
-                </h5>
 
                 <div class="widget-toolbar">
                     {% if settings.isMaximizable %}
@@ -55,12 +57,10 @@
                 </div>
                 
             </div>
-            <div class="widget-body">
-                <div class="widget-main">
+            <div class="widget-body no-padding">
                     {% block content %}
                         EMPTY CONTENT
                     {% endblock content %}
-                </div>
             </div>
         {% endblock block %}
     </div>
