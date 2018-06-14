@@ -25,7 +25,7 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent
  */
 abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements DefinitionBlockWidgetBoxInterface
 {
-    protected $cachePermission = null;
+    protected $cachePermission = [];
     
     use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
     
@@ -105,17 +105,50 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     
     public function hasPermission($name = null) 
     {
-        if($this->cachePermission !== null){
-            return $this->cachePermission;
-        }
+//        var_dump($name);
         $isGranted = true;
         if($name != null){
+            if(isset($this->cachePermission[$name])){
+                return $this->cachePermission[$name];
+            }
             $names = $this->getNames();
             if(isset($names[$name]['rol'])){
                 $isGranted = $this->isGranted($names[$name]['rol']);
-                $this->cachePermission = $isGranted;
+                $this->cachePermission[$name] = $isGranted;
             }
         }
         return $isGranted;
+    }
+    
+    protected function isGranted($rol) {
+        $user = $this->getUser();
+        return $user->hasRole($rol);
+    }
+    
+    /**
+     * Get a user from the Security Token Storage.
+     *
+     * @return mixed
+     *
+     * @throws \LogicException If SecurityBundle is not available
+     *
+     * @see \Symfony\Component\Security\Core\Authentication\Token\TokenInterface::getUser()
+     */
+    protected function getUser()
+    {
+        if (!$this->container->has('security.token_storage')) {
+            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        }
+
+        if (null === $token = $this->container->get('security.token_storage')->getToken()) {
+            return;
+        }
+
+        if (!is_object($user = $token->getUser())) {
+            // e.g. anonymous authentication
+            return;
+        }
+
+        return $user;
     }
 }

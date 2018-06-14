@@ -12,7 +12,8 @@
         <details class="details margin-bottom" open="">
             <summary role="button" aria-expanded="true" class="table table-bordered">
                 <span class="green underline font-120 bold">
-                {{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;{{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.countWidgets()) })|raw }}
+                {{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;
+                {{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.countWidgets()) })|raw }}
                 </span>
             </summary>
             <div class="with-padding">
