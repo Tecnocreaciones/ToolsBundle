@@ -1,4 +1,4 @@
-<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
+<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col animated fadeInUp" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
     <div id="widget-box-{{ block.id }}" class="widget-box {% if settings.isTransparent %}transparent{% endif %} {% if settings.isCollapsible and settings.isCollapsed %}collapsed{% endif %} {% if settings.widgetColor != '' %}{{ settings.widgetColor }}{% endif %}" data-load="{% if settings.isLoadedData %}true{% else %}false{% endif %}" >
         {% block block %}
 

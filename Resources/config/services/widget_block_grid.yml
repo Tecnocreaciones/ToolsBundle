@@ -14,9 +14,11 @@ services:
             - [ setContainer, ['@service_container']]
     block.main.summary:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent
-        arguments:
-            - "sonata.block.event.main.summary"
         tags:
             - { name: kernel.event_listener, event: sonata.block.event.widgets, method: "onBlock" }
         calls:
             - [ setContainer, ['@service_container']]
+    sonata.block.loader.service.widgets:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Service\Block\WidgetServiceLoader
+        tags:
+            - { name: sonata.block.loader }

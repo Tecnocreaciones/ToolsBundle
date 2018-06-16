@@ -25,7 +25,7 @@ class MainSummaryBlockEvent
         $target = $event->getSetting("target");
         $eventName = self::EVENT_BASE.$target;
         $gridWidgetBox = $this->getGridWidgetBoxService();
-        
+
         $gridWidgetBox->addAllPublishedByEvent($event,$eventName);
     }
     

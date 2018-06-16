@@ -82,9 +82,9 @@ file that was distributed with this source code.
 }
 .widget-header>.widget-title {
     line-height: 36px;
-    padding: 0;
     margin: 0;
     display: inline;
+    padding: 0px 10px;
 }
 .widget-header>.widget-title>.ace-icon {
     margin-right: 5px;

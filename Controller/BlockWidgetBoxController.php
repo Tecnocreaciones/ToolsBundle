@@ -202,7 +202,7 @@ class BlockWidgetBoxController extends Controller
         $widgetBox->setSetting('blockBase','TecnocreacionesToolsBundle:WidgetBox:block_widget_box_empty.html.twig');
         
         $blockContent = $blockHelper->render(array(
-            'type' => $widgetBox->getType()
+            'widget' => $widgetBox->getType()
         ), $widgetBox->getSettings());
         return new \Symfony\Component\HttpFoundation\Response($blockContent);
     }
