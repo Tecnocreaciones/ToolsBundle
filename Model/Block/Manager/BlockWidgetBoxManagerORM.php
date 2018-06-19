@@ -83,4 +83,20 @@ class BlockWidgetBoxManagerORM extends BlockWidgetBoxManager
         $repository = $em->getRepository($this->classBox);
         return $repository;
     }
+
+    public function countPublishedByEvent($event) {
+        $user = $this->getUser();
+        $qb = $this->getRepository()->createQueryBuilder("w");
+        
+        $qb->select("COUNT(w.id) total")
+          ->andWhere("w.event = :event")
+          ->andWhere("w.user = :user")
+          ->andWhere("w.enabled = :enabled")
+          ->setParameter("event",$event)
+          ->setParameter("user",$user)
+          ->setParameter("enabled",true)
+                ;
+        $result = $qb->getQuery()->getOneOrNullResult();
+        return (int)$result["total"];
+    }
 }

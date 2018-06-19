@@ -11,6 +11,12 @@
         </a>
     </p>
     <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> Algunos widgets mantienen la información por un periodo de tiempo no maximo de 24 horas.</p>
+    {% set news = gridWidgetBoxService.countNews() %}
+    {% if news > 0 %}
+        <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> 
+            Hay {{ news }} widget(s) nuevos!
+        </p>
+    {% endif %}
 </div>
                 
 <div id="area_main_widgets" class="gridster" style="min-height: 200px">

@@ -25,7 +25,12 @@ class MainSummaryBlockEvent
         $target = $event->getSetting("target");
         $eventName = self::EVENT_BASE.$target;
         $gridWidgetBox = $this->getGridWidgetBoxService();
-
+        
+        $totalPublished = $gridWidgetBox->countPublishedByEvent($eventName);
+        if($totalPublished === 0){
+            $gridWidgetBox->addDefaultByEvent($eventName);
+        }
+        
         $gridWidgetBox->addAllPublishedByEvent($event,$eventName);
     }
     

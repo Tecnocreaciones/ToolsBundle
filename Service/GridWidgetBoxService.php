@@ -115,8 +115,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
      */
     public function countPublishedByEvent($eventName)
     {
-        $widgetsBox = $this->getWidgetBoxManager()->findAllPublishedByEvent($eventName);
-        return count($widgetsBox);
+        return $this->getWidgetBoxManager()->countPublishedByEvent($eventName);
     }
     
     function addDefinitionsBlockGrid(DefinitionBlockWidgetBoxInterface $definitionsBlockGrid) 
@@ -235,5 +234,28 @@ class GridWidgetBoxService implements ContainerAwareInterface
             $news += $grid->countNews();
         }
         return $news;
+    }
+    
+    public function addDefaultByEvent($eventName) {
+        $added = 0;
+        $limit = 3;
+        foreach ($this->getDefinitionsBlockGrid() as $grid) {
+            if(!in_array($eventName, $grid->getParseEvents())){
+                continue;
+            }
+            foreach ($grid->getDefaults() as $name) {
+//                var_dump($name);
+                $i = $this->addAll($grid->getType(),$name);
+                $added += $i;
+//                var_dump($added);
+                if($added >= $limit){
+                    break;
+                }
+            }
+            if($added >= $limit){
+                break;
+            }
+        }
+        return $added;
     }
 }
