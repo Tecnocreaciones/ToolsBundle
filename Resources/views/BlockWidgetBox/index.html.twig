@@ -22,9 +22,8 @@
             {{ group|trans({},"widgets") }}&nbsp;
             {{ 'widget_box.widgets'|trans({'%quantity%': (gridWidgetBoxService.counInGroup(group)) })|raw }}
         </h5>
+        <div class="well">
         {% for definitionBlockGrid in definitionsBlockGrid %}
-            <div class="well with-header">
-                <div class="header bordered-purple">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}</div>
                 <div class="labels-container">
                     {% if definitionsBlockGrid|length > 1 %}
                         <h6>{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}</h6>
@@ -88,8 +87,8 @@
                 {% if definitionsBlockGrid|length > 1 %}
                     <hr class="wide">
                 {% endif %}
-            </div>
         {% endfor %}
+        </div>
         <div>&nbsp;</div>
     {% endfor %}
 {% endblock pageBody %}

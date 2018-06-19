@@ -50,6 +50,7 @@ file that was distributed with this source code.
     color: #669fc7;
     border-bottom: 1px solid #DDD;
     padding-left: 12px;
+    cursor: move;
 }
 .widget-header:before, .widget-header:after {
     content: "";
@@ -426,14 +427,16 @@ file that was distributed with this source code.
 }
 .widget-box.transparent {
     border-width: 0;
+    border: 0px;
 }
 .widget-box.transparent>.widget-header {
     background: 0 0;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     border-width: 0;
-    border-bottom: 1px solid #DCE8F1;
+    border-bottom: 0px solid #DCE8F1;
     color: #4383B4;
     padding-left: 3px;
+    box-shadow: none;
 }
 .widget-box.transparent>.widget-header-large {
     padding-left: 5px;
@@ -444,6 +447,7 @@ file that was distributed with this source code.
 .widget-box.transparent>.widget-body {
     border-width: 0;
     background-color: transparent;
+    box-shadow: none;
 }
 [class*=widget-color-]>.widget-header>.widget-toolbar>[data-action], [class*=widget-color-]>.widget-header>.widget-toolbar>.widget-menu>[data-action] {
     text-shadow: 0 1px 1px rgba(0, 0, 0, .2);

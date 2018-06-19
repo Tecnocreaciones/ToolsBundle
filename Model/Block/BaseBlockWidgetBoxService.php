@@ -40,6 +40,26 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
         ),$response);
     }
     
+    public function renderResponse($view, array $parameters = array(), Response $response = null) {
+        $r = null;
+        try {
+            $r = parent::renderResponse($view, $parameters, $response);
+        } catch (\Exception $ex) {
+            $r = $response;
+//            if(!empty($parameters["settings"]["widget_id"])){
+//                $blockWidgetBox = $this->getWidgetBoxManager()->find($parameters["settings"]["widget_id"]);
+//                if($blockWidgetBox !== null){
+//                    $oldId = $blockWidgetBox->getId();
+//                    $this->getWidgetBoxManager()->remove($blockWidgetBox);//Eliminar widget agregado con error
+//                    $blockWidgetBox->setId($oldId);//Fix: Notice: Undefined index
+//                }
+//            }
+            throw $ex;
+        }
+        
+        return $r;
+    }
+    
     public function setDefaultSettings(OptionsResolverInterface $resolver) {
         $this->configureSettings($resolver);
     }
@@ -51,7 +71,11 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     /**
      * Eventos que escucha el widget para renderizarse
      */
-    protected abstract function getEvents();
+    public function getEvents() {
+        return array(
+            'dashboard'
+        );
+    }
     
     public function getParseEvents() {
         $events = [];
@@ -65,6 +89,7 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     public function configureSettings(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'widget_id' => null,
             'url'      => false,
             'title'    => 'Titulo',
             'name'    => 'Nombre',
@@ -76,14 +101,14 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             'sizeY' => 4,
             'oldSizeY' => 4,
             'icon' => '<i class="fa fa-sort"></i>',
-            'isMaximizable' => true,
+            'isMaximizable' => false,
             'isReloadble' => true,
             'isCollapsible' => true,
             'isClosable' => true,
             'isCollapsed' => false,//Esta minimizada
             'isLoadedData' => true,//Esta cargada la data
             'isTransparent' => false,//Transparente
-            'isColorable' => true,//Se puede cambiar el color del wiget
+            'isColorable' => false,//Se puede cambiar el color del wiget
             'widgetColor' => null,//Color del widget
             'renderTitle' => true,//¿Renderizar el titulo del widget?
             'translationDomain' => $this->getTranslationDomain(),//Color del widget
@@ -139,6 +164,11 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             }
         }
         return $result;
+    }
+    
+    public function getDefaults() {
+        return [
+        ];
     }
     
     public function isNew($name) {
@@ -207,5 +237,14 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     protected function trans($id,array $parameters = array(), $domain = 'flashes')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
+    }
+    
+    /**
+     * 
+     * @return Manager\BlockWidgetBoxManagerInterface
+     */
+    private function getWidgetBoxManager()
+    {
+        return $this->container->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager'));
     }
 }

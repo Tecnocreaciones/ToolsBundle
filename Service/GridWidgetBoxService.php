@@ -103,6 +103,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $this->setEvent($event);
         $widgetsBox = $this->getWidgetBoxManager()->findAllPublishedByEvent($eventName);
         foreach ($widgetsBox as $widgetBox) {
+            $widgetBox->setSetting("widget_id",$widgetBox->getId());
             $widgetBox->setSetting('name',$widgetBox->getName());
             $this->addBlock($widgetBox);
         }
