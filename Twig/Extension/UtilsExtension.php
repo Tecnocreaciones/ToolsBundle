@@ -137,6 +137,7 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
             array(
                 'name_area' => $areaName,
                 'render_assets' => $renderAssets,
+                'gridWidgetBoxService' => $this->getGridWidgetBoxService(),
             )
         );
     }
@@ -219,6 +220,15 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
     private function trans($id,array $parameters = array(), $domain = 'messages')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
+    }
+    
+    /**
+     * 
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService
+     */
+    private function getGridWidgetBoxService()
+    {
+        return $this->container->get('tecnocreaciones_tools.service.grid_widget_box');
     }
     
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) 

@@ -3,33 +3,48 @@
 {% trans_default_domain 'widgetBox' %}
 
 {% block pageBody %}
-    
-    <hgroup id="main-title" class="thin">
-        <h1>{{ 'widget_box.header'|trans }}</h1>
-    </hgroup>
-    
-    {% for definitionBlockGrid in definitionsBlockGrid %}
-        <details class="details margin-bottom" open="">
-            <summary role="button" aria-expanded="true" class="table table-bordered">
-                <span class="green underline font-120 bold">
-                {{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}&nbsp;
-                {{ 'widget_box.widgets'|trans({'%quantity%': (definitionBlockGrid.countWidgets()) })|raw }}
-                </span>
-            </summary>
-            <div class="with-padding">
-                <table border="1" class="table table-bordered" style="width: 100%;">
-                    <tr>
-                        <td style="width: 60%" rowspan="2">
 
+    <div class="well bordered-left bordered-themeprimary animated bounceInDown">
+        <hgroup id="main-title" class="thin">
+            <h1><i class="mp mp-widgets-1"></i>&nbsp;{{ 'widget_box.header'|trans }}</h1>
+        </hgroup>
+        <p>Puede añadir un widget presione en el nombre o presione "{{ 'widget_box.buttons.add_all'|trans }}" para agregar todos de la sección indicada.
+        </p>
+        {% set news = gridWidgetBoxService.countNews() %}
+        {% if news > 0 %}
+            <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> 
+                Hay {{ news }} widget(s) nuevos!
+            </p>
+        {% endif %}
+    </div>
+    {% for group,definitionsBlockGrid in definitions %}
+        <h5 class="row-title before-success"><i class="glyphicon glyphicon-arrow-right success"></i>
+            {{ group|trans({},"widgets") }}&nbsp;
+            {{ 'widget_box.widgets'|trans({'%quantity%': (gridWidgetBoxService.counInGroup(group)) })|raw }}
+        </h5>
+        {% for definitionBlockGrid in definitionsBlockGrid %}
+            <div class="well with-header">
+                <div class="header bordered-purple">{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}</div>
+                <div class="labels-container">
+                    {% if definitionsBlockGrid|length > 1 %}
+                        <h6>{{ definitionBlockGrid.type|trans({},definitionBlockGrid.translationDomain) }}</h6>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6 col-xs-12">
                             <ul class="list" style="list-style-type: decimal-leading-zero;margin-left: 23px">
                                 {% for name,parameters in definitionBlockGrid.names %}
                                     {% if definitionBlockGrid.hasPermission(name) %}
-                                        <li>&nbsp;<a href="{{ path('block_widget_box_add_all',{type:definitionBlockGrid.type,name: name }) }}">{{ name|trans({},definitionBlockGrid.translationDomain) }}</a></li>
+                                        <li>
+                                            {% if definitionBlockGrid.isNew(name) %}
+                                                <b>{{ "widget_box.new"|trans }}</b>
+                                            {% endif %}
+                                            &nbsp;<a href="{{ path('block_widget_box_add_all',{type:definitionBlockGrid.type,name: name }) }}">{{ name|trans({},definitionBlockGrid.translationDomain) }}</a>
+                                        </li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
-                        </td>
-                        <td>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 col-xs-12">
                             <div class="with-padding">
                                 <table class="boxed left-border">
                                     <tr>
@@ -56,22 +71,25 @@
                                 </table>
                             </div>
                             <p class="button-height align-right float-right">
-                                <a href="{{ path('block_widget_box_create',{type: definitionBlockGrid.type}) }}" class="button">
+                                {#<a href="{{ path('block_widget_box_create',{type: definitionBlockGrid.type}) }}" class="button">
                                     <span class="button-icon"><span class="fa fa-plus-circle"></span></span>
-                                    {{ 'widget_box.buttons.add'|trans }}
+                                        {{ 'widget_box.buttons.add'|trans }}
                                 </a>
-                                &nbsp;
+                                &nbsp;#}
                                 <a href="{{ path('block_widget_box_add_all',{type: definitionBlockGrid.type}) }}" class="button">
                                     <span class="button-icon"><span class="fa fa-list-alt"></span></span>
-                                    {{ 'widget_box.buttons.add_all'|trans }}
+                                        {{ 'widget_box.buttons.add_all'|trans }}
                                 </a>
                             </p>
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+
+                </div>
+                {% if definitionsBlockGrid|length > 1 %}
+                    <hr class="wide">
+                {% endif %}
             </div>
-        </details>
-        
+        {% endfor %}
         <div>&nbsp;</div>
     {% endfor %}
 {% endblock pageBody %}

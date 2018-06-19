@@ -51,4 +51,11 @@ interface DefinitionBlockWidgetBoxInterface
      * Transforma los eventos su forma parseada
      */
     function getParseEvents();
+    
+    public function isNew($name);
+    
+    public function getInfo($name,$key,$default = null);
+    
+    public function countNews();
+    public function getGroup();
 }

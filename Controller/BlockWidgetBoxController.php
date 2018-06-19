@@ -28,13 +28,13 @@ class BlockWidgetBoxController extends Controller
     public function indexAction(Request $request) 
     {
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $definitionsBlockGrid = $gridWidgetBoxService->getDefinitionsBlockGrid();
-        
+        $definitions = $gridWidgetBoxService->getDefinitionsBlockGridByGroup();
 //        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
         
         return $this->render(
             'TecnocreacionesToolsBundle:BlockWidgetBox:index.html.twig',array(
-                'definitionsBlockGrid' => $definitionsBlockGrid
+                'gridWidgetBoxService' => $gridWidgetBoxService,
+                'definitions' => $definitions
             )
         );
     }

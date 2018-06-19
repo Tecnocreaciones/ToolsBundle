@@ -17,6 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
 use Sonata\BlockBundle\Block\Service\AbstractBlockService;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent;
+use InvalidArgumentException;
 
 /**
  * Base de un bloque en un widget box
@@ -118,6 +119,50 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             }
         }
         return $isGranted;
+    }
+    
+    public function getInfo($name,$key,$default = null) {
+        $result = null;
+        $names = $this->getNames();
+        if(isset($names[$name])){
+            $info = $names[$name];
+            if(isset($info[$key]) && !empty($info[$key])){
+                $result = $info[$key];
+                if($key === "created_at"){
+//                    19-06-2018
+                    $resultOld = $result;
+                    $result = \DateTime::createFromFormat("d-m-Y", $result);
+                    if($result === false){
+                        throw new InvalidArgumentException(sprintf("El formato de la fecha '%s' debeser d-m-Y por ejemplo %s",$resultOld,"19-06-2018"));
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+    
+    public function isNew($name) {
+        $createdAt = $this->getInfo($name,"created_at");
+        $result = false;
+        if($createdAt !== null){
+            $now = new \DateTime();
+            $diff = $createdAt->diff($now);
+            if($diff->invert === 0 && $diff->days < 15){
+                $result = true;
+            }
+        }
+        return $result;
+    }
+    
+    public function countNews(){
+        $names = $this->getNames();
+        $news = 0;
+        foreach ($names as $name => $values) {
+            if($this->hasPermission($name) && $this->isNew($name)){
+                $news++;
+            }
+        }
+        return $news;
     }
     
     protected function isGranted($rol) {
