@@ -23,7 +23,7 @@ class MainSummaryBlockEvent
     public function onBlock(BlockEvent $event)
     {
         $target = $event->getSetting("target");
-        $eventName = self::EVENT_BASE.$target;
+        $eventName = self::parseEvent($target);
         $gridWidgetBox = $this->getGridWidgetBoxService();
         
         $totalPublished = $gridWidgetBox->countPublishedByEvent($eventName);
@@ -41,5 +41,10 @@ class MainSummaryBlockEvent
     private function getGridWidgetBoxService()
     {
         return $this->container->get('tecnocreaciones_tools.service.grid_widget_box');
+    }
+    
+    public static function parseEvent($target) {
+        $event = self::EVENT_BASE.$target;
+        return $event;
     }
 }

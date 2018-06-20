@@ -80,7 +80,7 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     public function getParseEvents() {
         $events = [];
         foreach ($this->getEvents() as $event) {
-            $events[] = MainSummaryBlockEvent::EVENT_BASE.$event;
+            $events[] = MainSummaryBlockEvent::parseEvent($event);
         }
         return $events;
     }
@@ -137,9 +137,10 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             if(isset($this->cachePermission[$name])){
                 return $this->cachePermission[$name];
             }
-            $names = $this->getNames();
-            if(isset($names[$name]['rol'])){
-                $isGranted = $this->isGranted($names[$name]['rol']);
+            $rol = $this->getInfo($name,"rol");
+//            var_dump($names);
+            if($rol !== null){
+                $isGranted = $this->isGranted($rol);
                 $this->cachePermission[$name] = $isGranted;
             }
         }
@@ -197,8 +198,15 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     
     protected function isGranted($rol) {
         $user = $this->getUser();
-        return $user->hasRole($rol);
+        
+        $granted =  $user->hasRole($rol);
+        if(!$granted){
+            $granted = $this->container->get('security.authorization_checker')->isGranted($rol);
+        }
+
+        return $granted;
     }
+    
     
     /**
      * Get a user from the Security Token Storage.

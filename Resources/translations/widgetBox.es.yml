@@ -1,5 +1,6 @@
 widget_box:
     new: (Nuevo!)
+    clear: Limpiar widget(s)
     news: (%count%) Nuevos!
     widgets_label: Widgets
     templates: Plantillas <b>(%quantity%)</b>
@@ -19,4 +20,5 @@ widget_box:
     flashes:
         success: El widget se agrego correctamente.
         success_all: Se agrego %num% widget(s) correctamente.
+        success_all_remove: Se elimino %num% widget(s) correctamente.
 default: Predeterminada

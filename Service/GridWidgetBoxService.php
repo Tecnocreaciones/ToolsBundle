@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
 use InvalidArgumentException;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent;
 
 /**
  * Servicio para construir un grid ordenado (tecnocreaciones_tools.service.grid_widget_box)
@@ -49,6 +50,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
      * @var ContainerAwareInterface
      */
     private $container;
+    private $cacheGroup = [];
 
 
     public function __construct() 
@@ -177,6 +179,17 @@ class GridWidgetBoxService implements ContainerAwareInterface
     }
     
     /**
+     * ¿Widget añadido?
+     * @param type $type
+     * @param type $name
+     * @return type
+     */
+    public function isAdded($type, $name) {
+        $widget = $this->getWidgetBoxManager()->findPublishedByTypeAndName($type, $name);
+        return $widget;
+    }
+    
+    /**
      * Añade todos los widgets de un tipo
      * @param type $type
      * @return int
@@ -202,6 +215,10 @@ class GridWidgetBoxService implements ContainerAwareInterface
             if($nameFilter !== null && $name !== $nameFilter){
                 continue;
             }
+            if(($blockWidgetBox = $this->isAdded($type, $name)) !== null){
+                $this->getWidgetBoxManager()->remove($blockWidgetBox);
+                //continue;
+            }
             $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
             $blockWidgetBox->setType($type);
             $blockWidgetBox->setName($name);
@@ -216,12 +233,16 @@ class GridWidgetBoxService implements ContainerAwareInterface
     }
     
     public function counInGroup($group) {
+        if(isset($this->cacheGroup[$group])){
+            return $this->cacheGroup[$group];
+        }
         $total = 0;
         $definitions = $this->getDefinitionBlockGridByGroup($group);
         foreach ($definitions as $definition) {
             $total += $definition->countWidgets();
         }
-        return $total;
+        $this->cacheGroup[$group] = $total;
+        return $this->cacheGroup[$group];
     }
     
     /**
@@ -236,6 +257,11 @@ class GridWidgetBoxService implements ContainerAwareInterface
         return $news;
     }
     
+    /**
+     * Añade widgets por defecto a un area
+     * @param type $eventName
+     * @return type
+     */
     public function addDefaultByEvent($eventName) {
         $added = 0;
         $limit = 3;
@@ -244,10 +270,8 @@ class GridWidgetBoxService implements ContainerAwareInterface
                 continue;
             }
             foreach ($grid->getDefaults() as $name) {
-//                var_dump($name);
                 $i = $this->addAll($grid->getType(),$name);
                 $added += $i;
-//                var_dump($added);
                 if($added >= $limit){
                     break;
                 }
@@ -257,5 +281,11 @@ class GridWidgetBoxService implements ContainerAwareInterface
             }
         }
         return $added;
+    }
+    
+    public function clearAllByEvent($eventName) {
+        $result = $this->getWidgetBoxManager()->clearAllByEvent(MainSummaryBlockEvent::parseEvent($eventName));
+        
+        return $result;
     }
 }
