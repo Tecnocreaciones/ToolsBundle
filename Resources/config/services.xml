@@ -16,11 +16,11 @@
     </services>-->
     <services>
         <!-- Validator password not equals -->
-        <service id="tecno.validator.user_password_not_equals" class="Tecnocreaciones\Bundle\ToolsBundle\Validator\Constraints\UserPasswordValidator">
+<!--        <service id="tecno.validator.user_password_not_equals" class="Tecnocreaciones\Bundle\ToolsBundle\Validator\Constraints\UserPasswordValidator">
             <tag name="validator.constraint_validator" alias="tecno.validator.user_password_not_equals" />
             <argument type="service" id="security.context" />
             <argument type="service" id="security.encoder_factory" />
-        </service>
+        </service>-->
         <service id="tecno.service.time_ago" class="Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService">
             <argument type="service" id="translator" />
         </service>

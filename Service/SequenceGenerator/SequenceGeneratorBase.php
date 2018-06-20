@@ -13,6 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service\SequenceGenerator;
 
 use Doctrine\Common\Util\ClassUtils;
 use LogicException;
+use Tecnoready\Common\Service\SequenceGenerator\ItemReferenceInterface;
 
 /**
  * Base del generador de secuencias

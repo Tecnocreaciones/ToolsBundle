@@ -1,8 +1,8 @@
-{% extends "base.html.twig" %}
+{% extends "::layout.html.twig" %}
 
 {% trans_default_domain 'widgetBox' %}
 
-{% block body %}
+{% block pageBody %}
     
     <hgroup id="main-title" class="thin breadcrumb">
         <h1>{{ 'widget_box.widget'|trans }}
@@ -10,5 +10,4 @@
     </hgroup>
     
     {{ form(form) }}
-    
 {% endblock %}

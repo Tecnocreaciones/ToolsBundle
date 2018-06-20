@@ -1,0 +1,26 @@
+{% trans_default_domain 'widgetBox' %}
+
+<div class="well bordered-left bordered-themeprimary animated bounceInDown">
+    <p>Puede añadir widgets para personalizar esta vista y poder visualizar solo la información de su interes. Para agregar widgets presione en <a href="{{ path("block_widget_box_index") }}" class="btn btn-link bold">"Añadir Widget"</a>.
+        <a href="{{ path("block_widget_box_index") }}" class="btn btn-link pull-right bold animated fadeInLeft">
+            <i class="mp mp-widgets-1 mp-4x"></i>&nbsp;Añadir Widget
+            {% set news = gridWidgetBoxService.countNews() %}
+            {% if news > 0 %}
+                {{ "widget_box.news"|trans({"%count%": news}) }}
+            {% endif %}
+        </a>
+    </p>
+    <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> Algunos widgets mantienen la información por un periodo de tiempo no maximo de 24 horas.</p>
+    {% set news = gridWidgetBoxService.countNews() %}
+    {% if news > 0 %}
+        <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> 
+            Hay {{ news }} widget(s) nuevos!
+        </p>
+    {% endif %}
+</div>
+                
+<div id="area_main_widgets" class="gridster" style="min-height: 200px">
+    <ul class="main-dashboard" style="list-style-type: none;" url-update-widget="{{ path('block_widget_box_update') }}">
+        {{ sonata_block_render_event('widgets', { 'target': name_area }) }}
+    </ul>
+</div>

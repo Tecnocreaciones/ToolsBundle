@@ -30,7 +30,12 @@ interface BlockWidgetBoxManagerInterface
     function findAllPublishedByEvent($event);
     
     /**
-     * 
+     * Cuenta los widgets publicados en el evento
+     * @param type $event
+     */
+    function countPublishedByEvent($event);
+    
+    /**
      * @param array $parameters
      * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox Description
      */

@@ -312,10 +312,10 @@ function fnCreateGridster(isMobile,page)
         evaluateResponsiveValues();
         var rz_base_size = (((base_size * (windowWidth / base_size)) / cols) - offset);
 //        console.log('rz_base_size= '+rz_base_size);
-        gridster.resize_widget_dimensions({
-            widget_base_dimensions: [rz_base_size, widget_base_y],
-            widget_margins: [5, 5],
-        });
+//        gridster.resize_widget_dimensions({
+//            widget_base_dimensions: [rz_base_size, widget_base_y],
+//            widget_margins: [5, 5],
+//        });
     }
 
     /* we're ready for the show */

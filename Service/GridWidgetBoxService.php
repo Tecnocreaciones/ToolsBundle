@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+use InvalidArgumentException;
 
 /**
  * Servicio para construir un grid ordenado (tecnocreaciones_tools.service.grid_widget_box)
@@ -35,6 +36,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
     private $blocks;
     
     private $definitionsBlockGrid;
+    private $definitionsBlockGridByGroup;
 
     /**
      *
@@ -53,6 +55,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
     {
         $this->blocks = array();
         $this->definitionsBlockGrid = array();
+        $this->definitionsBlockGridByGroup = array();
     }
     
     public function addBlock(BlockWidgetBox $block) 
@@ -100,6 +103,7 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $this->setEvent($event);
         $widgetsBox = $this->getWidgetBoxManager()->findAllPublishedByEvent($eventName);
         foreach ($widgetsBox as $widgetBox) {
+            $widgetBox->setSetting("widget_id",$widgetBox->getId());
             $widgetBox->setSetting('name',$widgetBox->getName());
             $this->addBlock($widgetBox);
         }
@@ -111,14 +115,19 @@ class GridWidgetBoxService implements ContainerAwareInterface
      */
     public function countPublishedByEvent($eventName)
     {
-        $widgetsBox = $this->getWidgetBoxManager()->findAllPublishedByEvent($eventName);
-        return count($widgetsBox);
+        return $this->getWidgetBoxManager()->countPublishedByEvent($eventName);
     }
     
     function addDefinitionsBlockGrid(DefinitionBlockWidgetBoxInterface $definitionsBlockGrid) 
     {
+        if(isset($this->definitionsBlockGrid[$definitionsBlockGrid->getType()])){
+            throw new InvalidArgumentException(sprintf("The definition of widget box '%s' is already added.",$definitionsBlockGrid->getType()));
+        }
         $this->definitionsBlockGrid[$definitionsBlockGrid->getType()] = $definitionsBlockGrid;
-        
+        if(!isset($this->definitionsBlockGridByGroup[$definitionsBlockGrid->getGroup()])){
+            $this->definitionsBlockGridByGroup[$definitionsBlockGrid->getGroup()] = [];
+        }
+        $this->definitionsBlockGridByGroup[$definitionsBlockGrid->getGroup()][] = $definitionsBlockGrid;
     }  
     
     /**
@@ -128,12 +137,18 @@ class GridWidgetBoxService implements ContainerAwareInterface
      */
     function getDefinitionBlockGrid($type)
     {
-        if(isset($this->definitionsBlockGrid[$type])){
-            
+        if(!isset($this->definitionsBlockGrid[$type])){
+            throw new InvalidArgumentException(sprintf("The definition of widget box '%s' is not added.",$type));
         }
         return $this->definitionsBlockGrid[$type];
     }
-
+    
+    public function getDefinitionBlockGridByGroup($group) {
+         if(!isset($this->definitionsBlockGridByGroup[$group])){
+            throw new InvalidArgumentException(sprintf("The definition group '%s' is not added.",$group));
+        }
+        return $this->definitionsBlockGridByGroup[$group];
+    }
 
     /**
      * 
@@ -143,7 +158,11 @@ class GridWidgetBoxService implements ContainerAwareInterface
     {
         return $this->definitionsBlockGrid;
     }
-        
+    
+    public function getDefinitionsBlockGridByGroup() {
+        return $this->definitionsBlockGridByGroup;
+    }
+            
     /**
      * 
      * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManagerInterface
@@ -163,13 +182,12 @@ class GridWidgetBoxService implements ContainerAwareInterface
      * @return int
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function addAll($type) {
+    public function addAll($type,$nameFilter = null) {
         $definitionBlockGrid = $this->getDefinitionBlockGrid($type);
         if($definitionBlockGrid->hasPermission() == false){
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
-        $events = $definitionBlockGrid->getEvents();
-        $names = array();
+        $events = $definitionBlockGrid->getParseEvents();
         $names = $definitionBlockGrid->getNames();
         
         $templates = $definitionBlockGrid->getTemplates();
@@ -179,6 +197,9 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $i = 0;
         foreach ($names as $name => $value) {
             if($definitionBlockGrid->hasPermission($name) === false){
+                continue;
+            }
+            if($nameFilter !== null && $name !== $nameFilter){
                 continue;
             }
             $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
@@ -192,5 +213,49 @@ class GridWidgetBoxService implements ContainerAwareInterface
             $i++;
         }
         return $i;
+    }
+    
+    public function counInGroup($group) {
+        $total = 0;
+        $definitions = $this->getDefinitionBlockGridByGroup($group);
+        foreach ($definitions as $definition) {
+            $total += $definition->countWidgets();
+        }
+        return $total;
+    }
+    
+    /**
+     * Cuenta cuantos widgets hay nuevos
+     * @return int
+     */
+    public function countNews() {
+        $news = 0;
+        foreach ($this->getDefinitionsBlockGrid() as $grid) {
+            $news += $grid->countNews();
+        }
+        return $news;
+    }
+    
+    public function addDefaultByEvent($eventName) {
+        $added = 0;
+        $limit = 3;
+        foreach ($this->getDefinitionsBlockGrid() as $grid) {
+            if(!in_array($eventName, $grid->getParseEvents())){
+                continue;
+            }
+            foreach ($grid->getDefaults() as $name) {
+//                var_dump($name);
+                $i = $this->addAll($grid->getType(),$name);
+                $added += $i;
+//                var_dump($added);
+                if($added >= $limit){
+                    break;
+                }
+            }
+            if($added >= $limit){
+                break;
+            }
+        }
+        return $added;
     }
 }
