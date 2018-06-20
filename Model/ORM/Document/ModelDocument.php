@@ -232,7 +232,7 @@ abstract class ModelDocument extends BaseModel
     
     public abstract function getSubDir();
     
-    public static abstract function isDebug();
+    public abstract function isDebug();
         
     /**
      * @ORM\PrePersist()
@@ -254,7 +254,7 @@ abstract class ModelDocument extends BaseModel
                 $extension = $this->getFile()->guessExtension();
             }
             $path = "";
-            if(self::isDebug() === true){
+            if($this->isDebug() === true){
                 $path = 'debug/';
             }else{
                 $path = 'prod/';
