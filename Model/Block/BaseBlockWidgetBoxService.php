@@ -80,7 +80,7 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     public function getParseEvents() {
         $events = [];
         foreach ($this->getEvents() as $event) {
-            $events[] = MainSummaryBlockEvent::EVENT_BASE.$event;
+            $events[] = MainSummaryBlockEvent::parseEvent($event);
         }
         return $events;
     }
@@ -97,8 +97,10 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             'blockBase' => 'TecnocreacionesToolsBundle:WidgetBox:block_widget_box.html.twig',
             'positionX' => 1,
             'positionY' => 1,
-            'sizeX' => 4,
-            'sizeY' => 4,
+            'sizeX' => null,
+            'sizeY' => null,
+            'defaultSizeX' => 4,
+            'defaultSizeY' => 4,
             'oldSizeY' => 4,
             'icon' => '<i class="fa fa-sort"></i>',
             'isMaximizable' => false,
@@ -137,9 +139,10 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
             if(isset($this->cachePermission[$name])){
                 return $this->cachePermission[$name];
             }
-            $names = $this->getNames();
-            if(isset($names[$name]['rol'])){
-                $isGranted = $this->isGranted($names[$name]['rol']);
+            $rol = $this->getInfo($name,"rol");
+//            var_dump($names);
+            if($rol !== null){
+                $isGranted = $this->isGranted($rol);
                 $this->cachePermission[$name] = $isGranted;
             }
         }
@@ -197,8 +200,15 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     
     protected function isGranted($rol) {
         $user = $this->getUser();
-        return $user->hasRole($rol);
+        
+        $granted =  $user->hasRole($rol);
+        if(!$granted){
+            $granted = $this->container->get('security.authorization_checker')->isGranted($rol);
+        }
+
+        return $granted;
     }
+    
     
     /**
      * Get a user from the Security Token Storage.
@@ -234,7 +244,7 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
      * @param type $domain
      * @return type
      */
-    protected function trans($id,array $parameters = array(), $domain = 'flashes')
+    protected function trans($id,array $parameters = array(), $domain = 'widgets')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
     }

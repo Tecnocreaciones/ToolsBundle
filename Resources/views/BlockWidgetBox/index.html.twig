@@ -9,6 +9,9 @@
             <h1><i class="mp mp-widgets-1"></i>&nbsp;{{ 'widget_box.header'|trans }}</h1>
         </hgroup>
         <p>Puede añadir un widget presione en el nombre o presione "{{ 'widget_box.buttons.add_all'|trans }}" para agregar todos de la sección indicada.
+            <a href="{{ path("block_widget_box_delete_all",{eventName: app.request.get("eventName")}) }}" target="_self" class="btn btn-link pull-right bold animated fadeInLeft">
+                <i class="mp mp-widgets-1 mp-4x"></i>&nbsp;{{ "widget_box.clear"|trans }}
+            </a>
         </p>
         {% set news = gridWidgetBoxService.countNews() %}
         {% if news > 0 %}
@@ -17,7 +20,7 @@
             </p>
         {% endif %}
     </div>
-    {% for group,definitionsBlockGrid in definitions %}
+    {% for group,definitionsBlockGrid in definitions if gridWidgetBoxService.counInGroup(group) > 0%}
         <h5 class="row-title before-success"><i class="glyphicon glyphicon-arrow-right success"></i>
             {{ group|trans({},"widgets") }}&nbsp;
             {{ 'widget_box.widgets'|trans({'%quantity%': (gridWidgetBoxService.counInGroup(group)) })|raw }}
@@ -32,12 +35,25 @@
                         <div class="col-lg-6 col-sm-6 col-xs-12">
                             <ul class="list" style="list-style-type: decimal-leading-zero;margin-left: 23px">
                                 {% for name,parameters in definitionBlockGrid.names %}
-                                    {% if definitionBlockGrid.hasPermission(name) %}
+                                    {% set hasPermission = definitionBlockGrid.hasPermission(name) %}
+                                    {% set hasPermissionMaster = is_granted("ROLE_APP_WIDGET_SHOW_ROLE") %}
+                                    {% if (hasPermissionMaster or hasPermission) %}
                                         <li>
                                             {% if definitionBlockGrid.isNew(name) %}
                                                 <b>{{ "widget_box.new"|trans }}</b>
                                             {% endif %}
-                                            &nbsp;<a href="{{ path('block_widget_box_add_all',{type:definitionBlockGrid.type,name: name }) }}">{{ name|trans({},definitionBlockGrid.translationDomain) }}</a>
+                                            &nbsp;
+                                            {% if hasPermission %}
+                                                <a href="{{ path('block_widget_box_add_all',{type:definitionBlockGrid.type,name: name,eventName: app.request.get("eventName") }) }}" target="_self">
+                                            {% endif %}
+                                                {{ name|trans({},definitionBlockGrid.translationDomain) }}
+                                            {% if hasPermission %}
+                                                </a>
+                                            {% endif %}
+                                            {% if hasPermissionMaster and definitionBlockGrid.getInfo(name,"rol")|length > 0%}
+                                                </br>
+                                                <small>({{ definitionBlockGrid.getInfo(name,"rol") }})</small>
+                                            {% endif %}
                                         </li>
                                     {% endif %}
                                 {% endfor %}
@@ -70,12 +86,12 @@
                                 </table>
                             </div>
                             <p class="button-height align-right float-right">
-                                {#<a href="{{ path('block_widget_box_create',{type: definitionBlockGrid.type}) }}" class="button">
+                                {#<a href="{{ path('block_widget_box_create',{type: definitionBlockGrid.type}) }}" class="button" target="_self">
                                     <span class="button-icon"><span class="fa fa-plus-circle"></span></span>
                                         {{ 'widget_box.buttons.add'|trans }}
                                 </a>
                                 &nbsp;#}
-                                <a href="{{ path('block_widget_box_add_all',{type: definitionBlockGrid.type}) }}" class="button">
+                                <a href="{{ path('block_widget_box_add_all',{type: definitionBlockGrid.type,eventName: app.request.get("eventName")}) }}" class="button" target="_self">
                                     <span class="button-icon"><span class="fa fa-list-alt"></span></span>
                                         {{ 'widget_box.buttons.add_all'|trans }}
                                 </a>

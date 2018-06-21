@@ -34,7 +34,7 @@ class BlockWidgetBox extends Block
     
     /**
      * @var string
-     * @ORM\Column(name="name",type="string")
+     * @ORM\Column(name="name",type="string",length=100)
      */
     protected $name;
 
@@ -70,13 +70,13 @@ class BlockWidgetBox extends Block
 
     /**
      * @var string
-     * @ORM\Column(name="type",type="string")
+     * @ORM\Column(name="type",type="string",length=100)
      */
     protected $type;
 
     /**
      * @var string
-     * @ORM\Column(name="event",type="string")
+     * @ORM\Column(name="event",type="string",length=140)
      */
     protected $event;
     
