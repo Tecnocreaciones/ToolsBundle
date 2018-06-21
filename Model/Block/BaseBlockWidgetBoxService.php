@@ -244,7 +244,7 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
      * @param type $domain
      * @return type
      */
-    protected function trans($id,array $parameters = array(), $domain = 'flashes')
+    protected function trans($id,array $parameters = array(), $domain = 'widgets')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
     }
