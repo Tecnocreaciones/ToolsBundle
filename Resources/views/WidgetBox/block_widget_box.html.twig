@@ -6,7 +6,7 @@
                 {% if settings.renderTitle %}
                     <h5 class="widget-title">
                     {% if settings.icon != null %}
-                        {{ settings.icon|trans|raw }}
+                        <i class="{{ settings.icon }}"></i>
                     {% endif %}
                     {% block title %}
                         {{ settings.title|trans({},settings.translationDomain)|raw }}

@@ -63,7 +63,7 @@ function fnCreateGridster(isMobile,page)
 //    });
     var initPostSerialize = false;
     /* start gridster */
-    var listWidgets =$(".gridster ul");
+    var listWidgets =$(".gridster > ul");
     var gridster = listWidgets.gridster({
         extra_cols: 1,
         autogrow_cols: true,
