@@ -22,4 +22,10 @@ class ModelFilter extends \Tecnocreaciones\Bundle\ToolsBundle\Model\Base\BaseMod
     const DATATYPE_NUMBER = "number";
     const DATATYPE_FLOAT = "float";
     const DATATYPE_PERCENTAGE = "percentage";
+    
+    /**
+     * Parametro para choice: 
+     */
+    const CHOICE_PARAM_STATIC_CALL_CLASS = "staticCallClass";
+    const CHOICE_PARAM_STATIC_CALL_METHOD = "staticCallMethod";
 }
