@@ -34,7 +34,4 @@ class DoctrineORMAdapter extends Base {
         return $this->em->getRepository("Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration")->findAll();
     }
 
-    public function flush() {
-        $this->em->flush();
-    }
 }
