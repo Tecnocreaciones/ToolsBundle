@@ -60,6 +60,8 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('enable')->defaultFalse()->end()
                             ->booleanNode('debug')->end()
                             ->scalarNode('configuration_manager_class')->defaultValue('Tecnoready\Common\Service\ConfigurationService\ConfigurationManager')->cannotBeEmpty()->end()
+                            ->scalarNode('adapter')->defaultValue('configuration.adapter.orm')->cannotBeEmpty()->end()
+                            ->scalarNode('cache')->defaultValue('configuration.cache.disk')->cannotBeEmpty()->end()
                             ->scalarNode('configuration_name_service')->defaultValue('app.manager.configuration')->cannotBeEmpty()->end()
                         ->end()
                     ->end()

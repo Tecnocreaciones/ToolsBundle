@@ -28,9 +28,10 @@ class ConfigurationPass implements CompilerPassInterface {
         if ($container->getParameter('tecnocreaciones_tools.service.configuration_manager.enable') === false) {
             return;
         }
+        
         $config = $container->getParameter("tecnocreaciones_tools.configuration_manager.configuration");
 
-        $configurationClass = \Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration::class;
+        $configurationClass = $container->getParameter("tecnocreaciones_tools.configuration_class.class");
         $configurationManagerClass = $config['configuration_manager_class'];
         $configurationManagerNameService = $config['configuration_name_service'];
         $reflectionConfigurationClass = new ReflectionClass($configurationClass);
@@ -44,13 +45,9 @@ class ConfigurationPass implements CompilerPassInterface {
         } else {
             $debug = $container->getParameter('kernel.debug');
         }
-        $doctrine2Adapter = new Definition("Tecnocreaciones\Bundle\ToolsBundle\Service\ConfigurationService\Adapter\DoctrineORMAdapter");
-        $doctrine2Adapter->addArgument(new Reference('doctrine.orm.entity_manager'));
-        $container->setDefinition("configuration.adapter.doctrine_orm", $doctrine2Adapter);
         
         $configurationManager = new Definition($configurationManagerClass, [
-            $container->getDefinition("configuration.adapter.doctrine_orm"), [
-                "cache_dir" => $container->getParameter('kernel.cache_dir'),
+            new Reference($config['adapter']),new Reference($config['cache']), [
                 "add_default_wrapper" => true,
                 "debug" => $debug,
             ]

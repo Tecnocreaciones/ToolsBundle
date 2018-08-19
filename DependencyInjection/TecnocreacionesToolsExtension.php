@@ -64,12 +64,9 @@ class TecnocreacionesToolsExtension extends Extension
         }
         
         if($config['configuration_manager']['enable'] === true){
-            $loaderYml->load('services/configuration_manager.yml');
-            
             $configurationClass = \Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration::class;
-            
             $container->setParameter('tecnocreaciones_tools.configuration_class.class', $configurationClass);
-            
+            $loaderYml->load('services/configuration_manager.yml');
             $container->setParameter('tecnocreaciones_tools.configuration_manager.configuration', $config['configuration_manager']);
         }
         

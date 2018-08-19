@@ -1,8 +1,10 @@
+parameters:
+    configuration.cache.disk.password: "bfd59291e82.5b5f$2bbf1eb76569f8fe7"
 services:
     sonata.admin.configuration:
         class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\ConfigurationAdmin
         tags:
-            - { name: sonata.admin, manager_type: orm, group: "%sonata.user.admin.groupname%",label_catalogue: "admin", label: "admin.configuration" }
+            - { "name": "sonata.admin", "manager_type": "orm", "group": "%sonata.user.admin.groupname%","label_catalogue": "admin", "label": "admin.configuration" }
         arguments:
             - ~
             - "%tecnocreaciones_tools.configuration_class.class%"
@@ -10,13 +12,10 @@ services:
         calls:
             - [ setTranslationDomain, [admin]]
             - [ setContainer, ['@service_container']]
-#    sonata.admin.configuration_group:
-#        class: Tecnocreaciones\Bundle\ToolsBundle\Admin\Configuration\GroupAdmin
-#        tags:
-#            - { name: sonata.admin, manager_type: orm, group: "%sonata.user.admin.groupname%",label_catalogue: "admin", label: "admin.configuration_group" }
-#        arguments:
-#            - ~
-#            - "%tecnocreaciones_tools.configuration_group_class.class%"
-#            - ~
-#        calls:
-#            - [ setTranslationDomain, [admin]]
+    configuration.adapter.orm:
+        class:     Tecnoready\Common\Service\ConfigurationService\Adapter\DoctrineORMAdapter
+        arguments: ["@doctrine.orm.entity_manager", "%tecnocreaciones_tools.configuration_class.class%"]
+    configuration.cache.disk:
+        class: Tecnoready\Common\Service\ConfigurationService\Cache\DiskStore
+        arguments:
+            - { "debug": "%kernel.debug%", "cache_dir": "%kernel.cache_dir%","password": "%configuration.cache.disk.password%" }
