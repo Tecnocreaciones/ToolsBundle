@@ -13,9 +13,37 @@ services:
             - [ setTranslationDomain, [admin]]
             - [ setContainer, ['@service_container']]
     configuration.adapter.orm:
+        public: false
         class:     Tecnoready\Common\Service\ConfigurationService\Adapter\DoctrineORMAdapter
         arguments: ["@doctrine.orm.entity_manager", "%tecnocreaciones_tools.configuration_class.class%"]
     configuration.cache.disk:
+        public: false
         class: Tecnoready\Common\Service\ConfigurationService\Cache\DiskStore
         arguments:
             - { "debug": "%kernel.debug%", "cache_dir": "%kernel.cache_dir%","password": "%configuration.cache.disk.password%" }
+    configuration.transformer.integer:
+        public: false
+        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\IntegerDataTransformer
+        tags:
+            - { "name": "configuration.transformer" }
+    configuration.transformer.boolean:
+        public: false
+        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\BooleanDataTransformer
+        tags:
+            - { "name": "configuration.transformer" }
+    configuration.transformer.array:
+        public: false
+        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\ArrayDataTransformer
+        tags:
+            - { "name": "configuration.transformer" }
+    configuration.transformer.date_time:
+        public: false
+        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\DateTimeTransformerTest
+        tags:
+            - { "name": "configuration.transformer" }
+    configuration.transformer.doctrine:
+        public: false
+        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\DoctrineORMTransformer
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { "name": "configuration.transformer" }

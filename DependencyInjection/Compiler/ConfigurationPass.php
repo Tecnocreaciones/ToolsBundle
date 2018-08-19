@@ -52,7 +52,11 @@ class ConfigurationPass implements CompilerPassInterface {
                 "debug" => $debug,
             ]
         ]);
-
+        $tags = $container->findTaggedServiceIds('configuration.transformer');
+        foreach ($tags as $id => $params) {
+            $definition = $container->findDefinition($id);
+            $configurationManager->addMethodCall("addTransformer", [$definition]);
+        }
         $container->setDefinition($configurationManagerNameService, $configurationManager);
         $container->setParameter('tecnocreaciones_tools.configuration_manager.name', $configurationManagerNameService);
 
