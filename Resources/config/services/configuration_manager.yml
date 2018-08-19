@@ -38,7 +38,7 @@ services:
             - { "name": "configuration.transformer" }
     configuration.transformer.date_time:
         public: false
-        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\DateTimeTransformerTest
+        class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\DateTimeTransformer
         tags:
             - { "name": "configuration.transformer" }
     configuration.transformer.doctrine:
