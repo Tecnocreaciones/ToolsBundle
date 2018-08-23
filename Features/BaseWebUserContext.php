@@ -21,6 +21,8 @@ use Exception;
  */
 abstract class BaseWebUserContext extends MinkContext
 {
+    use TraitContext;
+    
     protected $kernel;
     protected $container;
     
@@ -388,19 +390,4 @@ abstract class BaseWebUserContext extends MinkContext
         return new \Symfony\Component\HttpFoundation\RedirectResponse($url, $status);
     }
     
-    /**
-     * Generates a URL from the given parameters.
-     *
-     * @param string $route         The name of the route
-     * @param mixed  $parameters    An array of parameters
-     * @param int    $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
-     *
-     * @return string The generated URL
-     *
-     * @see \Symfony\Component\Routing\Generator\UrlGeneratorInterface
-     */
-    public function generateUrl($route, $parameters = array(), $referenceType = \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_PATH)
-    {
-        return $this->container->get('router')->generate($route, $parameters, $referenceType);
-    }
 }

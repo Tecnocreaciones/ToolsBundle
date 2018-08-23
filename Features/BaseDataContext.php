@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Exception;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 if(!class_exists("PHPUnit\Exception") && php_sapi_name() === 'cli'){
     $base = realpath(__DIR__."/../../../");
@@ -51,6 +50,8 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
     use \Behat\Symfony2Extension\Context\KernelDictionary;
 
     use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
+    
+    use TraitContext;
 
     /**
      * Clase de usuario
@@ -648,37 +649,5 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         return $user;
     }
 
-    /**
-     * @return \Doctrine\Bundle\DoctrineBundle\Registry
-     */
-    protected function getDoctrine() {
-        return $this->container->get("doctrine");
-    }
-
-    /**
-     * Generates a URL from the given parameters.
-     *
-     * @param string $route         The name of the route
-     * @param mixed  $parameters    An array of parameters
-     * @param int    $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
-     *
-     * @return string The generated URL
-     *
-     * @see UrlGeneratorInterface
-     */
-    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
-        return $this->container->get('router')->generate($route, $parameters, $referenceType);
-    }
-    
-    /**
-     * Traduce un indice
-     * @param type $id
-     * @param array $parameters
-     * @param type $domain
-     * @return type
-     */
-    protected function trans($id,array $parameters = array(), $domain = 'flashes')
-    {
-        return $this->container->get('translator')->trans($id, $parameters, $domain);
-    }
+   
 }
