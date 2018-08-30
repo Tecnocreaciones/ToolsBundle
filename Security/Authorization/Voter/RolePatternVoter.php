@@ -25,12 +25,14 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 class RolePatternVoter extends RoleVoter {
 
     private $rolePrefix;
+    private $prefixLength;
     private $pattern;
     private $roleHierarchy;
 
     public function __construct(RoleHierarchyInterface $roleHierarchy, $prefix = 'ROLE_APP_') {
         $this->roleHierarchy = $roleHierarchy;
         $this->rolePrefix = $prefix;
+        $this->prefixLength = strlen($prefix);
         $this->pattern = sprintf('/^%s([A-Z])\w+\*/',$this->rolePrefix);
         parent::__construct($prefix);
     }
@@ -47,7 +49,7 @@ class RolePatternVoter extends RoleVoter {
         $roles = $this->extractRoles($token);
         
         foreach ($attributes as $attribute) {
-            if (!$this->supportsAttribute($attribute)) {
+            if ($attribute === null || substr($attribute,0,$this->prefixLength) !== $this->rolePrefix) {
                 continue;
             }
             if(preg_match($this->pattern, $attribute)){
