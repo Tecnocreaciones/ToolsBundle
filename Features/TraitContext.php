@@ -37,7 +37,7 @@ trait TraitContext {
      *
      * @see UrlGeneratorInterface
      */
-    public function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
+    protected function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
     

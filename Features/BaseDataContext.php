@@ -17,7 +17,9 @@ use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Exception;
 
-if(!class_exists("PHPUnit\Exception") && php_sapi_name() === 'cli'){
+//Version vieja PHPUnit\Framework\Assert
+if(!class_exists("PHPUnit\Framework\Assert") &&
+        !class_exists("PHPUnit\Exception") && php_sapi_name() === 'cli'){
     $base = realpath(__DIR__."/../../../");
     $pathPhpunit = $base."/bin/.phpunit";
     if(!file_exists($pathPhpunit)){
