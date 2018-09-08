@@ -48,7 +48,7 @@ abstract class BaseWebUserContext extends MinkContext
     public function setDataContext(BaseDataContext $dataContext) {
         $this->dataContext = $dataContext;
         $this->kernel = $this->dataContext->getKernel();
-        $this->container = $this->dataContext->getKernel()->getContainer();
+        $this->container = $this->kernel->getContainer();
         return $this;
     }
     
@@ -117,7 +117,7 @@ abstract class BaseWebUserContext extends MinkContext
     * @return \Behat\Mink\Element\NodeElement
     * @throws Exception
     */
-   private function findElement($selector){
+   protected function findElement($selector){
        $page = $this->getSession()->getPage();
        $element = $page->find('css', $selector);
 

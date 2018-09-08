@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 //Version vieja PHPUnit\Framework\Assert
 if(!class_exists("PHPUnit\Framework\Assert") &&
@@ -55,6 +56,12 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
     
     use TraitContext;
 
+    /**
+     *
+     * @var \Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected $client;
+    
     /**
      * Clase de usuario
      * @var string 

@@ -23,7 +23,7 @@ trait TraitContext {
      * @return \Doctrine\Bundle\DoctrineBundle\Registry
      */
     protected function getDoctrine() {
-        return $this->container->get("doctrine");
+        return $this->getContainer()->get("doctrine");
     }
 
     /**
