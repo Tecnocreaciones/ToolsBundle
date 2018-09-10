@@ -15,6 +15,12 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters;
  */
 class StandardFilters implements GroupFilterInterface 
 {
+    /**
+     * [$macroTemplate Template standar para renderizado de filtros]
+     * @var string
+     */
+    static protected $macroTemplate = "TecnocreacionesToolsBundle:Search:standard_filters.html.twig";
+
     const TYPE_INPUT= "input";
     const TYPE_CHOICE = "choice";
     const TYPE_INPUT_FROM_TO = "inputFromTo";
@@ -26,9 +32,15 @@ class StandardFilters implements GroupFilterInterface
     const TYPE_TODO = "todo";
     const TYPE_YEAR = "year";
     
+    public static function setMacroTemplate($macroTemplate) 
+    {   
+        self::$macroTemplate = $macroTemplate;
+        return self::$macroTemplate;
+    }
+
     public static function getMacroTemplate() 
-    {
-        return "TecnocreacionesToolsBundle:Search:standard_filters.html.twig";
+    {   
+        return self::$macroTemplate;
     }
 
     public static function getName() 
