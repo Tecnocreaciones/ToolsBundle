@@ -30,6 +30,7 @@ class WidgetBoxPass implements CompilerPassInterface
         }
         $definitionGridWidgetBox = $container->getDefinition('tecnocreaciones_tools.service.grid_widget_box');
         $tags = $container->findTaggedServiceIds('sonata.block');
+        $widgetIds = [];
         foreach ($tags as $id => $attributes) {
             
             $sonataBlockDefinition = $container->getDefinition($id);
@@ -40,7 +41,10 @@ class WidgetBoxPass implements CompilerPassInterface
             $reflectionClass = new ReflectionClass($class);
             if($reflectionClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface')){
                 $definitionGridWidgetBox->addMethodCall('addDefinitionsBlockGrid',array(new Reference($id)));
+                $widgetIds[] = $id;
             }
         }
+        $loaderWidget = $container->findDefinition("sonata.block.loader.service.widgets");
+        $loaderWidget->addArgument($widgetIds);
     }
 }

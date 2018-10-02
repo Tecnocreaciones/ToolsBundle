@@ -13,6 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service\SequenceGenerator;
 
 use Doctrine\Common\Util\ClassUtils;
 use LogicException;
+use Tecnoready\Common\Service\SequenceGenerator\ItemReferenceInterface;
 
 /**
  * Base del generador de secuencias
@@ -39,7 +40,7 @@ abstract class SequenceGeneratorBase implements SequenceGeneratorBaseInterface
         $field = $config['field'];
         $qb = $this->sequenceGenerator->createQueryBuilder();
         $qb->from($className,'p');
-        return $this->sequenceGenerator->generateNext($qb, $mask,$field,[],$config["options"]);
+        return $this->sequenceGenerator->generateNext($qb, $mask,$field,[],$config);
     }
     
     /**
@@ -56,14 +57,19 @@ abstract class SequenceGeneratorBase implements SequenceGeneratorBaseInterface
         if(!isset($classMap[$className])){
             throw new LogicException(sprintf("No ha definido la configuracion de '%s' para generar su referencia",$className));
         }
-        $defaultConfig = [
+        $resolver = new \Symfony\Component\OptionsResolver\OptionsResolver();
+        $resolver->setDefined([
+            "method","field","options","mask"
+        ]);
+        $resolver->setDefaults([
             'method' => 'buildRef',
             'field' => 'ref',
-            'options' => array()
-        ];
-        $config = array_merge($defaultConfig,$classMap[$className]);
-        $config['className'] = $className;
+            'use_cache' => false,
+//            'options' => array()
+        ]);
         
+        $config = $resolver->resolve($classMap[$className]);
+        $config['className'] = $className;
         $method = $config['method'];
         $ref = $this->$method($item,$config);
         $item->setRef($ref);

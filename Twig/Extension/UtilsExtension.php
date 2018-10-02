@@ -46,6 +46,11 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
                 $functions[] = new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
             }
         }
+        if($config['widget_block_grid']['enable']  === true){
+            $functions[] = new \Twig_SimpleFunction('widgets_render_area', array($this,'widgetsRenderArea'), array('is_safe' => array('html')));
+            $functions[] = new \Twig_SimpleFunction('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
+            $functions[] = new \Twig_SimpleFunction('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
+        }
         $functions[] = new \Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
         $functions[] = new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
         $functions[] = new \Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
@@ -126,6 +131,31 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         );
     }
     
+    public function widgetsRenderArea($areaName,$renderAssets = true)
+    {
+        return $this->container->get('templating')->render("TecnocreacionesToolsBundle:BlockWidgetBox:area.html.twig", 
+            array(
+                'name_area' => $areaName,
+                'render_assets' => $renderAssets,
+                'gridWidgetBoxService' => $this->getGridWidgetBoxService(),
+            )
+        );
+    }
+    public function widgetsRenderAssets()
+    {
+        return $this->container->get('templating')->render("TecnocreacionesToolsBundle:BlockWidgetBox:assets.html.twig", 
+            array(
+            )
+        );
+    }
+    public function widgetsInitGrid()
+    {
+        return $this->container->get('templating')->render("TecnocreacionesToolsBundle:BlockWidgetBox:initGrid.html.twig", 
+            array(
+            )
+        );
+    }
+    
     function printError($error,array $parameters = array(),$translationDomain = 'messages') {
         $errorTrans = $this->trans($error,$parameters,$translationDomain);
         $base = '<div class="alert alert-danger fade in radius-bordered alert-shadowed">
@@ -190,6 +220,15 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
     private function trans($id,array $parameters = array(), $domain = 'messages')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
+    }
+    
+    /**
+     * 
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService
+     */
+    private function getGridWidgetBoxService()
+    {
+        return $this->container->get('tecnocreaciones_tools.service.grid_widget_box');
     }
     
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) 

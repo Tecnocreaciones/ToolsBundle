@@ -64,18 +64,15 @@ class TecnocreacionesToolsExtension extends Extension
         }
         
         if($config['configuration_manager']['enable'] === true){
-            $loaderYml->load('services/configuration_manager.yml');
-            
             $configurationClass = \Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\Configuration::class;
-            
             $container->setParameter('tecnocreaciones_tools.configuration_class.class', $configurationClass);
-            
+            $loaderYml->load('services/configuration_manager.yml');
             $container->setParameter('tecnocreaciones_tools.configuration_manager.configuration', $config['configuration_manager']);
         }
         
         if($config['widget_block_grid']['enable'] === true)
         {
-           $loader->load('services/widget_block_grid.xml');
+           $loaderYml->load('services/widget_block_grid.yml');
             
            $blockGridConfig = $config['widget_block_grid']; 
            $blockGridClass = $blockGridConfig['widget_block_grid_class'];
@@ -153,7 +150,7 @@ class TecnocreacionesToolsExtension extends Extension
         }
         
         
-        if($config['extra_form_types']['enable'] === true)
+        if(isset($config['extra_form_types']) && $config['extra_form_types']['enable'] === true)
         {
             $loader->load('services/extra_form_types.xml');
             $container->setParameter('tecnocreaciones.extra_form_types.autocomplete_entities', $config['extra_form_types']['autocomplete_entities']);
@@ -220,6 +217,10 @@ class TecnocreacionesToolsExtension extends Extension
            
            $container->setParameter("tecnoready.swiftmailer_db.spool.entity_class", $config['database_spool']["entity_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
+           $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
+           $container->setParameter("tecnoready.swiftmailer_db.spool.email_queue_class", $config['database_spool']["email_queue_class"]);
+           $container->setParameter("tecnoready.swiftmailer_db.spool.email_template_class", $config['database_spool']["email_template_class"]);
+           $container->setParameter("tecnoready.swiftmailer_db.email_component_class", $config['database_spool']["email_component_class"]);
         }
         
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);

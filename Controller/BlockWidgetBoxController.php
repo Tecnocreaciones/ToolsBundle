@@ -28,13 +28,13 @@ class BlockWidgetBoxController extends Controller
     public function indexAction(Request $request) 
     {
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $definitionsBlockGrid = $gridWidgetBoxService->getDefinitionsBlockGrid();
-        
-        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
+        $definitions = $gridWidgetBoxService->getDefinitionsBlockGridByGroup();
+//        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
         
         return $this->render(
             'TecnocreacionesToolsBundle:BlockWidgetBox:index.html.twig',array(
-                'definitionsBlockGrid' => $definitionsBlockGrid
+                'gridWidgetBoxService' => $gridWidgetBoxService,
+                'definitions' => $definitions
             )
         );
     }
@@ -68,7 +68,7 @@ class BlockWidgetBoxController extends Controller
                 $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
                 
                 $data = $form->getData();
-                $events = $definitionBlockGrid->getEvents();
+                $events = $definitionBlockGrid->getParseEvents();
                 $name = $data['name'];
                 if($definitionBlockGrid->hasPermission($name) === false){
                     throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
@@ -84,7 +84,9 @@ class BlockWidgetBoxController extends Controller
                 
                 $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success'));
                 
-                return $this->redirect($this->generateUrl('block_widget_box_index'));
+                return $this->redirect($this->generateUrl('block_widget_box_index',[
+                    "eventName" => $request->get("eventName"),
+                ]));
             }
         }
         
@@ -99,13 +101,31 @@ class BlockWidgetBoxController extends Controller
     function addAllAction(Request $request) 
     {
         $type = $request->get('type');
+        $name = $request->get('name');
         $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $i = $gridWidgetBoxService->addAll($type);
+        $i = $gridWidgetBoxService->addAll($type,$name);
+        if($i > 0){
+        }
         $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all',array(
             '%num%' => $i,
         )));
 
-        return $this->redirect($this->generateUrl('block_widget_box_index'));
+        return $this->redirect($this->generateUrl('block_widget_box_index',[
+            "eventName" => $request->get("eventName"),
+        ]));
+    }
+    
+    public function deleteAllAction(Request $request) {
+        $eventName = $request->get('eventName');
+        $gridWidgetBoxService = $this->getGridWidgetBoxService();
+        $i = $gridWidgetBoxService->clearAllByEvent($eventName);
+        $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all_remove',array(
+            '%num%' => $i,
+        )));
+        
+        return $this->redirect($this->generateUrl('block_widget_box_index',[
+            "eventName" => $request->get("eventName"),
+        ]));
     }
     
     public function deleteAction(Request $request)
@@ -201,7 +221,7 @@ class BlockWidgetBoxController extends Controller
         $widgetBox->setSetting('blockBase','TecnocreacionesToolsBundle:WidgetBox:block_widget_box_empty.html.twig');
         
         $blockContent = $blockHelper->render(array(
-            'type' => $widgetBox->getType()
+            'widget' => $widgetBox->getType()
         ), $widgetBox->getSettings());
         return new \Symfony\Component\HttpFoundation\Response($blockContent);
     }
@@ -210,7 +230,7 @@ class BlockWidgetBoxController extends Controller
     {
         $templatesData = $eventsData = $nameData = null;
         $names = $definitionBlockGrid->getNames();
-        $events = $definitionBlockGrid->getEvents();
+        $events = $definitionBlockGrid->getParseEvents();
         $templates = $definitionBlockGrid->getTemplates();
         
         if(count($names) == 1){

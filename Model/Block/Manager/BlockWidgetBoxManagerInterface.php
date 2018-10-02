@@ -30,9 +30,27 @@ interface BlockWidgetBoxManagerInterface
     function findAllPublishedByEvent($event);
     
     /**
-     * 
+     * Busca un widget publicado por el tipo y el nombre
+     * @param type $type
+     * @param type $name
+     */
+    function findPublishedByTypeAndName($type,$name);
+    
+    /**
+     * Cuenta los widgets publicados en el evento
+     * @param type $event
+     */
+    function countPublishedByEvent($event);
+    
+    /**
      * @param array $parameters
      * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox Description
      */
     function buildBlockWidget(array $parameters = array());
+    
+    /**
+     * Elimina todos los widget de un area
+     * @param type $eventName
+     */
+    function clearAllByEvent($eventName);
 }

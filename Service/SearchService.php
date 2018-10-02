@@ -10,6 +10,7 @@
  */
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
+use Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\StandardFilters;
 
 /**
  * Manejador de filtros (tecnocreaciones_tools.search)
@@ -76,7 +77,6 @@ class SearchService
         ]);
     }
 
-
     public function getStandardFilters() {
         return $this->standardFilters;
     }
@@ -114,6 +114,23 @@ class SearchService
         return $this;
     }
     
+    /**
+     * [setMacroTemplateGroupFilter Se agrega nueva plantilla base para filtros]
+     *  
+     * @author Máximo Sojo <maxsojo13@gmail.com>
+     * @param  [String] $filter
+     * @param  [String] $macroTemplate
+     */
+    public function setMacroTemplateGroupFilter($filter, $macroTemplate = null)
+    {
+        if(!isset($this->groupFilters[$filter])){
+            throw new \RuntimeException(sprintf("The group filter %s is not added.", $filter));
+        }
+
+        $groupFilter = $this->groupFilters[$filter];
+        $groupFilter->setMacroTemplate($macroTemplate);
+    }
+
     public function addGroupFilter(\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\Filters\GroupFilterInterface $filter)
     {
         if(isset($this->groupFilters[$filter->getName()])){

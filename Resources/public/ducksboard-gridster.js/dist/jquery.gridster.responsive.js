@@ -71,6 +71,11 @@ function fnCreateGridster(isMobile,page)
 //        max_cols: cols,
         widget_margins: [5, 5],
         widget_base_dimensions: [base_size, widget_base_y],
+//        shift_widgets_up: false,
+//        shift_larger_widgets_down: false,
+//        collision: {
+//            wait_for_mouseup: true
+//        },
         resize: {
             enabled: true,
             min_size: [1, 2],
@@ -94,7 +99,6 @@ function fnCreateGridster(isMobile,page)
         },
         draggable:
             {
-                //                    handle: '.panel-heading, .panel-handel',
                 handle: '.widget-header, .widget-title',
                 stop: function (event, ui,$widget) {
                     if(saveAjax == true){
@@ -312,10 +316,10 @@ function fnCreateGridster(isMobile,page)
         evaluateResponsiveValues();
         var rz_base_size = (((base_size * (windowWidth / base_size)) / cols) - offset);
 //        console.log('rz_base_size= '+rz_base_size);
-        gridster.resize_widget_dimensions({
-            widget_base_dimensions: [rz_base_size, widget_base_y],
-            widget_margins: [5, 5],
-        });
+//        gridster.resize_widget_dimensions({
+//            widget_base_dimensions: [rz_base_size, widget_base_y],
+//            widget_margins: [5, 5],
+//        });
     }
 
     /* we're ready for the show */

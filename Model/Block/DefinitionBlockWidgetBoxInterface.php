@@ -48,7 +48,27 @@ interface DefinitionBlockWidgetBoxInterface
     function hasPermission($name = null);
     
     /**
-     * Eventos que escucha el widget para renderizarse
+     * Transforma los eventos su forma parseada
      */
-    function getEvents();
+    function getParseEvents();
+    
+    public function isNew($name);
+    
+    public function getInfo($name,$key,$default = null);
+    
+    /**
+     * Cuenta cuantos widgets son nuevos en base a la fecha de la creacion
+     */
+    public function countNews();
+    
+    /**
+     * Retorna el grupo al cual pertenece el widget
+     */
+    public function getGroup();
+    
+    /**
+     * Filtros por defecto a añadir automaticamente en caso de tener cero widgets.
+     */
+    public function getDefaults();
+    
 }

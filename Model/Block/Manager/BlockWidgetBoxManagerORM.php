@@ -77,10 +77,53 @@ class BlockWidgetBoxManagerORM extends BlockWidgetBoxManager
         return $blockWidget;
     }
     
+    /**
+     * @return \Doctrine\ORM\EntityRepository
+     */
     private function getRepository()
     {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository($this->classBox);
         return $repository;
+    }
+
+    public function countPublishedByEvent($event) {
+        $user = $this->getUser();
+        $qb = $this->getRepository()->createQueryBuilder("w");
+        
+        $qb->select("COUNT(w.id) total")
+          ->andWhere("w.event = :event")
+          ->andWhere("w.user = :user")
+          ->andWhere("w.enabled = :enabled")
+          ->setParameter("event",$event)
+          ->setParameter("user",$user)
+          ->setParameter("enabled",true)
+                ;
+        $result = $qb->getQuery()->getOneOrNullResult();
+        return (int)$result["total"];
+    }
+
+    public function findPublishedByTypeAndName($type, $name) {
+        $user = $this->getUser();
+        return $this->getRepository()->findOneBy(array(
+            'type' => $type,
+            'name' => $name,
+            'user' => $user,
+            'enabled' => true
+        ));
+    }
+
+    public function clearAllByEvent($eventName) {
+        $user = $this->getUser();
+        $qb = $this->getRepository()->createQueryBuilder("w");
+        $qb
+            ->delete()
+            ->andWhere("w.event = :event")
+            ->andWhere("w.user = :user")
+            ->setParameter("event",$eventName)
+            ->setParameter("user",$user)
+            ;
+        $r = $qb->getQuery()->getResult();
+        return $r;
     }
 }

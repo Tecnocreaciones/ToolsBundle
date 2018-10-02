@@ -1,16 +1,18 @@
-<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX }}" data-sizey="{{ settings.sizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
+<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col animated fadeInUp" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX is not null ? settings.sizeX : settings.defaultSizeX }}" data-sizey="{{ settings.sizeY is not null ? settings.sizeY : settings.defaultSizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
     <div id="widget-box-{{ block.id }}" class="widget-box {% if settings.isTransparent %}transparent{% endif %} {% if settings.isCollapsible and settings.isCollapsed %}collapsed{% endif %} {% if settings.widgetColor != '' %}{{ settings.widgetColor }}{% endif %}" data-load="{% if settings.isLoadedData %}true{% else %}false{% endif %}" >
         {% block block %}
 
             <div class="widget-header">
-                <h5 class="widget-title">
-                {% if settings.icon != null %}
-                    {{ settings.icon|trans|raw }}
+                {% if settings.renderTitle %}
+                    <h5 class="widget-title">
+                    {% if settings.icon != null %}
+                        <i class="{{ settings.icon }}"></i>
+                    {% endif %}
+                    {% block title %}
+                        {{ settings.title|trans({},settings.translationDomain)|raw }}
+                    {% endblock title %}
+                    </h5>
                 {% endif %}
-                {% block title %}
-                    {{ settings.title|trans|raw }}
-                {% endblock title %}
-                </h5>
 
                 <div class="widget-toolbar">
                     {% if settings.isMaximizable %}
@@ -55,12 +57,10 @@
                 </div>
                 
             </div>
-            <div class="widget-body">
-                <div class="widget-main">
+            <div class="widget-body no-padding">
                     {% block content %}
                         EMPTY CONTENT
                     {% endblock content %}
-                </div>
             </div>
         {% endblock block %}
     </div>
