@@ -121,7 +121,9 @@ class EntityRepository extends Base implements ContainerAwareInterface
         $pagerfanta = new Paginator(new ArrayAdapter($queryBuilder->getQuery()->getScalarResult()));
         $pagerfanta->setDefaultFormat($this->getFormatPaginator());
         $pagerfanta->setContainer($this->container);
-        $pagerfanta->setRequest($request);
+        if($request){
+            $pagerfanta->setRequest($request);
+        }
         return $pagerfanta;
     }
     
