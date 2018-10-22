@@ -223,6 +223,10 @@ class TecnocreacionesToolsExtension extends Extension
            $container->setParameter("tecnoready.swiftmailer_db.email_component_class", $config['database_spool']["email_component_class"]);
         }
         
+        if($config['exporter']['enable'] === true){
+           $loaderYml->load('services/exporter.yml');
+        }
+        
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);
@@ -236,5 +240,6 @@ class TecnocreacionesToolsExtension extends Extension
         
         $container->setParameter('tecnocreaciones_tools.service.link_generator.enable', $config['link_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.search.enable', $config['search']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.exporter.enable', $config['exporter']['enable']);
     }
 }
