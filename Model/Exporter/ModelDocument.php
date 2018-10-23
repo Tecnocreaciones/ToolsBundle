@@ -45,10 +45,8 @@ abstract class ModelDocument
      */
     protected $pathFileOut;
 
-    public function __construct($name,$fileName = null,$nameDocument = null) {
+    public function __construct($name) {
         $this->name = $name;
-        $this->nameDocument = $nameDocument;
-        $this->fileName = $fileName;
     }
     
     public function getName() {
@@ -142,18 +140,13 @@ abstract class ModelDocument
     }
     
     public function getFileNameTranslate(array $parameters = []) {
-        if ($this->nameDocument) {
-            return $this->nameDocument;
-        }else{
-            $parameters = [
-                '%ref%' => 'hola'///$parameters['entity']->getRef()
-            ];
-            $name = $this->fileName;
-            if(empty($name)){
-                $name = $this->name;
-            }
-            return $this->container->get("translator")->trans($name,$parameters,"labels");
+        $parameters = [
+        ];
+        $name = $this->fileName;
+        if(empty($name)){
+            $name = $this->name;
         }
+        return $this->container->get("translator")->trans($name,$parameters,"labels");
     }
     
     /**
@@ -177,12 +170,7 @@ abstract class ModelDocument
         return $this;
     }
 
-    /**
-     * Registro de nombre de archivo
-     * @author Máximo Sojo maxsojo13@gmail.com <maxtoan at atechnologies>
-     */
-    public function setName($nameDocument) {
-        $this->nameDocument = $nameDocument;
-        return $this;
+    function setFileName($fileName) {
+        $this->fileName = $fileName;
     }
 }

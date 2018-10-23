@@ -116,7 +116,7 @@ class ExporterManager
     /**
      * Genera un documento de un modulo
      * @param type $idChain
-     * @param type $name
+     * @param string $name Nombre del documento pre-definido
      * @param array $options
      * @return string La ruta del archivo generado
      * @throws RuntimeException
@@ -125,6 +125,10 @@ class ExporterManager
         $chainModel = $this->resolveChainModel($idChain, $options);
         
         $modelDocument = $chainModel->getModel($name);
+        if(isset($options["fileName"]) && !empty($options["fileName"])){
+            $modelDocument->setFileName($options["fileName"]);
+            unset($options["fileName"]);
+        }
         $pathFileOut = $modelDocument
                 ->setChainModel($chainModel)
                 ->write($options["data"]);
@@ -178,7 +182,8 @@ class ExporterManager
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             "sub_path" => null,
-            "data" => []
+            "data" => [],
+            "fileName" => null,
         ]);
         $resolver->setAllowedTypes("data","array");
         $options = $resolver->resolve($options);
