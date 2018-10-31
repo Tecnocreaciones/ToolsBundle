@@ -181,6 +181,7 @@ class ExporterManager
     public function resolveChainModel($idChain,array $options = []) {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
+            "base_path" => null,
             "sub_path" => null,
             "data" => [],
             "fileName" => null,
@@ -191,6 +192,7 @@ class ExporterManager
         $chainModel
             ->setExporterManager($this)
             ->setSubPath($options["sub_path"])
+            ->setBasePath($options["base_path"])
             ;
         return $chainModel;
     }

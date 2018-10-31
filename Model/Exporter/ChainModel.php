@@ -37,8 +37,14 @@ class ChainModel {
     private $models;
     
     /**
+     * Path base de la ruta (si es nulo se calculara con los parametros por defecto)
+     * @var string 
+     */
+    private $basePath = null;
+    
+    /**
      * Sub path para almacenar los documentos dentro de la carpeta del modulo
-     * @var type 
+     * @var string 
      */
     private $subPath;
     
@@ -108,9 +114,13 @@ class ChainModel {
     public function getDirOutput() {
         $ds = DIRECTORY_SEPARATOR;
         $id = $this->getId();
-        $basePath = $this->exporterManager->getOption("documents_path");
+        $documentsPath = $this->exporterManager->getOption("documents_path");
         $env = $this->exporterManager->getOption("env");
-        $fullPath = $basePath.$ds.$env.$ds.$id;
+        if($this->basePath === null){
+            $fullPath = $documentsPath.$ds.$env.$ds.$id;
+        }else{
+            $fullPath = $this->basePath;
+        }
         if($this->subPath !== null){
             $fullPath .= $ds.$this->subPath;
         }
@@ -195,8 +205,23 @@ class ChainModel {
         ];
     }
     
+    /**
+     * Establecer un sub-directorio donde guardar el documento
+     * @param type $subPath
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Exporter\ChainModel
+     */
     public function setSubPath($subPath) {
         $this->subPath = $subPath;
+        return $this;
+    }
+    
+    /**
+     * Reemplazar ruta base del documento
+     * @param type $basePath
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\Model\Exporter\ChainModel
+     */
+    public function setBasePath($basePath) {
+        $this->basePath = $basePath;
         return $this;
     }
 }
