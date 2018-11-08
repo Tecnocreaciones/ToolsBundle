@@ -315,7 +315,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
 
     protected function restartKernel() {
 //        $kernel = clone ($this->kernel);
-        $kernel = $this->kernel;
+        $kernel = $this->getKernel();
         $kernel->shutdown();
         $kernel->boot();
         $this->setKernel($kernel);
@@ -546,10 +546,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      */
     public function aExecuteCommandTo($command) {
         $this->restartKernel();
-        $kernel = $this->kernel;
+        $kernel = $this->getKernel();
 
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
         $application->setAutoExit(false);
+
         $exploded = explode(" ", $command);
 
         $commandsParams = [
@@ -567,7 +568,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 }
             }
         }
-        foreach ($parameters as $key => $value) {
+        foreach ($commandsParams as $key => $value) {
             $commandsParams[$key] = $value;
         }
         $input = new \Symfony\Component\Console\Input\ArrayInput($commandsParams);
