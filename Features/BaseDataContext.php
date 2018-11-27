@@ -88,6 +88,12 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @var \Faker\Generator
      */
     protected $faker;
+    
+    /**
+     * Funcion para hacer parse de parametros customs
+     * @var callable
+     */
+    protected $parseParameterCallBack;
 
     public function __construct() {
         $this->accessor = PropertyAccess::createPropertyAccessor();
@@ -578,7 +584,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $application->run($input, $output);
 //         $content = $output->fetch();
     }
-
+    
     /**
      * Parsea un parametro para ver si es una constante o una traduccion con parametros
      * Constante seria "Pandco\Bundle\AppBundle\Model\Base\TransactionItemInterface__STATUS_FINISH"
@@ -600,6 +606,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 throw new \RuntimeException(sprintf("The date format must be Y-m-d of '%s'", $exploded[1]));
             }
             return $value;
+        }
+        if($this->parseParameterCallBack){
+            $value = call_user_func_array($this->parseParameterCallBack, [$value, $parameters,$domain,$this]);
         }
         $valueExplode = explode("__", $value);
         if (is_array($valueExplode) && count($valueExplode) == 2) {
@@ -658,6 +667,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         }
         return $user;
     }
-
-   
+    
+    
+    
+    public function setParseParameterCallBack($parseParameterCallBack) {
+        $this->parseParameterCallBack = $parseParameterCallBack;
+        return $this;
+    }
 }
