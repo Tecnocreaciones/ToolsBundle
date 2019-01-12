@@ -228,6 +228,7 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->booleanNode('enable')->defaultFalse()->end()
+                            ->scalarNode('color')->defaultValue('#000')->end()
                         ->end()
                     ->end()
                     ->arrayNode('database_spool')
