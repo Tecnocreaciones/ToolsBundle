@@ -173,4 +173,12 @@ abstract class ModelDocument
     function setFileName($fileName) {
         $this->fileName = $fileName;
     }
+    
+    /**
+     * @return ChainModel
+     */
+    protected function getChainModel()
+    {
+        return $this->chainModel;
+    }
 }

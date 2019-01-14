@@ -198,7 +198,7 @@ class ChainModel {
             "idChain" => $chain->getId(),
             "id" => $id,
             "fileName" => $fileName,
-            "icon" => \Atechnologies\ToolsBundle\Services\Util\AppUtil::iconExtension($file->getExtension()),
+            "icon" => \Tecnocreaciones\Bundle\ToolsBundle\Service\ToolsUtils::iconExtension($file->getExtension()),
             "date" => ($date->format('d/m/Y h:i a')),
             "deleteUrl" => $deleteUrl,
             "downloadUrl" => $downloadUrl,
