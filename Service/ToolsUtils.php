@@ -112,4 +112,24 @@ class ToolsUtils {
             $filtersArray[$new->getRef()] = $new;
         }
     }
+    
+    public static function iconExtension($extension) {
+        $sprite = 'unknown';
+        $extensionsAvailables = [
+            "zip" => "compressed",
+            "rar" => "compressed",
+            "csv" => "csv",
+            "pdf" => "pdf",
+            "txt" => "text",
+            "doc" => "word",
+            "docx" => "word",
+            "xls" => "xls",
+            "xlsx" => "xls",
+        ];
+        if(isset($extensionsAvailables[$extension])){
+            $sprite = $extensionsAvailables[$extension];
+        }
+        $icon = '<i class="sprite sprite-'.$sprite.'"></i>';
+        return $icon;
+    }
 }
