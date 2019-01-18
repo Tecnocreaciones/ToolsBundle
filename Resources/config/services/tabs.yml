@@ -1,0 +1,4 @@
+services:
+    Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager
+        arguments: ['@request_stack']

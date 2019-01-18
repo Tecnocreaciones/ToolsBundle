@@ -13,6 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Twig_Extension;
+use Twig_SimpleFunction;
 
 /**
  * Funciones para construir breadcumb y page title con twig
@@ -51,6 +52,11 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
             $functions[] = new \Twig_SimpleFunction('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
             $functions[] = new \Twig_SimpleFunction('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
         }
+        
+        if($config['tabs']['enable']  === true){
+            $functions[] = new Twig_SimpleFunction('render_tabs', array($this, 'renderTabs'),array('is_safe' => ['html']));
+        }
+        
         $functions[] = new \Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
         $functions[] = new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
         $functions[] = new \Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
@@ -215,6 +221,21 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
     
     public function breadcrumbRender($idService = "tecno.service.breadcrumb"){
         return $this->container->get($idService)->breadcrumbRender();
+    }
+    
+    /**
+     * Render base tabs
+     * @author Máximo Sojo maxsojo13@gmail.com <maxtoan at atechnologies>
+     * @param  \Atechnologies\ToolsBundle\Model\Core\Tab\Tab
+     * @param  array
+     * @return [type]
+     */
+    public function renderTabs(\Tecnoready\Common\Model\Tab\Tab $tab,array $parameters = []) 
+    {
+        $parameters["tab"] = $tab;
+        return $this->container->get('templating')->render($this->config["tabs"]["template"], 
+            $parameters
+        );
     }
 
     private function trans($id,array $parameters = array(), $domain = 'messages')

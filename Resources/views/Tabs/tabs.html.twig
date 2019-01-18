@@ -1,0 +1,197 @@
+<style>
+    .hide {
+        display: none;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        color: #257dd5;
+        font-weight: 500;
+    }
+    .nav-link {
+        padding: 0.6rem 1rem;
+    }
+</style>
+{#<div
+    ng-controller="TabsController as tabsCtrl" 
+    class="ng-cloak nav-tabs-custom" 
+    ng-init="tabsCtrl.init({ tab: {{ tab.toArray()|json_encode }} })">
+    
+    <ul id="tabs" class="nav nav-tabs">
+        <li class="tab-title">
+            {% if tab.icon %}
+                <i class="{{ tab.icon }}"></i>
+            {% else %}
+                <i class="fa fa-check"></i>
+            {% endif %}
+            &nbsp;
+            {{ tab.name|trans({},"titles") }}
+        </li>
+        <li>
+            <ul  class="nav nav-tabs" role="tablist">    
+                <li ng-repeat="tabContent in tabsCtrl.tab.tabsContent" class="ng-class:tabsCtrl.getClsTab(tabContent)" ng-click="tabsCtrl.selectedTab(tabContent)" role="tab">
+                    <a href="#{$ tabContent.id_url $}" class="nav-link">
+                        <i class="{$ tabContent.icon $}" ng-if="tabContent.icon"></i>
+                        <span class="hidden-xs-down">{$ tabContent.name $}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    
+
+    <div class="tab-content">
+        <div loading-container="tabsCtrl.currentTab.loading">
+            <div ng-if="tabsCtrl.currentTab.options.add_content_div" class="tab-pane tabcontent-border">
+                <div ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>
+            </div>
+            <div ng-if="!tabsCtrl.currentTab.options.add_content_div" class="" ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>
+        </div>
+    </div>
+</div>#}
+        
+<div class="nav-tabs-custom">
+    
+    <ul id="tabs" class="nav nav-tabs">
+        <li class="tab-title">
+            {% if tab.icon %}
+                <i class="{{ tab.icon }}"></i>
+            {% else %}
+                <i class="fa fa-check"></i>
+            {% endif %}
+            &nbsp;
+            {{ tab.name|trans({},"titles") }}
+        </li>
+        <li>
+            <ul id="{{ tab.id }}" class="nav nav-tabs" role="tablist">
+                {% for tabContent in tab.tabsContent %}
+                    <li {% if tabContent.active %}class="active"{% endif%} role="tab">
+                        {% set tabTitle = tabContent.title|trans %}
+                        <a class="nav-link{% if tabContent.active %} active{% endif%}" href="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
+                            {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
+                            <span class="hidden-xs-down">{{ tabTitle }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    
+    <div class="tab-content">
+        {% for tabContent in tab.tabsContent %}
+             <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}">
+               todo
+               {#<div  ng-if="tabsCtrl.currentTab.options.add_content_div" class="tab-pane ">
+                   <div ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>
+               </div>
+               <div ng-if="!tabsCtrl.currentTab.options.add_content_div" class="" ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>#}
+            </div>
+        {% endfor %}
+       {# <div loading-container="tabsCtrl.currentTab.loading">
+            
+        </div>#}
+    </div>
+</div>
+<div id="lo-{{ tab.id }}" class="hide">
+    <div class="tab-pane l-loading-container">
+        {{ "Loading content"|trans }}
+        <div class='loading'><p class='blocktext'>
+                
+                <span class='ellipsis_animated-inner'>
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+            </span></p></div></div>
+</div>
+
+<script>
+    if(tabsService === undefined){
+        var tabsService = {
+            id: null,
+            isReloading: false,
+            forceLoad: false,
+            isInit: false,
+            lastTabContentId: null,
+            setId: function(id){
+                this.id = id;
+            },
+            reload: function(){
+                this.isReloading = true;
+                $("#"+tabsService.id+" > li.active > a").dblclick();
+            },
+            done: function(){
+                this.isReloading = false;
+            },
+            loading: function(){
+                $("#"+tabsService.id).html($("#lo-"+tabsService.id).html());
+            },
+            loadContent: function(url,tabContentId,parameters){
+                if(tabContentId){
+                    this.lastTabContentId = tabContentId;
+                }
+                var self = $(this.lastTabContentId);
+                if(!parameters){
+                    parameters = {};
+                }
+                parameters["ajax"] = "true";
+                var qs = jQuery.param( parameters );
+                url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
+                $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());
+                $(this.lastTabContentId).load(url, function(response, status, xhr){
+                    //$('#'+tabsService.id).tab(); //reinitialize tabs
+                    if(status == "error"){
+                        self.html("<b>{{ "modal.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
+                    }else if(status == "success"){
+                        self.data("loaded",true);
+                    }
+                });
+            }
+        };
+    }
+    $(function() {
+        tabsService.setId("{{ tab.id }}");
+        $('[tab-ajax="true"]').dblclick(function(e) {
+            e.preventDefault();
+            tabsService.forceLoad = true;
+            tabsService.typeClick = "dblclick";
+            $(this).click();
+        });
+        var currentTabRequest = null;
+        $('[data-toggle="tab"]').click(function(e) {
+            e.preventDefault();
+            $this = $(this);
+            if($this.parent().hasClass("active") == true){
+                clearTimeout(currentTabRequest);
+                return;
+            }
+            var tabContent = $this.attr('href');
+            var current = jQuery.param({ {{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
+            clearTimeout(currentTabRequest);
+            currentTabRequest = setTimeout(function(){
+                $.ajax({
+                    url: "{{ url("tabs_save_current") }}?"+current
+                });
+            },300);
+        });
+        $('[tab-ajax="true"]').click(function(e) {
+            e.preventDefault();
+            
+            $this = $(this);
+            var tabContent = $(this).attr('href');
+            var tabContentObj = $(tabContent);
+            var loaded = tabContentObj.data("loaded");
+            if(tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true){
+                return;
+            }
+            if(tabsService.forceLoad === false && loaded === true){
+                return;
+            }
+            tabsService.forceLoad = false;
+            tabsService.done();
+            var loadurl = $(this).attr('data-url');
+            var current = $this.parent().parent().attr("id")+tabContent;
+            tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}':current,isInit: tabsService.isInit == true ? 1 : 0});
+            tabsService.isInit = true;
+        });
+        tabsService.forceLoad = true;
+        tabsService.reload();
+    });
+</script>

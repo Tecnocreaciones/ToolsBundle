@@ -227,6 +227,10 @@ class TecnocreacionesToolsExtension extends Extension
            $loaderYml->load('services/exporter.yml');
         }
         
+        if($config['tabs']['enable'] === true){
+            $loaderYml->load('services/tabs.yml');
+        }
+        
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);

@@ -1,0 +1,6 @@
+tabs_save_current:
+    path: /tab/save-current.json
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:Tools:tabSaveCurrent
+        _format: json
+    requirements: { _method: GET }
