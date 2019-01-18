@@ -2,6 +2,10 @@
     .hide {
         display: none;
     }
+    .loading-block {
+        height: 200px;
+        text-align: center;
+    }
     .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
         color: #257dd5;
         font-weight: 500;
@@ -45,7 +49,8 @@
     </div>
 </div>
 <div id="lo-{{ tab.id }}" class="hide">
-    <div class="tab-pane l-loading-container">
+    <div class="tab-pane l-loading-container loading-block">
+        <div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div>
         {{ "Loading content"|trans }}
         <div class='loading'><p class='blocktext'>
                 
