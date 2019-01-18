@@ -10,44 +10,6 @@
         padding: 0.6rem 1rem;
     }
 </style>
-{#<div
-    ng-controller="TabsController as tabsCtrl" 
-    class="ng-cloak nav-tabs-custom" 
-    ng-init="tabsCtrl.init({ tab: {{ tab.toArray()|json_encode }} })">
-    
-    <ul id="tabs" class="nav nav-tabs">
-        <li class="tab-title">
-            {% if tab.icon %}
-                <i class="{{ tab.icon }}"></i>
-            {% else %}
-                <i class="fa fa-check"></i>
-            {% endif %}
-            &nbsp;
-            {{ tab.name|trans({},"titles") }}
-        </li>
-        <li>
-            <ul  class="nav nav-tabs" role="tablist">    
-                <li ng-repeat="tabContent in tabsCtrl.tab.tabsContent" class="ng-class:tabsCtrl.getClsTab(tabContent)" ng-click="tabsCtrl.selectedTab(tabContent)" role="tab">
-                    <a href="#{$ tabContent.id_url $}" class="nav-link">
-                        <i class="{$ tabContent.icon $}" ng-if="tabContent.icon"></i>
-                        <span class="hidden-xs-down">{$ tabContent.name $}</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-    
-
-    <div class="tab-content">
-        <div loading-container="tabsCtrl.currentTab.loading">
-            <div ng-if="tabsCtrl.currentTab.options.add_content_div" class="tab-pane tabcontent-border">
-                <div ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>
-            </div>
-            <div ng-if="!tabsCtrl.currentTab.options.add_content_div" class="" ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>
-        </div>
-    </div>
-</div>#}
-        
 <div class="nav-tabs-custom">
     
     <ul id="tabs" class="nav nav-tabs">
@@ -65,7 +27,7 @@
                 {% for tabContent in tab.tabsContent %}
                     <li {% if tabContent.active %}class="active"{% endif%} role="tab">
                         {% set tabTitle = tabContent.title|trans %}
-                        <a class="nav-link{% if tabContent.active %} active{% endif%}" href="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
+                        <a class="nav-link{% if tabContent.active %} active{% endif%}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
                             {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
                             <span class="hidden-xs-down">{{ tabTitle }}</span>
                         </a>
@@ -78,16 +40,8 @@
     <div class="tab-content">
         {% for tabContent in tab.tabsContent %}
              <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}">
-               todo
-               {#<div  ng-if="tabsCtrl.currentTab.options.add_content_div" class="tab-pane ">
-                   <div ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>
-               </div>
-               <div ng-if="!tabsCtrl.currentTab.options.add_content_div" class="" ng-include="tabsCtrl.currentTab.options.url" onload="tabsCtrl.loaded(tabsCtrl.currentTab)"></div>#}
             </div>
         {% endfor %}
-       {# <div loading-container="tabsCtrl.currentTab.loading">
-            
-        </div>#}
     </div>
 </div>
 <div id="lo-{{ tab.id }}" class="hide">
@@ -162,7 +116,7 @@
                 clearTimeout(currentTabRequest);
                 return;
             }
-            var tabContent = $this.attr('href');
+            var tabContent = $this.attr('data-content-id');
             var current = jQuery.param({ {{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
             clearTimeout(currentTabRequest);
             currentTabRequest = setTimeout(function(){
@@ -175,7 +129,7 @@
             e.preventDefault();
             
             $this = $(this);
-            var tabContent = $(this).attr('href');
+            var tabContent = $(this).attr('data-content-id');
             var tabContentObj = $(tabContent);
             var loaded = tabContentObj.data("loaded");
             if(tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true){
