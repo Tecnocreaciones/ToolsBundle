@@ -1,0 +1,543 @@
+/**
+ * Sprites of common file type in 16x16px.
+ * https://github.com/devi/sprites
+ * Credits:
+ *   http://splitbrain.org/projects/file_icons
+ *   http://spritegen.website-performance.org
+ *  
+ * 
+ * Don't forget to add a background rule to reference the sprite image. Something like this, for example:
+ * 
+ * #container li {
+ *    background: url(fileicons.png) no-repeat top left;
+ * }
+ * 
+ * or a class:
+ * 
+ * .fileicons {background:url(fileicons.png) no-repeat top left;}
+ * Demo: <i class="file file-7z"></i>
+ *       <i class="file file-ai"></i>
+*/
+
+.file {
+    background-image: url(fileicons.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    /*display: block;*/
+}
+
+.file-7z {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -5px;
+}
+
+.file-ai {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -5px;
+}
+
+.file-aiff {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -5px;
+}
+
+.file-asc {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -5px;
+}
+
+.file-audio {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -5px;
+}
+
+.file-bin {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -5px;
+}
+
+.file-bz2 {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -5px;
+}
+
+.file-c {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -5px;
+}
+
+.file-cfc {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -5px;
+}
+
+.file-cfm {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -31px;
+}
+
+.file-chm {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -31px;
+}
+
+.file-class {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -31px;
+}
+
+.file-conf {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -31px;
+}
+
+.file-cpp {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -31px;
+}
+
+.file-cs {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -31px;
+}
+
+.file-css {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -31px;
+}
+
+.file-csv {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -31px;
+}
+
+.file-deb {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -31px;
+}
+
+.file-divx {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -57px;
+}
+
+.file-doc,.file-docx {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -57px;
+}
+
+.file-dot {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -57px;
+}
+
+.file-eml {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -57px;
+}
+
+.file-enc {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -57px;
+}
+
+.file-file {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -57px;
+}
+
+.file-gif {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -57px;
+}
+
+.file-gz {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -57px;
+}
+
+.file-hlp {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -57px;
+}
+
+.file-htm {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -83px;
+}
+
+.file-html {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -83px;
+}
+
+.file-image {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -83px;
+}
+
+.file-iso {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -83px;
+}
+
+.file-jar {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -83px;
+}
+
+.file-java {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -83px;
+}
+
+.file-jpeg {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -83px;
+}
+
+.file-jpg {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -83px;
+}
+
+.file-js {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -83px;
+}
+
+.file-lua {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -109px;
+}
+
+.file-m {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -109px;
+}
+
+.file-mm {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -109px;
+}
+
+.file-mov {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -109px;
+}
+
+.file-mp3 {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -109px;
+}
+
+.file-mpg {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -109px;
+}
+
+.file-odc {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -109px;
+}
+
+.file-odf {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -109px;
+}
+
+.file-odg {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -109px;
+}
+
+.file-odi {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -135px;
+}
+
+.file-odp {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -135px;
+}
+
+.file-ods {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -135px;
+}
+
+.file-odt {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -135px;
+}
+
+.file-ogg {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -135px;
+}
+
+.file-pdf {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -135px;
+}
+
+.file-pgp {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -135px;
+}
+
+.file-php {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -135px;
+}
+
+.file-pl {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -135px;
+}
+
+.file-png {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -161px;
+}
+
+.file-ppt,file-ppt.x {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -161px;
+}
+
+.file-ps {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -161px;
+}
+
+.file-py {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -161px;
+}
+
+.file-ram {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -161px;
+}
+
+.file-rar {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -161px;
+}
+
+.file-rb {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -161px;
+}
+
+.file-rm {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -161px;
+}
+
+.file-rpm {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -161px;
+}
+
+.file-rtf {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -187px;
+}
+
+.file-sig {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -187px;
+}
+
+.file-sql {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -187px;
+}
+
+.file-swf {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -187px;
+}
+
+.file-sxc {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -187px;
+}
+
+.file-sxd {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -187px;
+}
+
+.file-sxi {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -187px;
+}
+
+.file-sxw {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -187px;
+}
+
+.file-tar {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -187px;
+}
+
+.file-tex {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -213px;
+}
+
+.file-tgz {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -213px;
+}
+
+.file-txt {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -213px;
+}
+
+.file-vcf {
+    width: 16px;
+    height: 16px;
+    background-position: -83px -213px;
+}
+
+.file-video {
+    width: 16px;
+    height: 16px;
+    background-position: -109px -213px;
+}
+
+.file-vsd {
+    width: 16px;
+    height: 16px;
+    background-position: -135px -213px;
+}
+
+.file-wav {
+    width: 16px;
+    height: 16px;
+    background-position: -161px -213px;
+}
+
+.file-wma {
+    width: 16px;
+    height: 16px;
+    background-position: -187px -213px;
+}
+
+.file-wmv {
+    width: 16px;
+    height: 16px;
+    background-position: -213px -213px;
+}
+
+.file-xls,.file-xlsx {
+    width: 16px;
+    height: 16px;
+    background-position: -239px -5px;
+}
+
+.file-xml {
+    width: 16px;
+    height: 16px;
+    background-position: -239px -31px;
+}
+
+.file-xpi {
+    width: 16px;
+    height: 16px;
+    background-position: -239px -57px;
+}
+
+.file-xvid {
+    width: 16px;
+    height: 16px;
+    background-position: -239px -83px;
+}
+
+.file-zip {
+    width: 16px;
+    height: 16px;
+    background-position: -239px -109px;
+}

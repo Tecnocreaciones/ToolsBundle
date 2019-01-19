@@ -112,24 +112,23 @@ class ToolsUtils {
             $filtersArray[$new->getRef()] = $new;
         }
     }
-    
     public static function iconExtension($extension) {
-        $sprite = 'unknown';
-        $extensionsAvailables = [
-            "zip" => "compressed",
-            "rar" => "compressed",
-            "csv" => "csv",
-            "pdf" => "pdf",
-            "txt" => "text",
-            "doc" => "word",
-            "docx" => "word",
-            "xls" => "xls",
-            "xlsx" => "xls",
-        ];
-        if(isset($extensionsAvailables[$extension])){
-            $sprite = $extensionsAvailables[$extension];
+        static $icons = null;
+        if($icons === null){
+            $icons = [];
+            $finder = new \Symfony\Component\Finder\Finder();
+            $ds = DIRECTORY_SEPARATOR;
+            $dir = __DIR__.$ds."..".$ds."Resources/public/tabs/sprites/icons";
+            $finder->in($dir)->files();
+            foreach ($finder as $file) {
+                $icons[] = basename($file->getFilename(),".png");
+            }
         }
-        $icon = '<i class="sprite sprite-'.$sprite.'"></i>';
+        $sprite = 'file';
+        if(in_array($extension,$icons)){
+            $sprite = $extension;
+        }
+        $icon = '<i class="file file-'.$sprite.'"></i>';
         return $icon;
     }
 }

@@ -117,8 +117,8 @@
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
                                 <td>
-                                    {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}
-                                    <i class="vf vf-document"></i>&nbsp;
+                                    {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}&nbsp;
+                                    {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\ToolsUtils","iconExtension",[file.extension])|raw }}
                                     <a href="{{ path("tabs_object_manager_documents_get",params) }}" class="btn btn-link btn-sm">
                                         {{ file.filename }}
                                     </a>
