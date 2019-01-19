@@ -1,4 +1,20 @@
 services:
     Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager
-        arguments: ['@request_stack']
+        arguments: ["@request_stack","%tecnocreaciones_tools.service.tabs%"]
+        calls:
+            - [ setContainer, ['@service_container']  ]
+    tecnoready.document_manager_disk_adapter:
+        class: Tecnoready\Common\Service\ObjectManager\DocumentManager\Adapter\DiskAdapter
+        arguments:
+            - { "debug": "%kernel.debug%", "documents_path": "%kernel.root_dir%/../var/documents","env": "%kernel.environment%" }
+    tecnoready.document_manager:
+        class: Tecnoready\Common\Service\ObjectManager\DocumentManager\DocumentManager
+    tecnoready.history_manager:
+        class: Tecnoready\Common\Service\ObjectManager\HistoryManager\HistoryManager
+    tecnoready.note_manager:
+        class: Tecnoready\Common\Service\ObjectManager\NoteManager\NoteManager
+        
+    Tecnoready\Common\Service\ObjectManager\ObjectDataManager:
+        class: Tecnoready\Common\Service\ObjectManager\ObjectDataManager
+        arguments: ["@tecnoready.document_manager","@tecnoready.history_manager","@tecnoready.note_manager"]

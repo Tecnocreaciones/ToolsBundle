@@ -97,7 +97,7 @@
                 $(this.lastTabContentId).load(url, function(response, status, xhr){
                     //$('#'+tabsService.id).tab(); //reinitialize tabs
                     if(status == "error"){
-                        self.html("<b>{{ "modal.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
+                        self.html("<b>{{ "tab.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
                     }else if(status == "success"){
                         self.data("loaded",true);
                     }
