@@ -25,6 +25,26 @@ use Symfony\Component\DependencyInjection\Reference;
 class ConfigurationPass implements CompilerPassInterface {
     
     public function process(ContainerBuilder $container) {
+        if ($container->getParameter('tecnocreaciones_tools.service.tabs.enable') === true) {
+            $tabs = $container->getParameter("tecnocreaciones_tools.service.tabs");
+            $adapterDefinition = $container->findDefinition($tabs["document_manager"]["adapter"]);
+            $definitionDocumentManager = $container->findDefinition("tecnoready.document_manager");
+            $definitionDocumentManager->addArgument($adapterDefinition);
+            
+            $adapterDefinition = $container->findDefinition($tabs["history_manager"]["adapter"]);
+            $historyManagerDefinition = $container->findDefinition("tecnoready.history_manager");
+            $historyManagerDefinition->addArgument($adapterDefinition);
+            
+            $adapterDefinition = $container->findDefinition($tabs["note_manager"]["adapter"]);
+            $noteManagerDefinition = $container->findDefinition("tecnoready.note_manager");
+            $noteManagerDefinition->addArgument($adapterDefinition);
+            
+//            var_dump("aaa");
+//            var_dump($container->getParameter("tecnocreaciones_tools.service.tabs"));
+//            die;
+        }
+        
+        
         if ($container->getParameter('tecnocreaciones_tools.service.configuration_manager.enable') === false) {
             return;
         }

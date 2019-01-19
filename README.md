@@ -205,3 +205,10 @@ Configurar: link_generator
             ];
         }
     }
+
+
+Si usas tabs Importar tabs.yml en routing.yml
+
+TecnocreacionesToolsTabs:
+    resource: "@TecnocreacionesToolsBundle/Resources/config/routing/tabs.yml"
+    prefix: /tabs

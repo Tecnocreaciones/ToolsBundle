@@ -13,6 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Tecnoready\Common\Model\Tab\Tab;
 
 /**
  * Controlador generico para guardar acciones
@@ -31,6 +32,13 @@ class ToolsController extends Controller
         $introService->log($introId, $user, $typeLog);
         $response = new \Symfony\Component\HttpFoundation\JsonResponse();
         return $response;
+    }
+    
+    public function tabSaveCurrentAction(Request $request) {
+        if($request->query->has(Tab::NAME_CURRENT_TAB)){
+            $request->getSession()->set(Tab::NAME_CURRENT_TAB,$request->query->get(Tab::NAME_CURRENT_TAB));
+        }
+        return new \Symfony\Component\HttpFoundation\JsonResponse();
     }
     
     /**

@@ -1,0 +1,27 @@
+tabs_save_current:
+    path: /tabs/save-current.json
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:Tools:tabSaveCurrent
+        _format: json
+    requirements: { _method: GET }
+    
+tabs_object_manager_documents_upload:
+    path: /tabs/object-manager/documents/upload
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:upload
+        _format: html
+    requirements: { _method: POST }
+    
+tabs_object_manager_documents_delete:
+    path: /tabs/object-manager/documents/delete
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:delete
+        _format: html
+    requirements: { _method: GET }
+    
+tabs_object_manager_documents_get:
+    path: /tabs/object-manager/documents/get/{filename}
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:get
+        _format: html
+    requirements: { _method: GET }
