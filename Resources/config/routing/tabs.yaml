@@ -18,3 +18,10 @@ tabs_object_manager_documents_delete:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:delete
         _format: html
     requirements: { _method: GET }
+    
+tabs_object_manager_documents_get:
+    path: /tabs/object-manager/documents/get/{filename}
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:get
+        _format: html
+    requirements: { _method: GET }

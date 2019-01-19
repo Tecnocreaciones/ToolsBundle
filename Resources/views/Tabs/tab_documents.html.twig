@@ -127,14 +127,19 @@
                             {% endif %}
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
-                                <td>{{ file.filename }}</td>
+                                <td>
+                                    {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}
+                                    <i class="vf vf-document"></i>&nbsp;
+                                    <a href="{{ path("tabs_object_manager_documents_get",params) }}" class="btn btn-link btn-sm">
+                                        {{ file.filename }}
+                                    </a>
+                                </td>
                                 <td>
                                     <span class="badge {{ badge }}">
                                         {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[size]) }}
                                     </span>
                                 </td>
                                 <td>{{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}</td>
-                                {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}
                                 <td class="color-primary"><a href="{{ path("tabs_object_manager_documents_delete",params) }}" class="btn btn-danger"><i class="vf vf-delete"></i></a></td>
                             </tr>
                         {% endfor %}

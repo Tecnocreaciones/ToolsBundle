@@ -4,6 +4,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Controller\ObjectManager;
 
 use Symfony\Component\HttpFoundation\Request;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Controlador de manejador de documentos
@@ -29,7 +30,6 @@ class DocumentManagerController extends ManagerController
     
     public function deleteAction(Request $request)
     {
-        
         $objectDataManager = $this->getObjectDataManager($request);
         $objectDataManager->documents()->delete($request->get("filename"));
         return $this->toReturnUrl();
@@ -37,7 +37,11 @@ class DocumentManagerController extends ManagerController
     
     public function getAction(Request $request)
     {
-        
+        $objectDataManager = $this->getObjectDataManager($request);
+        $file = $objectDataManager->documents()->get($request->get("filename"));
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        return $response;
     }
     
 }
