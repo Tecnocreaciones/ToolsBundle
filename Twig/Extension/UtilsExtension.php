@@ -13,7 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig_Function;
 
 /**
  * Funciones para construir breadcumb y page title con twig
@@ -36,32 +36,43 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         $functions = [];
         
         if($config['intro']['enable']  === true){
-            $functions[] = new \Twig_SimpleFunction('print_intro', array($this,'renderIntro'), array('is_safe' => array('html')));
+            $functions[] = new Twig_Function('print_intro', array($this,'renderIntro'), array('is_safe' => array('html')));
         }
         if($config['twig'] != ''){
             if($config['twig']['breadcrumb'] === true){
-                $functions[] = new \Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html')));
-                $functions[] = new \Twig_SimpleFunction('breadcrumb_render', array($this,'breadcrumbRender'), array('is_safe' => array('html')));
+                $functions[] = new Twig_Function('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html')));
+                $functions[] = new Twig_Function('breadcrumb_render', array($this,'breadcrumbRender'), array('is_safe' => array('html')));
             }
             if($config['twig']['page_header'] === true){
-                $functions[] = new \Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
+                $functions[] = new Twig_Function('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
             }
         }
         if($config['widget_block_grid']['enable']  === true){
-            $functions[] = new \Twig_SimpleFunction('widgets_render_area', array($this,'widgetsRenderArea'), array('is_safe' => array('html')));
-            $functions[] = new \Twig_SimpleFunction('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
-            $functions[] = new \Twig_SimpleFunction('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
+            $functions[] = new Twig_Function('widgets_render_area', array($this,'widgetsRenderArea'), array('is_safe' => array('html')));
+            $functions[] = new Twig_Function('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
+            $functions[] = new Twig_Function('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
         }
         
         if($config['tabs']['enable']  === true){
-            $functions[] = new Twig_SimpleFunction('render_tabs', array($this, 'renderTabs'),array('is_safe' => ['html']));
+            $functions[] = new Twig_Function('render_tabs', array($this, 'renderTabs'),array('is_safe' => ['html']));
+            $functions[] = new Twig_Function('timezone_get', array($this,'timezoneGet'),array('is_safe' => ['html']));
         }
         
-        $functions[] = new \Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
-        $functions[] = new \Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
-        $functions[] = new \Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
-        $functions[] = new \Twig_SimpleFunction('staticCall', array($this, 'staticCall'));
+        $functions[] = new Twig_Function('uniqueId', array($this, 'uniqueId'));
+        $functions[] = new Twig_Function('print_error', array($this,'printError'), array('is_safe' => array('html')));
+        $functions[] = new Twig_Function('strpadleft', array($this, 'strpadleft'));
+        $functions[] = new Twig_Function('staticCall', array($this, 'staticCall'));
         return $functions;
+    }
+    
+    public function getFilters()
+    {
+        $config = $this->config;
+        $filters = [];
+        if($config['tabs']['enable']  === true){
+            $filters[] = new \Twig_Filter('super_usort', array($this,'usortFilter'));
+        }
+        return $filters;
     }
     
     public function breadcrumb()
@@ -204,6 +215,28 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
     {
         return str_pad($string, $pad_lenght, $pad_string, STR_PAD_LEFT);
     }
+    
+    public function timezoneGet()
+    {
+        return date_default_timezone_get();
+    }
+    
+    public function usortFilter($item,$property,$mode){
+        $propertyAccessor = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor();
+        $items = [];
+        foreach ($item as $value) {
+            $items[$propertyAccessor->getValue($value,$property)] = $value;
+        }
+        if($mode === "ASC"){
+            ksort($items);
+        }else if($mode === "DESC"){
+            krsort($items);
+        }else{
+            throw new \RuntimeException(sprintf("Mode to sort '%s' is invalid.",$mode));
+        }
+        return $items;
+    }
+    
     
     /**
      * Llama un metodo estatico de una clase

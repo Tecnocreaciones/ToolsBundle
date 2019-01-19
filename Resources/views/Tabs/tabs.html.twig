@@ -91,6 +91,14 @@
                     parameters = {};
                 }
                 parameters["ajax"] = "true";
+                {% set sortPropertyName = constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') %}
+                {% if app.request.get(sortPropertyName) is not null %}
+                    parameters["{{ sortPropertyName }}"] = "{{ app.request.get(sortPropertyName) }}";
+                {% endif %}
+                {% set sortOrderName = constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') %}
+                {% if app.request.get(sortOrderName) is not null %}
+                    parameters["{{ sortOrderName }}"] = "{{ app.request.get(sortOrderName) }}";
+                {% endif %}
                 var qs = jQuery.param( parameters );
                 url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
                 $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());

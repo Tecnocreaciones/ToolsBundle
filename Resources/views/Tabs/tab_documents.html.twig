@@ -4,8 +4,22 @@
     class="tabcontent-border"
 {% endblock ng_parameter %}
 
+{% set files = tab.parameter("objectDataManager").documents.getAll() %}
+
+{% macro header_sort(tab,property) %}
+    {% set uri = tab.parameter("parameters_to_route")["_conf"]["returnUrl"] %}
+    <a href="{{ uri }}?{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') }}={{ property }}&{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') }}=ASC">
+        <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
+    </a>
+    <a href="{{ uri }}?{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') }}={{ property }}&{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') }}=DESC">
+        <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
+    </a>
+{% endmacro %}
+
+{% import _self as internal %}
+
 {% block tab_body %}
-    {% set files = tab.parameter("objectDataManager").documents.getAll() %}
+    
     <style>
         table.border {
             border-collapse: collapse;
@@ -40,8 +54,12 @@
                         <td class="text-left">{{ files|length }}</td>
                     </tr>
                     <tr>
+                        {% set totalBytes = 0 %}
+                        {% for file in files %}
+                            {% set totalBytes = totalBytes + file.getSize() %}
+                        {% endfor %}
                         <td>Tamaño total de los archivos/documentos adjuntos</td>
-                        <td class="text-left">0 bytes</td>
+                        <td class="text-left">{{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[totalBytes]) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -52,76 +70,24 @@
 
 {% block tab_footer %}
     <div class="clearfix">&nbsp;</div>
-    {#<div>
-        <h6 class="title-section">Adjuntar un archivo</h6>
-        <form name="userfile" action="http://localhost:8080/freelance/siempre/siempre.php/320/card/document-Facture?tab=3&amp;module=500&amp;m=13290&amp;sm=13444&amp;ssm=4&amp;uploadFile=1&amp;deleteFile=0&amp;sortfield=name&amp;sortorder=desc" enctype="multipart/form-data" method="POST">
-            <input type="hidden" name="section" value="0"><input type="hidden" name="token" value="b670e8e01ad73c1e7d299f24bd7ee5fd">
-
-            <input type="hidden" name="max_file_size" value="2097152">
-            <input type="file" name="userfile[]" multiple="" size="50"> &nbsp; 
-            <button type="button" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
-            (Tamaño máximo: 2 Mb)
-        </form>
-    </div>#}
     <div class="card">
         <div class="card-title">
             <h6 class="title-section">Adjuntar un archivo</h6>
         </div>
         <div class="card-body">
-            <form name="userfile" action="http://localhost:8080/freelance/siempre/siempre.php/320/card/document-Facture?tab=3&amp;module=500&amp;m=13290&amp;sm=13444&amp;ssm=4&amp;uploadFile=1&amp;deleteFile=0&amp;sortfield=name&amp;sortorder=desc" enctype="multipart/form-data" method="POST">
-            <input type="hidden" name="section" value="0"><input type="hidden" name="token" value="b670e8e01ad73c1e7d299f24bd7ee5fd">
-
-            <input type="hidden" name="max_file_size" value="2097152">
-            <input type="file" name="userfile[]" multiple="" size="50"> &nbsp; 
-            <button type="button" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
-            {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
-            (Tamaño máximo: 2 Mb)
-        </form>
+            <form action="{{ path("tabs_object_manager_documents_upload",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST">
+                {{ form_widget(tab.parameter("form").documents) }}
+                &nbsp; 
+                <button type="input" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
+                {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
+                {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
+                (Tamaño máximo: {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
+                {{ form_rest(tab.parameter("form")) }}
+            </form>
+            
         </div>
     </div>
     <div class="clearfix">&nbsp;</div>
-    {#<h6 class="title-section">Archivos y documentos adjuntos</h6>
-    <table width="100%" class="table table-bordered table-striped">
-        <tbody><tr class="liste_titre">
-                <td class="liste_titre" align="left">
-                    Documentos
-                    <a href="_tab=3&_sortfield=name&_sortorder=asc">
-                        <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
-                    </a>
-                    <a href="_tab=3&_sortfield=name&_sortorder=desc">
-                        <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
-                    </a>
-                </td>
-                <td class="liste_titre" align="right">
-                    Tamaño
-                    <a href="_tab=3&_sortfield=name&_sortorder=asc">
-                        <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
-                    </a>
-                    <a href="_tab=3&_sortfield=name&_sortorder=desc">
-                        <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
-                    </a>
-                </td>
-                <td class="liste_titre" align="center">
-                    Fecha
-                    <a href="_tab=3&_sortfield=name&_sortorder=asc">
-                        <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
-                    </a>
-                    <a href="_tab=3&_sortfield=name&_sortorder=desc">
-                        <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
-                    </a>
-                </td>
-                <td class="liste_titre" align="center">
-
-                </td>
-                <td class="liste_titre" width="15">
-
-                </td>
-            </tr>
-            <tr class="pair">
-                <td colspan="5" style="text-align:center">No hay documentos guardados en este directorio</td>
-            </tr>
-        </tbody>
-    </table>#}
     <div class="card">
         <div class="card-title">
             <h6 class="title-section">Archivos y documentos adjuntos</h6>
@@ -134,56 +100,44 @@
                             <th>#</th>
                             <th>
                                 Documentos
-                                <a href="_tab=3&_sortfield=name&_sortorder=asc">
-                                    <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
-                                </a>
-                                <a href="_tab=3&_sortfield=name&_sortorder=desc">
-                                    <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
-                                </a>
+                                {{ internal.header_sort(tab,"filename")}}
                             </th>
                             <th>
                                 Tamaño
-                                <a href="_tab=3&_sortfield=name&_sortorder=asc">
-                                    <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
-                                </a>
-                                <a href="_tab=3&_sortfield=name&_sortorder=desc">
-                                    <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
-                                </a>
+                                {{ internal.header_sort(tab,"size")}}
                             </th>
                             <th>
                                 Fecha
-                                <a href="_tab=3&_sortfield=name&_sortorder=asc">
-                                    <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
-                                </a>
-                                <a href="_tab=3&_sortfield=name&_sortorder=desc">
-                                    <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
-                                </a>
+                                {{ internal.header_sort(tab,"ATime")}}
                             </th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Kolor Tea Shirt For Man</td>
-                            <td><span class="badge badge-primary">Sale</span></td>
-                            <td>January 22</td>
-                            <td class="color-primary">$21.56</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Kolor Tea Shirt For Women</td>
-                            <td><span class="badge badge-success">Tax</span></td>
-                            <td>January 30</td>
-                            <td class="color-success">$55.32</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Blue Backpack For Baby</td>
-                            <td><span class="badge badge-danger">Extended</span></td>
-                            <td>January 25</td>
-                            <td class="color-danger">$14.85</td>
-                        </tr>
+                        {% for file in files|super_usort(app.request.get(constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY'),"filename"),app.request.get(constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER'),"ASC")) %}
+                            {% set size = file.getSize() %}
+                            
+                            {% set badge = "badge-success" %}
+                            {% if size > 20971520 %}
+{#                              20 MB   #}
+                                {% set badge = "badge-danger" %}
+                            {% elseif size > 10485760  %}
+{#                              10 MB   #}
+                                {% set badge = "badge-warning" %}
+                            {% endif %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{ file.filename }}</td>
+                                <td>
+                                    <span class="badge {{ badge }}">
+                                        {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[size]) }}
+                                    </span>
+                                </td>
+                                <td>{{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}</td>
+                                {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}
+                                <td class="color-primary"><a href="{{ path("tabs_object_manager_documents_delete",params) }}" class="btn btn-danger"><i class="vf vf-delete"></i></a></td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
