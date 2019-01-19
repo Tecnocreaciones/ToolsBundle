@@ -85,7 +85,7 @@ class TabsManager
         $options = $resolver->resolve($options);
         $tabContentDocuments = new TabContent($options);
         $this->tab->addTabContent($tabContentDocuments);
-        $folder = "documents";
+        $folder = "uploaded";
         $this->getObjectDataManager()->documents()->folder($folder);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = $folder;
 //        $this->parametersToView["form"] = function(){
