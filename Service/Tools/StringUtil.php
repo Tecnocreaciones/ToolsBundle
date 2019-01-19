@@ -30,7 +30,9 @@ class StringUtil
     {
         $base = log($size, 1024);
         $suffixes = array('Bytes', 'KB', 'MB', 'GB', 'TB');
-
+        if($size == 0){
+            return $size." ".$suffixes[0];
+        }
         return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
     }
 
