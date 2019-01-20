@@ -22,33 +22,47 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class ConfigurationPass implements CompilerPassInterface {
-    
-    public function process(ContainerBuilder $container) {
+class ConfigurationPass implements CompilerPassInterface
+{
+
+    public function process(ContainerBuilder $container)
+    {
         if ($container->getParameter('tecnocreaciones_tools.service.tabs.enable') === true) {
             $tabs = $container->getParameter("tecnocreaciones_tools.service.tabs");
             $adapterDefinition = $container->findDefinition($tabs["document_manager"]["adapter"]);
             $definitionDocumentManager = $container->findDefinition("tecnoready.document_manager");
             $definitionDocumentManager->addArgument($adapterDefinition);
-            
+
             $adapterDefinition = $container->findDefinition($tabs["history_manager"]["adapter"]);
             $historyManagerDefinition = $container->findDefinition("tecnoready.history_manager");
             $historyManagerDefinition->addArgument($adapterDefinition);
-            
+
             $adapterDefinition = $container->findDefinition($tabs["note_manager"]["adapter"]);
             $noteManagerDefinition = $container->findDefinition("tecnoready.note_manager");
             $noteManagerDefinition->addArgument($adapterDefinition);
-            
-//            var_dump("aaa");
-//            var_dump($container->getParameter("tecnocreaciones_tools.service.tabs"));
-//            die;
+
+            //Exportador
+            $exporter = $container->getDefinition("app.service.exporter");
+            $chaines = $container->findTaggedServiceIds("exporter.chain");
+            $models = $container->findTaggedServiceIds("exporter.chain.model");
+            foreach ($models as $id => $model) {
+                $idChain = $model[0]["chain"];
+                if (!isset($chaines[$idChain])) {
+                    throw new \InvalidArgumentException(sprintf("The exporter chain '%s' is not exists.", $idChain));
+                }
+                $chain = $container->getDefinition($idChain);
+                $chain->addMethodCall("add", [$container->getDefinition($id)]);
+            }
+            foreach ($chaines as $id => $chain) {
+                $exporter->addMethodCall("addChainModel", [$container->getDefinition($id)]);
+            }
         }
-        
-        
+
+
         if ($container->getParameter('tecnocreaciones_tools.service.configuration_manager.enable') === false) {
             return;
         }
-        
+
         $config = $container->getParameter("tecnocreaciones_tools.configuration_manager.configuration");
 
         $configurationClass = $container->getParameter("tecnocreaciones_tools.configuration_class.class");
@@ -65,9 +79,9 @@ class ConfigurationPass implements CompilerPassInterface {
         } else {
             $debug = $container->getParameter('kernel.debug');
         }
-        
+
         $configurationManager = new Definition($configurationManagerClass, [
-            new Reference($config['adapter']),new Reference($config['cache']), [
+            new Reference($config['adapter']), new Reference($config['cache']), [
                 "add_default_wrapper" => true,
                 "debug" => $debug,
             ]

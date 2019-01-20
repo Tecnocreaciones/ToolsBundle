@@ -14,7 +14,14 @@ services:
         class: Tecnoready\Common\Service\ObjectManager\HistoryManager\HistoryManager
     tecnoready.note_manager:
         class: Tecnoready\Common\Service\ObjectManager\NoteManager\NoteManager
-        
     Tecnoready\Common\Service\ObjectManager\ObjectDataManager:
         class: Tecnoready\Common\Service\ObjectManager\ObjectDataManager
-        arguments: ["@tecnoready.document_manager","@tecnoready.history_manager","@tecnoready.note_manager"]
+        arguments: ["@tecnoready.document_manager","@tecnoready.history_manager","@tecnoready.note_manager","@app.service.exporter"]
+    app.service.exporter.adapter:
+        class: Tecnoready\Common\Service\ObjectManager\DocumentManager\ExporterManager\Adapter\DoctrineORMAdapter
+        arguments: ["@doctrine.orm.default_entity_manager"]
+    app.service.exporter:
+        class: Tecnoready\Common\Service\ObjectManager\DocumentManager\ExporterManager\ExporterManager
+        arguments: [ "@tecnoready.document_manager",{ "debug": '%kernel.debug%' } ]
+        calls:
+            - [ setAdapter, ["@app.service.exporter.adapter"]  ]

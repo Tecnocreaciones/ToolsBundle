@@ -8,6 +8,8 @@ use Tecnoready\Common\Model\Tab\TabContent;
 use Tecnoready\Common\Service\ObjectManager\ObjectDataManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
+use RuntimeException;
 
 /**
  * Manejador de tabs
@@ -47,6 +49,9 @@ class TabsManager
      */
     public function createNew(array $options = [],$objectId, $objectType)
     {
+        if(!in_array($objectType,$this->options["object_types"])){
+            throw new RuntimeException(sprintf("The objectType '%s' is not managed. Olny are '%s'",$objectType,implode(",",$this->options["object_types"])));
+        }
         $request = $this->requestStack->getCurrentRequest();
         $this->parametersToView = [];
         $this->getObjectDataManager()->configure($objectId, $objectType);
@@ -54,6 +59,7 @@ class TabsManager
         $tab->setRequest($request);
         $this->tab = $tab;
         $this->parametersToView["objectDataManager"] = $this->getObjectDataManager();
+        $this->parametersToView["tabsManager"] = $this;
         $this->parametersToView["parameters_to_route"] = [
             "_conf" => [
                 "returnUrl" => $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
@@ -88,9 +94,6 @@ class TabsManager
         $folder = "uploaded";
         $this->getObjectDataManager()->documents()->folder($folder);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = $folder;
-//        $this->parametersToView["form"] = function(){
-//            
-//        };
         $this->parametersToView["form"] = $this->createForm(DocumentsType::class)->createView();
     }
     
@@ -120,9 +123,36 @@ class TabsManager
     {
         $tab = $this->tab;
         $tab->setParameters($this->parametersToView);
-        $this->tab = null;
-        $this->parametersToView = [];
+        //$this->tab = null;
+        //$this->parametersToView = [];
         return $tab;
+    }
+    
+    /**
+     * Renderiza el modulo para generar archivos del moduloe
+     * @param $entity
+     * @param type $idChain
+     * @return type
+     */
+    public function renderFilesGenerated($entity) {
+        $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
+        $choices = [];
+        $models = $chain->getModels();
+        foreach ($models as $model) {
+            $choices[$this->trans($model->getName())." [".strtoupper($model->getFormat())."]"] = $model->getName();
+        }
+        $form = $this->createForm(ExporterType::class,$choices);
+        $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
+        return $this->container->get('templating')->render($this->options["exporter"]["template"], 
+            [
+                'chain' => $chain,
+                'entity' => $entity,
+                'objectDataManager' => $this->getObjectDataManager(),
+                'form' => $form->createView(),
+                'tab' => $this->tab,
+                'parametersToView' => $this->parametersToView,
+            ]
+        );
     }
     
     /**
