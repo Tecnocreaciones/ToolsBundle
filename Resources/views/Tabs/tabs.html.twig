@@ -149,7 +149,7 @@
         $('[data-toggle="tab"]').click(function(e) {
             e.preventDefault();
             $this = $(this);
-            if($this.parent().hasClass("active") == true){
+            if($this.hasClass("active") == true){
                 clearTimeout(currentTabRequest);
                 return;
             }
