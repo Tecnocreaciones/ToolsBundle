@@ -86,6 +86,7 @@ class ConfigurationPass implements CompilerPassInterface
                 "debug" => $debug,
             ]
         ]);
+        $configurationManager->setPublic(true);
         $tags = $container->findTaggedServiceIds('configuration.transformer');
         foreach ($tags as $id => $params) {
             $definition = $container->findDefinition($id);
