@@ -35,6 +35,7 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
     public function getFunctions() 
     {
         $functions[] = new \Twig_SimpleFunction('getAppConfig', array($this, 'getAppConfig'));
+        $functions[] = new \Twig_SimpleFunction('get_value_parameter', array($this, 'getValueParameter'));
         return $functions;
     }
 
@@ -55,6 +56,11 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
         $wrapper = $configurationManager->getWrapper($wrapperName);
         
         return call_user_func_array(array($wrapper,$method),array());
+    }
+    public function getValueParameter($key,$wrapperName,$default = null) {
+        $configurationManager = $this->getConfigurationManager();
+        
+        return $configurationManager->get($key,$wrapperName,$default);
     }
     
     /**
