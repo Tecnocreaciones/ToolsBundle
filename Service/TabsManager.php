@@ -10,15 +10,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
 use RuntimeException;
+use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Manejador de tabs
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class TabsManager
+class TabsManager implements ConfigureInterface
 {
     use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
+    use \Tecnoready\Common\Service\ObjectManager\TraitConfigure;
     
     /**
      * @var RequestStack
@@ -47,29 +50,40 @@ class TabsManager
     /**
      * @return Tab
      */
-    public function createNew(array $options = [],$objectId, $objectType)
+    public function createNew(array $options = [])
     {
-        if(!in_array($objectType,$this->options["object_types"])){
-            throw new RuntimeException(sprintf("The objectType '%s' is not managed. Olny are '%s'",$objectType,implode(",",$this->options["object_types"])));
+        if(!in_array($this->objectType,$this->options["object_types"])){
+            throw new RuntimeException(sprintf("The objectType '%s' is not managed. Olny are '%s'",$this->objectType,implode(",",$this->options["object_types"])));
         }
         $request = $this->requestStack->getCurrentRequest();
         $this->parametersToView = [];
-        $this->getObjectDataManager()->configure($objectId, $objectType);
+        $this->getObjectDataManager()->configure($this->objectId, $this->objectType);
         $tab = new Tab($options);
         $tab->setRequest($request);
         $this->tab = $tab;
         $this->parametersToView["objectDataManager"] = $this->getObjectDataManager();
         $this->parametersToView["tabsManager"] = $this;
-        $this->parametersToView["parameters_to_route"] = [
-            "_conf" => [
-                "returnUrl" => $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
-                "objectId" => $objectId,
-                "objectType" => $objectType,
-            ]
-        ];
+        $this->parametersToView["parameters_to_route"] = $this->getParametersToRoute();
         return $tab;
     }
     
+    /**
+     * Retorna los parametros para la ruta del manejador de objetos
+     * @return array
+     */
+    private function getParametersToRoute()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        return [
+            "_conf" => [
+                "returnUrl" => $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
+                "objectId" => $this->objectId,
+                "objectType" => $this->objectType,
+            ]
+        ];
+    }
+
+
     public function addTabContent(TabContent $tabContent)
     {
         $this->tab->addTabContent($tabContent);
@@ -156,6 +170,26 @@ class TabsManager
     }
     
     /**
+     * Retorna la url de descarga de un archivo
+     * @param type $fileName
+     * @param type $disposition
+     * @return type
+     */
+    public function documentsDownloadUrl($fileName,$disposition = \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,$folder = "uploaded")
+    {
+        $url = null;
+        $file = $this->getObjectDataManager()->documents()->get($fileName);
+        if($file !== null){
+            $params = $this->getParametersToRoute();
+            $params["_conf"]["folder"] = $folder;
+            $params["filename"] = $fileName;
+            $params["disposition"] = $disposition;
+            $url = $this->generateUrl("tabs_object_manager_documents_get",$params);
+        }
+        return $url;
+    }
+    
+    /**
      * @return ObjectDataManager
      */
     public function getObjectDataManager()
@@ -189,5 +223,23 @@ class TabsManager
     protected function createForm($type, $data = null, array $options = array())
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
+    }
+    
+    /**
+     * Generates a URL from the given parameters.
+     *
+     * @param string $route         The name of the route
+     * @param array  $parameters    An array of parameters
+     * @param int    $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
+     *
+     * @return string The generated URL
+     *
+     * @see UrlGeneratorInterface
+     *
+     * @final since version 3.4
+     */
+    protected function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
 }
