@@ -15,6 +15,7 @@ services:
     tecnoready.note_manager:
         class: Tecnoready\Common\Service\ObjectManager\NoteManager\NoteManager
     Tecnoready\Common\Service\ObjectManager\ObjectDataManager:
+        public: true
         class: Tecnoready\Common\Service\ObjectManager\ObjectDataManager
         arguments: ["@tecnoready.document_manager","@tecnoready.history_manager","@tecnoready.note_manager","@app.service.exporter"]
     app.service.exporter.adapter:

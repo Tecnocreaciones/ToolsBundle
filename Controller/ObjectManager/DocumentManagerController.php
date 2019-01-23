@@ -37,9 +37,10 @@ class DocumentManagerController extends ManagerController
     
     public function getAction(Request $request)
     {
+        $fileName = $request->get("filename");
         $objectDataManager = $this->getObjectDataManager($request);
         $disposition = $request->get("disposition",ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-        $file = $objectDataManager->documents()->get($request->get("filename"));
+        $file = $objectDataManager->documents()->get($fileName);
         $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
         $response->setContentDisposition($disposition);
         return $response;
