@@ -103,6 +103,7 @@ class ConfigurationPass implements CompilerPassInterface
 
         $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\GlobalConfExtension');
         $extensionToolsDefinition
+                ->setPublic(false)
                 ->addMethodCall('setContainer', array(new Reference('service_container')))
                 ->addTag('twig.extension')
         ;

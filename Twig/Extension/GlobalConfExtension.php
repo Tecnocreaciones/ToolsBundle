@@ -11,12 +11,15 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
+use Twig\Extension\AbstractExtension;
+use Twig_Function;
+
 /**
  * Extension de twig que provee herramientas globales
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\DependencyInjection\ContainerAwareInterface 
+class GlobalConfExtension extends AbstractExtension implements \Symfony\Component\DependencyInjection\ContainerAwareInterface 
 {
 
     private $container;
@@ -34,8 +37,8 @@ class GlobalConfExtension extends \Twig_Extension implements \Symfony\Component\
     
     public function getFunctions() 
     {
-        $functions[] = new \Twig_SimpleFunction('getAppConfig', array($this, 'getAppConfig'));
-        $functions[] = new \Twig_SimpleFunction('get_value_parameter', array($this, 'getValueParameter'));
+        $functions[] = new Twig_Function('getAppConfig', array($this, 'getAppConfig'));
+        $functions[] = new Twig_Function('get_value_parameter', array($this, 'getValueParameter'));
         return $functions;
     }
 
