@@ -122,6 +122,7 @@ class TabsManager implements ConfigureInterface
             "add_content_div" => false,
             "template" => $this->options["history_manager"]["template"],
             "title" => $this->trans("messages.tab.history", [], "messages"),
+            "icon" => "vf vf-history-clock",
         ]);
         $options = $resolver->resolve($options);
         $tabContentHistory = new TabContent($options);

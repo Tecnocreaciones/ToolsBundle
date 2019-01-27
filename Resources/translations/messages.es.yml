@@ -13,3 +13,4 @@ documents.generated.button.delete: 'Eliminar'
 documents.generated.empty: 'No hay documentos generados'
 documents.generated.title.model: 'Modelo'
 documents.generated.model.placeholder: 'Seleccione un modelo'
+title.tooltip.show.element: "Ver"
