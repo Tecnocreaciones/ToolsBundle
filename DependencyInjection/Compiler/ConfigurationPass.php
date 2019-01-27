@@ -33,13 +33,19 @@ class ConfigurationPass implements CompilerPassInterface
             $definitionDocumentManager = $container->findDefinition("tecnoready.document_manager");
             $definitionDocumentManager->addArgument($adapterDefinition);
 
-            $adapterDefinition = $container->findDefinition($tabs["history_manager"]["adapter"]);
-            $historyManagerDefinition = $container->findDefinition("tecnoready.history_manager");
-            $historyManagerDefinition->addArgument($adapterDefinition);
+            $idHistoryManagerAdapter = $tabs["history_manager"]["adapter"];
+            if($container->hasDefinition($idHistoryManagerAdapter)){
+                $adapterDefinition = $container->findDefinition($idHistoryManagerAdapter);
+                $historyManagerDefinition = $container->findDefinition("tecnoready.history_manager");
+                $historyManagerDefinition->addArgument($adapterDefinition);
+            }
 
-            $adapterDefinition = $container->findDefinition($tabs["note_manager"]["adapter"]);
-            $noteManagerDefinition = $container->findDefinition("tecnoready.note_manager");
-            $noteManagerDefinition->addArgument($adapterDefinition);
+            $idNoteManagerAdapter = $tabs["note_manager"]["adapter"];
+            if($container->hasDefinition($idNoteManagerAdapter)){
+                $adapterDefinition = $container->findDefinition($idNoteManagerAdapter);
+                $noteManagerDefinition = $container->findDefinition("tecnoready.note_manager");
+                $noteManagerDefinition->addArgument($adapterDefinition);
+            }
 
             //Exportador
             $exporter = $container->getDefinition("app.service.exporter");
@@ -97,6 +103,7 @@ class ConfigurationPass implements CompilerPassInterface
 
         $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\GlobalConfExtension');
         $extensionToolsDefinition
+                ->setPublic(false)
                 ->addMethodCall('setContainer', array(new Reference('service_container')))
                 ->addTag('twig.extension')
         ;

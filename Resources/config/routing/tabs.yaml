@@ -1,3 +1,7 @@
+#TecnocreacionesToolsTabs:
+#    resource: "@TecnocreacionesToolsBundle/Resources/config/routing/tabs.yaml"
+#    prefix: /tabs
+
 tabs_save_current:
     path: /tabs/save-current.json
     defaults:

@@ -47,6 +47,13 @@ class TabsManager implements ConfigureInterface
         $this->options = $options;
     }
     
+    public function configure($objectId, $objectType)
+    {
+        $this->objectId = $objectId;
+        $this->objectType = $objectType;
+        $this->getObjectDataManager()->configure($this->objectId, $this->objectType);
+    }
+    
     /**
      * @return Tab
      */
@@ -179,6 +186,7 @@ class TabsManager implements ConfigureInterface
     public function documentsDownloadUrl($fileName,$disposition = \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,$folder = "uploaded")
     {
         $url = null;
+        $this->getObjectDataManager()->documents()->folder($folder);
         $file = $this->getObjectDataManager()->documents()->get($fileName);
         if($file !== null){
             $params = $this->getParametersToRoute();
