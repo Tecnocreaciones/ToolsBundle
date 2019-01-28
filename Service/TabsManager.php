@@ -145,6 +145,7 @@ class TabsManager implements ConfigureInterface
     {
         $tab = $this->tab;
         $tab->setParameters($this->parametersToView);
+        $tab->resolveCurrentTab();
         //$this->tab = null;
         //$this->parametersToView = [];
         return $tab;

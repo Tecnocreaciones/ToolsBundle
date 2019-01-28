@@ -126,6 +126,9 @@
                         self.html("<b>{{ "tab.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
                     }else if(status == "success"){
                         self.data("loaded",true);
+                        if(onLoadTabSuccess !== undefined && onLoadTabSuccess !== null){
+                            onLoadTabSuccess();
+                        }
                     }
                     if(angular !== undefined){
                         setTimeout(function() {
