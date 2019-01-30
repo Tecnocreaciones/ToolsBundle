@@ -127,7 +127,7 @@ class TabsManager implements ConfigureInterface
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             "add_content_div" => false,
-            "template" => $this->options["history_manager"]["template"],
+            "template" => 'person/history.html.twig',
             "title" => $this->trans("messages.tab.history", [], "messages"),
             "icon" => "vf vf-history-clock",
         ]);
