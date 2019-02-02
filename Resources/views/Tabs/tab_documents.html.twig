@@ -1,5 +1,7 @@
 {% extends "layouts/components/common/tab/show.html.twig" %}
 
+{% set deleteFtn = "delete"~random() %}
+
 {% block ng_parameter %}
     class="tabcontent-border"
 {% endblock ng_parameter %}
@@ -19,7 +21,6 @@
 {% import _self as internal %}
 
 {% block tab_body %}
-    
     <style>
         table.border {
             border-collapse: collapse;
@@ -64,13 +65,14 @@
             <h6 class="title-section">Adjuntar un archivo</h6>
         </div>
         <div class="card-body">
-            <form action="{{ path("tabs_object_manager_documents_upload",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST">
+            <form action="{{ path("tabs_object_manager_documents_upload",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
                 {{ form_widget(tab.parameter("form").documents) }}
                 &nbsp; 
                 <button type="input" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
                 {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
                 {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
                 (Tamaño máximo: {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
+                {{ form_widget(tab.parameter("form").comments) }}
                 {{ form_rest(tab.parameter("form")) }}
             </form>
             
@@ -114,6 +116,7 @@
 {#                              10 MB   #}
                                 {% set badge = "badge-warning" %}
                             {% endif %}
+                            {% set metadata = tab.parameter("objectDataManager").documents.getMetadata(file) %}
                             <tr>
                                 <th scope="row">{{ loop.index }}</th>
                                 <td>
@@ -122,6 +125,9 @@
                                     <a href="{{ path("tabs_object_manager_documents_get",params) }}" class="btn btn-link btn-sm">
                                         {{ file.filename }}
                                     </a>
+                                    {% if metadata["comments"] is not null %}
+                                        ({{ metadata["comments"] }})
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <span class="badge {{ badge }}">
@@ -129,7 +135,9 @@
                                     </span>
                                 </td>
                                 <td>{{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}</td>
-                                <td class="color-primary"><a href="{{ path("tabs_object_manager_documents_delete",params) }}" class="btn btn-danger"><i class="vf vf-delete"></i></a></td>
+                                <td class="color-primary">
+                                    <button onclick="{{ deleteFtn }}('{{ file.filename }}','{{ path("tabs_object_manager_documents_delete",params) }}');" class="btn btn-danger"><i class="vf vf-delete"></i></button>
+                                </td>
                             </tr>
                         {% else%}
                             <tr>
@@ -148,4 +156,11 @@
             </div>
         </div>
     </div>
+    <script>
+        function {{ deleteFtn }}(name,url){
+            if(confirm("¿Eliminar el archivo "+name+"?")){
+                window.location = url;
+            }
+        }
+    </script>
 {% endblock %}

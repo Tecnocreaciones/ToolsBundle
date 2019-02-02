@@ -21,8 +21,11 @@ class DocumentManagerController extends ManagerController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $documents = $form->get("documents")->getData();
+            $comments = $form->get("comments")->getData();
             foreach ($documents as $document) {
-                $objectDataManager->documents()->upload($document);
+                $objectDataManager->documents()->upload($document,[
+                    "comments" => $comments,
+                ]);
             }
         }
         return $this->toReturnUrl();

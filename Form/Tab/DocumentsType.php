@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Formulario para subir documentos en la tab de documentos
@@ -24,7 +25,17 @@ class DocumentsType extends AbstractType
                 ->add('documents',FileType::class, [
                 'label' => ' ',
                 'multiple' => true,
-            ]);
+            ])
+                ->add('comments',TextType::class, [
+                'label' => ' ',
+                'required' => false,
+                'attr' => [
+                    "class" => "form-control input-flat",
+                    "style" => "width: 20%;height: 30px;display: inline;",
+                    "placeholder" => "Comentarios (opcional)",
+                ],
+            ])
+                ;
     }
 
     /**
