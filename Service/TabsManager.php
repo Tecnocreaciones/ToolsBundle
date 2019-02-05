@@ -9,6 +9,7 @@ use Tecnoready\Common\Service\ObjectManager\ObjectDataManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\NotesType;
 use RuntimeException;
 use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -134,7 +135,26 @@ class TabsManager implements ConfigureInterface
         $options = $resolver->resolve($options);
         $tabContentHistory = new TabContent($options);
         $this->tab->addTabContent($tabContentHistory);
-        
+        return $tabContentHistory;
+    }
+    
+    /**
+     * Añade la tab de historiales
+     * @param array $options
+     */
+    public function addNotes(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "add_content_div" => false,
+            "template" => $this->options["note_manager"]["template"],
+            "title" => $this->trans("messages.tab.notes", [], "messages"),
+            "icon" => "vf vf-draft",
+        ]);
+        $options = $resolver->resolve($options);
+        $tabContentHistory = new TabContent($options);
+        $this->tab->addTabContent($tabContentHistory);
+        $this->parametersToView["form_notes"] = $this->createForm(NotesType::class)->createView();
     }
     
     /**

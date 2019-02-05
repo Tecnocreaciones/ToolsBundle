@@ -1,0 +1,125 @@
+{% extends "layouts/components/common/tab/show.html.twig" %}
+
+{% block ng_parameter %}
+    class="tabcontent-border"
+{% endblock ng_parameter %}
+
+{% set classFormNotes = "form-notes"~random() %}
+{% set classListNotes = "list-notes"~random() %}
+{% set classButtonAction = "list-action-btn"~random() %}
+{% set classDivButton1 = "d-btn-1"~random() %}
+{% set classDivButton2 = "d-btn-2"~random() %}
+
+{% set publics = tab.parameter("objectDataManager").notes.getPaginator(constant('Tecnoready\\Common\\Model\\ObjectManager\\NoteManager\\NoteInterface::TYPE_PUBLIC')) %}
+{% set privates = tab.parameter("objectDataManager").notes.getPaginator(constant('Tecnoready\\Common\\Model\\ObjectManager\\NoteManager\\NoteInterface::TYPE_PRIVATE')) %}
+
+{% macro printNotes(notes) %}
+    <ul>
+        {% for note in notes %}
+            <li><small>({{ note.createdAt()|date('d/m/Y h:i:s a',timezone_get())  }})</small>&nbsp;{{ note.description }}</li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% block tab_body %}
+    {% import _self as macros %}
+    <style>
+        table.border {
+            border-collapse: collapse;
+            border: 1px white;
+        }
+        table.border td {
+            border: 1px solid #DCDCDC;
+            padding: 1px 2px;
+            border-collapse: collapse;
+        }
+        .title-section {
+            color: #257dd5;
+        }
+        .notes-list {
+            padding: 10px;
+        }
+    </style>
+    <form action="{{ path("tabs_object_note_add",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="border" width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="30%">
+                                <b>Notas publicas</b>
+                                <br/>
+                                <small>(Estas notas podran ser observadas en documentos, perfiles, resumenes y otros)</small>
+                            </td>
+                            <td class="text-left">
+                                <div class="{{ classListNotes }} notes-list">
+                                    {{ macros.printNotes(publics) }}
+                                </div>
+                                <div class="{{ classFormNotes }} hide">
+                                    {{ form_widget(tab.parameter("form_notes").publicNote) }}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td>
+                                <b>Notas privadas</b>
+                                <br/>
+                                <small>(Estas notas son de uso interno, no podrán ser visualizadas en otra parte.)</small>
+                            </td>
+                            <td class="text-left">
+                                <div class="{{ classListNotes }} notes-list">
+                                    {{ macros.printNotes(privates) }}
+                                </div>
+                                <div class="{{ classFormNotes }} hide">
+                                    {{ form_widget(tab.parameter("form_notes").privateNote) }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{ form_rest(tab.parameter("form_notes")) }}
+        <div class="text-right">
+            <div class="{{ classDivButton1 }}" >
+                <button type="button" class="btn btn-success {{ classButtonAction }}" data-action="update"><i class="vf vf-pencil vf-1x"></i>&nbsp;Actualizar</button>
+            </div>
+            <div class="hide {{ classDivButton2 }}">
+                <button type="submit" class="btn btn-success" data-action="save">
+                    <i class="vf vf-save"></i>
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-link {{ classButtonAction }}" data-action="cancel"><i class="vf vf-stop vf-1x"></i>&nbsp;Cancelar</button>
+            </div>
+            <script>
+                $(function () {
+                    function showForms() {
+                        $(".{{ classFormNotes }}").removeClass("hide");
+                        $(".{{ classDivButton2 }}").removeClass("hide");
+                        $(".{{ classListNotes }}").addClass("hide");
+                        $(".{{ classDivButton1 }}").addClass("hide");
+                    }
+                    function hideForms() {
+                        $(".{{ classFormNotes }}").addClass("hide");
+                        $(".{{ classDivButton2 }}").addClass("hide");
+                        $(".{{ classListNotes }}").removeClass("hide");
+                        $(".{{ classDivButton1 }}").removeClass("hide");
+                    }
+                    $(".{{ classButtonAction }}").on("click", function () {
+                        var action = $(this).attr("data-action");
+                        if (action == "update") {
+                            showForms();
+                        } else if (action == "cancel") {
+                            hideForms();
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </form>
+{% endblock %}
+
+{% block tab_buttons %}
+
+{% endblock %}

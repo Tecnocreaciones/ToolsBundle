@@ -50,3 +50,10 @@ tabs_object_exporter_delete:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:delete
         _format: html
     requirements: { _method: GET }
+    
+tabs_object_note_add:
+    path: /tabs/object-manager/note/add
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/NoteManager:add
+        _format: html
+    requirements: { _method: POST }
