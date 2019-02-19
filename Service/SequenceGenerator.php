@@ -106,7 +106,7 @@ class SequenceGenerator implements \Symfony\Component\DependencyInjection\Contai
         }
         
         if (!preg_match('/\{(0+)([@\+][0-9]+)?([\-][0-9]+)?\}/i', $mask, $reg))
-            throw new \InvalidArgumentException('Incorrect format mask, the counter is required "{00},{00+n},{00-n}"');
+            throw new \InvalidArgumentException('Incorrect format mask, the counter is required "{00},{00+n},{00-n}" for mask "'.$mask.'"');
         
         $masktri = (isset($reg[1]) ? $reg[1] : '') . (isset($reg[2]) ? $reg[2] : '') . (isset($reg[3]) ? $reg[3] : '');
         $maskcounter = $reg[1];
