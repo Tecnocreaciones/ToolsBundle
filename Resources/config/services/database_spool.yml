@@ -1,5 +1,5 @@
-parameters:
-    tecnoready.swiftmailer_db.spool.class: Tecnoready\Common\Spool\ORM\DatabaseSpool
+#parameters:
+#    tecnoready.swiftmailer_db.spool.class: Tecnoready\Common\Spool\ORM\DatabaseSpool
     
 services:
     tecnoready.repository.email:

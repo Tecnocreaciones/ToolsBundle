@@ -27,6 +27,7 @@ class ConfigurationPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
+        //Verificar tabs activas
         if ($container->getParameter('tecnocreaciones_tools.service.tabs.enable') === true) {
             $tabs = $container->getParameter("tecnocreaciones_tools.service.tabs");
             $adapterDefinition = $container->findDefinition($tabs["document_manager"]["adapter"]);
@@ -34,14 +35,14 @@ class ConfigurationPass implements CompilerPassInterface
             $definitionDocumentManager->addArgument($adapterDefinition);
 
             $idHistoryManagerAdapter = $tabs["history_manager"]["adapter"];
-            if($container->hasDefinition($idHistoryManagerAdapter)){
+            if ($container->hasDefinition($idHistoryManagerAdapter)) {
                 $adapterDefinition = $container->findDefinition($idHistoryManagerAdapter);
                 $historyManagerDefinition = $container->findDefinition("tecnoready.history_manager");
                 $historyManagerDefinition->addArgument($adapterDefinition);
             }
 
             $idNoteManagerAdapter = $tabs["note_manager"]["adapter"];
-            if($container->hasDefinition($idNoteManagerAdapter)){
+            if ($container->hasDefinition($idNoteManagerAdapter)) {
                 $adapterDefinition = $container->findDefinition($idNoteManagerAdapter);
                 $noteManagerDefinition = $container->findDefinition("tecnoready.note_manager");
                 $noteManagerDefinition->addArgument($adapterDefinition);
@@ -64,61 +65,70 @@ class ConfigurationPass implements CompilerPassInterface
             }
         }
 
+        //Manejador de configuracion
+        if ($container->getParameter('tecnocreaciones_tools.service.configuration_manager.enable') === true) {
+            $config = $container->getParameter("tecnocreaciones_tools.configuration_manager.configuration");
 
-        if ($container->getParameter('tecnocreaciones_tools.service.configuration_manager.enable') === false) {
-            return;
-        }
-
-        $config = $container->getParameter("tecnocreaciones_tools.configuration_manager.configuration");
-
-        $configurationClass = $container->getParameter("tecnocreaciones_tools.configuration_class.class");
-        $configurationManagerClass = $config['configuration_manager_class'];
-        $configurationManagerNameService = $config['configuration_name_service'];
-        $reflectionConfigurationClass = new ReflectionClass($configurationClass);
-        if ($reflectionConfigurationClass->isSubclassOf('Tecnoready\Common\Model\Configuration\BaseEntity\DoctrineORMConfiguration') === false) {
-            throw new LogicException(
-            'The "' . $reflectionConfigurationClass->getName() . '" must inherit from Tecnoready\\Common\\Model\\Configuration\\BaseEntity\\DoctrineORMConfiguration'
-            );
-        }
-        if (isset($config['debug'])) {
-            $debug = $config['debug'];
-        } else {
-            $debug = $container->getParameter('kernel.debug');
-        }
-
-        $configurationManager = new Definition($configurationManagerClass, [
-            new Reference($config['adapter']), new Reference($config['cache']), [
-                "add_default_wrapper" => true,
-                "debug" => $debug,
-            ]
-        ]);
-        $configurationManager->setPublic(true);
-        $tags = $container->findTaggedServiceIds('configuration.transformer');
-        foreach ($tags as $id => $params) {
-            $definition = $container->findDefinition($id);
-            $configurationManager->addMethodCall("addTransformer", [$definition]);
-        }
-        $container->setDefinition($configurationManagerNameService, $configurationManager);
-        $container->setParameter('tecnocreaciones_tools.configuration_manager.name', $configurationManagerNameService);
-
-        $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\GlobalConfExtension');
-        $extensionToolsDefinition
-                ->setPublic(false)
-                ->addMethodCall('setContainer', array(new Reference('service_container')))
-                ->addTag('twig.extension')
-        ;
-        $container->setDefinition('tecnocreaciones_tools.global_config_extension', $extensionToolsDefinition);
-
-        $manager = $container->getDefinition($container->getParameter("tecnocreaciones_tools.configuration_manager.name"));
-        $tags = $container->findTaggedServiceIds('configuration.wrapper');
-        $serviceContainer = new \Symfony\Component\DependencyInjection\Reference("service_container");
-        foreach ($tags as $id => $params) {
-            $definition = $container->findDefinition($id);
-            $reflection = new \ReflectionClass($definition->getClass());
-            if ($reflection->isSubclassOf("Symfony\Component\DependencyInjection\ContainerAwareInterface")) {
-                $definition->addMethodCall("setContainer", [$serviceContainer]);
+            $configurationClass = $container->getParameter("tecnocreaciones_tools.configuration_class.class");
+            $configurationManagerClass = $config['configuration_manager_class'];
+            $configurationManagerNameService = $config['configuration_name_service'];
+            $reflectionConfigurationClass = new ReflectionClass($configurationClass);
+            if ($reflectionConfigurationClass->isSubclassOf('Tecnoready\Common\Model\Configuration\BaseEntity\DoctrineORMConfiguration') === false) {
+                throw new LogicException(
+                'The "' . $reflectionConfigurationClass->getName() . '" must inherit from Tecnoready\\Common\\Model\\Configuration\\BaseEntity\\DoctrineORMConfiguration'
+                );
             }
-            $manager->addMethodCall("addWrapper", [$definition]);
+            if (isset($config['debug'])) {
+                $debug = $config['debug'];
+            } else {
+                $debug = $container->getParameter('kernel.debug');
+            }
+
+            $configurationManager = new Definition($configurationManagerClass, [
+                new Reference($config['adapter']), new Reference($config['cache']), [
+                    "add_default_wrapper" => true,
+                    "debug" => $debug,
+                ]
+            ]);
+            $configurationManager->setPublic(true);
+            $tags = $container->findTaggedServiceIds('configuration.transformer');
+            foreach ($tags as $id => $params) {
+                $definition = $container->findDefinition($id);
+                $configurationManager->addMethodCall("addTransformer", [$definition]);
+            }
+            $container->setDefinition($configurationManagerNameService, $configurationManager);
+            $container->setParameter('tecnocreaciones_tools.configuration_manager.name', $configurationManagerNameService);
+
+            $extensionToolsDefinition = new Definition('Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\GlobalConfExtension');
+            $extensionToolsDefinition
+                    ->setPublic(false)
+                    ->addMethodCall('setContainer', array(new Reference('service_container')))
+                    ->addTag('twig.extension')
+            ;
+            $container->setDefinition('tecnocreaciones_tools.global_config_extension', $extensionToolsDefinition);
+
+            $manager = $container->getDefinition($container->getParameter("tecnocreaciones_tools.configuration_manager.name"));
+            $tags = $container->findTaggedServiceIds('configuration.wrapper');
+            $serviceContainer = new \Symfony\Component\DependencyInjection\Reference("service_container");
+            foreach ($tags as $id => $params) {
+                $definition = $container->findDefinition($id);
+                $reflection = new \ReflectionClass($definition->getClass());
+                if ($reflection->isSubclassOf("Symfony\Component\DependencyInjection\ContainerAwareInterface")) {
+                    $definition->addMethodCall("setContainer", [$serviceContainer]);
+                }
+                $manager->addMethodCall("addWrapper", [$definition]);
+            }
+        }
+
+        if ($container->getParameter('tecnocreaciones_tools.service.database_spool.enable') === true) {
+            $v = \Swift::VERSION;
+            $v = "6.0.0";
+            $r = version_compare("6.0.0", $v);
+            if ($r === -1 || $r === 0) {
+                $container->setParameter("tecnoready.swiftmailer_db.spool.class", "Tecnoready\Common\Spool\ORM\DatabaseSpoolV6");
+            } else {
+                $container->setParameter("tecnoready.swiftmailer_db.spool.class", "Tecnoready\Common\Spool\ORM\DatabaseSpoolV5");
+            }
         }
     }
 
