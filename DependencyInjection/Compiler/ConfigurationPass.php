@@ -129,6 +129,9 @@ class ConfigurationPass implements CompilerPassInterface
             } else {
                 $container->setParameter("tecnoready.swiftmailer_db.spool.class", "Tecnoready\Common\Spool\ORM\DatabaseSpoolV5");
             }
+            $defRepoEmail = $container->getDefinition("tecnoready.repository.email");
+            $defRepoEmail->setFactory([new Reference($container->getParameter("tecnoready.swiftmailer_db.email_repository_manager")),"getRepository"]);
+            $container->setDefinition("tecnoready.repository.email", $defRepoEmail);
         }
     }
 

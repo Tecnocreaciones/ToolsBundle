@@ -240,6 +240,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('email_queue_class')->defaultNull()->end()
                             ->scalarNode('email_template_class')->defaultNull()->end()
                             ->scalarNode('email_component_class')->defaultNull()->end()
+                            ->scalarNode('email_repository_manager')->defaultValue("doctrine.orm.default_entity_manager")->end()
                         ->end()
                     ->end()
                     ->arrayNode('tabs')

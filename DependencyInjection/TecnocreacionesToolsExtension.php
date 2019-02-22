@@ -221,6 +221,7 @@ class TecnocreacionesToolsExtension extends Extension
            $container->setParameter("tecnoready.swiftmailer_db.spool.email_queue_class", $config['database_spool']["email_queue_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.email_template_class", $config['database_spool']["email_template_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.email_component_class", $config['database_spool']["email_component_class"]);
+           $container->setParameter("tecnoready.swiftmailer_db.email_repository_manager", $config['database_spool']["email_repository_manager"]);
         }
         
         if($config['tabs']['enable'] === true){
