@@ -122,16 +122,18 @@ class ConfigurationPass implements CompilerPassInterface
 
         if ($container->getParameter('tecnocreaciones_tools.service.database_spool.enable') === true) {
             $v = \Swift::VERSION;
-            $v = "6.0.0";
             $r = version_compare("6.0.0", $v);
             if ($r === -1 || $r === 0) {
                 $container->setParameter("tecnoready.swiftmailer_db.spool.class", "Tecnoready\Common\Spool\ORM\DatabaseSpoolV6");
             } else {
                 $container->setParameter("tecnoready.swiftmailer_db.spool.class", "Tecnoready\Common\Spool\ORM\DatabaseSpoolV5");
             }
+            $idManager = $container->getParameter("tecnoready.swiftmailer_db.email_repository_manager");
+            $em = new Reference($idManager);
             $defRepoEmail = $container->getDefinition("tecnoready.repository.email");
-            $defRepoEmail->setFactory([new Reference($container->getParameter("tecnoready.swiftmailer_db.email_repository_manager")),"getRepository"]);
+            $defRepoEmail->setFactory([$em,"getRepository"]);
             $container->setDefinition("tecnoready.repository.email", $defRepoEmail);
+            $container->setAlias("tecnoready.repository.email.em",$idManager);
         }
     }
 

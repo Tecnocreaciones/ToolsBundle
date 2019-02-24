@@ -15,7 +15,7 @@ services:
         alias: tecnoready.swiftmailer_db.spool
     tecnoready.swiftmailer.adapter.orm:
         class: Tecnoready\Common\Service\Email\Adapter\DoctrineORMAdapter
-        arguments: ["@doctrine",{ "email_queue_class" : "%tecnoready.swiftmailer_db.spool.email_queue_class%", "email_template_class": "%tecnoready.swiftmailer_db.spool.email_template_class%", "email_component_class": "%tecnoready.swiftmailer_db.email_component_class%" }]
+        arguments: ["@doctrine","@tecnoready.repository.email.em",{ "email_queue_class" : "%tecnoready.swiftmailer_db.spool.email_queue_class%", "email_template_class": "%tecnoready.swiftmailer_db.spool.email_template_class%", "email_component_class": "%tecnoready.swiftmailer_db.email_component_class%" }]
     tecnoready.swiftmailer:
         class: Tecnoready\Common\Service\Email\TwigSwiftMailer
         public: true
