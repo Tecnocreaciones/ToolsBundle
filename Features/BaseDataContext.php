@@ -319,7 +319,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         return $this->scenarioParameters;
     }
 
-    protected function restartKernel() {
+    public function restartKernel() {
 //        $kernel = clone ($this->kernel);
         $kernel = $this->getKernel();
         $kernel->shutdown();
