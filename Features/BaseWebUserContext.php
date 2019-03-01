@@ -103,12 +103,19 @@ abstract class BaseWebUserContext extends MinkContext
     /**
      * Click a un elemento visible por su id
      * Example: And I click the "#cb-withdraw_smart_form_smartWithdrawalEnabled" element
-    * @Given I click the :arg1 element
+    * @Given I click the :selector element
     */
    public function iClickTheElement($selector)
    {
        $element = $this->findElement($selector);
-       $element->click();
+       $this->getSession()->wait(2 * 1000);
+       try {
+           $element->click();
+       } catch (\Exception $ex) {
+           //esperamos 2 segundos para intentar de nuevo hacer click
+           $this->getSession()->wait(2 * 1000);
+           $element->click();
+       }
    }
    
    /**
@@ -224,7 +231,14 @@ abstract class BaseWebUserContext extends MinkContext
         $this->spin(function($context) use ($locator){
             return $context->getSession()->getPage()->findButton($locator) !== null;
         });
-        return parent::pressButton($locator);
+        $this->getSession()->wait(2 * 1000);
+       try {
+           parent::pressButton($locator);
+       } catch (\Exception $ex) {
+           //esperamos 2 segundos para intentar de nuevo hacer click
+           $this->getSession()->wait(2 * 1000);
+           parent::pressButton($locator);
+       }
     }
     
     /**
@@ -362,7 +376,14 @@ abstract class BaseWebUserContext extends MinkContext
             $link = $this->dataContext->getScenarioParameter($link,true);
         }
         $link = $this->dataContext->parseParameter($link,[],"titles");
-        return parent::clickLink($link);
+        
+        try {
+            parent::clickLink($link);
+        } catch (\Exception $ex) {
+            //esperamos 2 segundos para intentar de nuevo hacer click
+            $this->getSession()->wait(2 * 1000);
+            parent::clickLink($link);
+        }
     }
     
     public function selectOption($select, $option) {       
@@ -374,7 +395,15 @@ abstract class BaseWebUserContext extends MinkContext
     
     public function fillField($field, $value){
         $value = $this->dataContext->parseParameter($value);
-        return parent::fillField($field, $value);
+        parent::fillField($field, $value);
+        
+        $fieldOriginal = $this->fixStepArgument($field);
+        $value = $this->fixStepArgument($value);
+        $field = $this->getSession()->getPage()->findField($fieldOriginal);
+        if($field->getValue() !== $value){
+//            var_dump("diferente ".$field->getValue()." != ".$value);
+            parent::fillField($fieldOriginal, $value);
+        }
     }
     
     /**
