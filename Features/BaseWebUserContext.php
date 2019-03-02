@@ -226,6 +226,25 @@ abstract class BaseWebUserContext extends MinkContext
         return $path;
     }
     
+    /**
+     * Mueve el scroll de navegador a un elemento
+     * Example: And I scroll bottom
+     * @Then I scroll bottom and :element appear
+     * @When I scroll to bottom
+     */
+    public function iScrollBottomAndElementAppear($element = null)
+    {
+        $this->getSession()->getDriver()->executeScript("window.scrollTo(0,document.body.scrollHeight);");
+        sleep(1);
+        if($element !== null){
+            $this->spin(function($context) use ($element) {
+               return $this->findElement($element);
+            },15,function() use ($element){
+               echo sprintf("No se encontro el elemento '%s'",$element);
+            });
+        }
+    }
+    
     public function pressButton($button) {
         $locator = $this->dataContext->parseParameter($button,[],"buttons");
         $this->spin(function($context) use ($locator){
@@ -235,6 +254,7 @@ abstract class BaseWebUserContext extends MinkContext
        try {
            parent::pressButton($locator);
        } catch (\Exception $ex) {
+           $this->iScrollBottomAndElementAppear();
            //esperamos 2 segundos para intentar de nuevo hacer click
            $this->getSession()->wait(2 * 1000);
            parent::pressButton($locator);
