@@ -311,6 +311,18 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('filter_added_admin')->defaultValue('Tecnocreaciones\Bundle\ToolsBundle\Admin\Search\FilterAddedAdmin')->end()
                                 ->end()
                             ->end()
+                        ->end()
+                    ->end()
+                    ->arrayNode('statistic')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('enable')->defaultFalse()->end()
+                            ->arrayNode('object_types')
+                                ->prototype('scalar')
+                            ->end()
+                            ->end()
+                        ->end()
+                    ->end()
             ;
         
         return $treeBuilder;
