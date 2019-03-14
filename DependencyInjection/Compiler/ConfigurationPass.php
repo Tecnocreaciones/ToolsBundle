@@ -79,6 +79,8 @@ class ConfigurationPass implements CompilerPassInterface
             foreach ($statistic["object_types"] as $param) {
                 if ($param["adapter"]) {
                     $statisticManager->addMethodCall("addAdapter", [$container->getDefinition($param["adapter"]),$param["objectType"]]);
+                }
+                if ($param["objectValids"]) {
                     $statisticManager->addMethodCall("addObjectValids", [$param["objectType"],$param["objectValids"]]);
                 }
             }
