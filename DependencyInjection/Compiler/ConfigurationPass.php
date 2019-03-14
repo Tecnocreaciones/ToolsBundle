@@ -65,6 +65,25 @@ class ConfigurationPass implements CompilerPassInterface
             }
         }
 
+        // Verifica esten activas las estadisticas
+        if ($container->getParameter('tecnocreaciones_tools.service.statistic.enable') === true) {
+            $statistic = $container->getParameter("tecnocreaciones_tools.service.statistic");
+            $idHistoryManagerAdapter = $statistic["adapter"];
+            if ($container->hasDefinition($idHistoryManagerAdapter)) {
+                $adapterDefinition = $container->findDefinition($idHistoryManagerAdapter);
+                $historyManagerDefinition = $container->findDefinition("tecnocreaciones_tools.service.statistics_manager");
+                $historyManagerDefinition->addArgument($adapterDefinition);                
+            }
+
+            $statisticManager = $container->getDefinition("tecnocreaciones_tools.service.statistics_manager"); 
+            foreach ($statistic["object_types"] as $param) {
+                if ($param["adapter"]) {
+                    $statisticManager->addMethodCall("addAdapter", [$container->getDefinition($param["adapter"]),$param["objectType"]]);
+                    $statisticManager->addMethodCall("addObjectValids", [$param["objectType"],$param["objectValids"]]);
+                }
+            }
+        }
+        
         //Manejador de configuracion
         if ($container->getParameter('tecnocreaciones_tools.service.configuration_manager.enable') === true) {
             $config = $container->getParameter("tecnocreaciones_tools.configuration_manager.configuration");

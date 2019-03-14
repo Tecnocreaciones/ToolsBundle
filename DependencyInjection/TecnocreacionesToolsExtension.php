@@ -246,10 +246,10 @@ class TecnocreacionesToolsExtension extends Extension
         $container->setParameter('tecnocreaciones_tools.service.search.enable', $config['search']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.database_spool.enable', $config['database_spool']['enable']);
 
-        if($config['statistic']['enable'] === true){
+        if($config['statistic_manager']['enable'] === true){
             $loaderYml->load('services/statistic.yml');
-            $container->setParameter('tecnocreaciones_tools.service.statistic',$config['statistic']);
+            $container->setParameter('tecnocreaciones_tools.service.statistic',$config['statistic_manager']);
         }
-        $container->setParameter('tecnocreaciones_tools.service.statistic.enable',$config['statistic']['enable']);        
+        $container->setParameter('tecnocreaciones_tools.service.statistic.enable',$config['statistic_manager']['enable']);        
     }
 }

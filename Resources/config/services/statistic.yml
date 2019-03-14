@@ -1,8 +1,3 @@
 services:
-    tecnocreaciones_tools.service.statistic.adapter:
-        class: Tecnoready\Common\Service\ObjectManager\StatisticManager\Adapter\DoctrineORMAdapter
-        arguments: ["@doctrine.orm.secondary_entity_manager"]
-
     tecnocreaciones_tools.service.statistics_manager:
         class: Tecnoready\Common\Service\ObjectManager\StatisticManager\StatisticsManager
-        arguments: ["@tecnocreaciones_tools.service.statistic.adapter"]
