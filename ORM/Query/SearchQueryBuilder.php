@@ -299,14 +299,16 @@ class SearchQueryBuilder
      */
     public function addFieldDate(array $fieldDates) {
         foreach ($fieldDates as $fieldDate) {
+            $dateTime = $this->criteria->remove($fieldDate);
             $fieldDateDay = $this->criteria->remove("day_".$fieldDate);
             $fieldDateMonth = $this->criteria->remove("month_".$fieldDate);
             $fieldDateYear = $this->criteria->remove("year_".$fieldDate);
-            if(empty($fieldDateDay) && empty($fieldDateMonth) && empty($fieldDateYear) ){
+            if($dateTime === null && empty($fieldDateDay) && empty($fieldDateMonth) && empty($fieldDateYear) ){
                 continue;
             }
-            
-            if($fieldDateDay !== null && $fieldDateMonth !== null && $fieldDateYear !== null){
+            if($dateTime instanceof \DateTime){
+                $this->qb->andWhere($this->qb->expr()->like($this->getAlias().".".$fieldDate,$this->qb->expr()->literal("%".$dateTime->format("Y-m-d")."%")));
+            }else if($fieldDateDay !== null && $fieldDateMonth !== null && $fieldDateYear !== null){
                 $fieldDateDay = str_pad($fieldDateDay, 2,"0",STR_PAD_LEFT);
                 $fieldDateMonth = str_pad($fieldDateMonth, 2,"0",STR_PAD_LEFT);
                 
