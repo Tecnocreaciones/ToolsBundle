@@ -24,10 +24,10 @@ class NoteManagerController extends ManagerController
             ];
             $publicNote = $form->get("publicNote")->getData();
             $privateNote = $form->get("privateNote")->getData();
-            if (!empty($publicNote)) {
+            if (!empty($publicNote) && strlen($publicNote) > 2) {
                 $objectDataManager->notes()->addPublic($publicNote,$options);
             }
-            if (!empty($publicNote)) {
+            if (!empty($privateNote) && strlen($privateNote) > 2) {
                 $objectDataManager->notes()->addPrivate($privateNote,$options);
             }
         }
