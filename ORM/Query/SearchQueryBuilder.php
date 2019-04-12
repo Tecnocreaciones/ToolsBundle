@@ -63,6 +63,7 @@ class SearchQueryBuilder
      */
     public function addFieldDescription() {
         if(($description = $this->criteria->remove('description')) != null){
+            $description = $this->normalizeValue($description);
             $this->qb
                 ->andWhere($this->qb->expr()->like($this->getAlias().'.description', $this->qb->expr()->literal("%$description%")));
         }
@@ -105,6 +106,7 @@ class SearchQueryBuilder
             $normalizeField = $this->normalizeField($this->getAlias(),$field);
             $valueField = $this->criteria->remove($field);
             if($valueField !== null){
+                $valueField = $this->normalizeValue($valueField);
                 $this->qb->andWhere(sprintf("%s = %s",$normalizeField,$this->qb->expr()->literal($valueField)));
             }
         }
@@ -128,6 +130,7 @@ class SearchQueryBuilder
                 $valueField = $defaultValueField;
             }
             if($valueField !== null){
+                $valueField = $this->normalizeValue($valueField);
                 $orX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
@@ -154,6 +157,7 @@ class SearchQueryBuilder
     public function addQueryField($queryField,array $fields) {
         $valueField = $this->criteria->remove($queryField);
         if($valueField !== null){
+            $valueField = $this->normalizeValue($valueField);
             $this->addFieldLike($fields,$valueField);
         }
         return $this;
@@ -407,7 +411,18 @@ class SearchQueryBuilder
         }
         return $fieldResponse;
     }
-    
+    /**
+     * Decodifica los valores, como se envia por GET la data puede tener
+     * @param type $valueField
+     * @return type
+     */
+    private function normalizeValue($valueField)
+    {
+        $valueField = urldecode($valueField);
+        return $valueField;
+    }
+
+
     public function __call($name, $args)
     {
         if($name === "expr"){
