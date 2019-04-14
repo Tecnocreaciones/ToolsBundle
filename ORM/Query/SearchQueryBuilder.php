@@ -118,7 +118,7 @@ class SearchQueryBuilder
      */
     public function addFieldLike(array $fields,$defaultValueField = null)
     {
-        $orX = $this->qb->expr()->orX();
+        $andX = $this->qb->expr()->andX();//Se coloco andX para buscar siempre por todos los campos en conjutos
         foreach ($fields as $key => $field){
             $fieldValue = $field;
             if(is_string($key)){
@@ -131,11 +131,11 @@ class SearchQueryBuilder
             }
             if($valueField !== null){
                 $valueField = $this->normalizeValue($valueField);
-                $orX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
+                $andX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
-        if($orX->count() > 0){
-            $this->qb->andWhere($orX);
+        if($andX->count() > 0){
+            $this->qb->andWhere($andX);
         }
         return $this;
     }
