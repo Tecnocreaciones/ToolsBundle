@@ -516,7 +516,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         if ($em->getFilters()->isEnabled('softdeleteable')) {
             $em->getFilters()->disable('softdeleteable');
         }
-        $query = $em->createQuery("DELETE FROM " . \Application\Sonata\UserBundle\Entity\User::class . " e WHERE e.username = '" . $username . "'");
+        $query = $em->createQuery("DELETE FROM " . $this->userClass . " e WHERE e.username = '" . $username . "'");
         $query->execute();
         $em->flush();
 //        $em->clear();
