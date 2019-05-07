@@ -1,3 +1,7 @@
+#TecnocreacionesToolsTabs:
+#    resource: "@TecnocreacionesToolsBundle/Resources/config/routing/tabs.yaml"
+#    prefix: /tabs
+
 tabs_save_current:
     path: /tabs/save-current.json
     defaults:
@@ -13,7 +17,7 @@ tabs_object_manager_documents_upload:
     requirements: { _method: POST }
     
 tabs_object_manager_documents_delete:
-    path: /tabs/object-manager/documents/delete
+    path: /tabs/object-manager/documents/delete/{filename}
     defaults:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:delete
         _format: html
@@ -25,3 +29,31 @@ tabs_object_manager_documents_get:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:get
         _format: html
     requirements: { _method: GET }
+    
+tabs_object_exporter_generate:
+    path: /tabs/object-manager/exporter/generate
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:generate
+        _format: html
+    requirements: { _method: POST }
+    
+tabs_object_exporter_get:
+    path: /tabs/object-manager/exporter/get/{filename}
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:get
+        _format: html
+    requirements: { _method: GET }
+    
+tabs_object_exporter_delete:
+    path: /tabs/object-manager/exporter/delete/{filename}
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:delete
+        _format: html
+    requirements: { _method: GET }
+    
+tabs_object_note_add:
+    path: /tabs/object-manager/note/add
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/NoteManager:add
+        _format: html
+    requirements: { _method: POST }

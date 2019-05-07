@@ -63,6 +63,7 @@ class SearchQueryBuilder
      */
     public function addFieldDescription() {
         if(($description = $this->criteria->remove('description')) != null){
+            $description = $this->normalizeValue($description);
             $this->qb
                 ->andWhere($this->qb->expr()->like($this->getAlias().'.description', $this->qb->expr()->literal("%$description%")));
         }
@@ -105,6 +106,7 @@ class SearchQueryBuilder
             $normalizeField = $this->normalizeField($this->getAlias(),$field);
             $valueField = $this->criteria->remove($field);
             if($valueField !== null){
+                $valueField = $this->normalizeValue($valueField);
                 $this->qb->andWhere(sprintf("%s = %s",$normalizeField,$this->qb->expr()->literal($valueField)));
             }
         }
@@ -116,7 +118,7 @@ class SearchQueryBuilder
      */
     public function addFieldLike(array $fields,$defaultValueField = null)
     {
-        $orX = $this->qb->expr()->orX();
+        $andX = $this->qb->expr()->andX();//Se coloco andX para buscar siempre por todos los campos en conjutos
         foreach ($fields as $key => $field){
             $fieldValue = $field;
             if(is_string($key)){
@@ -128,11 +130,12 @@ class SearchQueryBuilder
                 $valueField = $defaultValueField;
             }
             if($valueField !== null){
-                $orX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
+                $valueField = $this->normalizeValue($valueField);
+                $andX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
-        if($orX->count() > 0){
-            $this->qb->andWhere($orX);
+        if($andX->count() > 0){
+            $this->qb->andWhere($andX);
         }
         return $this;
     }
@@ -154,6 +157,7 @@ class SearchQueryBuilder
     public function addQueryField($queryField,array $fields) {
         $valueField = $this->criteria->remove($queryField);
         if($valueField !== null){
+            $valueField = $this->normalizeValue($valueField);
             $this->addFieldLike($fields,$valueField);
         }
         return $this;
@@ -299,14 +303,16 @@ class SearchQueryBuilder
      */
     public function addFieldDate(array $fieldDates) {
         foreach ($fieldDates as $fieldDate) {
+            $dateTime = $this->criteria->remove($fieldDate);
             $fieldDateDay = $this->criteria->remove("day_".$fieldDate);
             $fieldDateMonth = $this->criteria->remove("month_".$fieldDate);
             $fieldDateYear = $this->criteria->remove("year_".$fieldDate);
-            if(empty($fieldDateDay) && empty($fieldDateMonth) && empty($fieldDateYear) ){
+            if($dateTime === null && empty($fieldDateDay) && empty($fieldDateMonth) && empty($fieldDateYear) ){
                 continue;
             }
-            
-            if($fieldDateDay !== null && $fieldDateMonth !== null && $fieldDateYear !== null){
+            if($dateTime instanceof \DateTime){
+                $this->qb->andWhere($this->qb->expr()->like($this->getAlias().".".$fieldDate,$this->qb->expr()->literal("%".$dateTime->format("Y-m-d")."%")));
+            }else if($fieldDateDay !== null && $fieldDateMonth !== null && $fieldDateYear !== null){
                 $fieldDateDay = str_pad($fieldDateDay, 2,"0",STR_PAD_LEFT);
                 $fieldDateMonth = str_pad($fieldDateMonth, 2,"0",STR_PAD_LEFT);
                 
@@ -405,7 +411,18 @@ class SearchQueryBuilder
         }
         return $fieldResponse;
     }
-    
+    /**
+     * Decodifica los valores, como se envia por GET la data puede tener
+     * @param type $valueField
+     * @return type
+     */
+    private function normalizeValue($valueField)
+    {
+        $valueField = urldecode($valueField);
+        return $valueField;
+    }
+
+
     public function __call($name, $args)
     {
         if($name === "expr"){

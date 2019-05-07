@@ -83,6 +83,7 @@ class LinkGeneratorService implements ContainerAwareInterface
             'labelMethod' => null,
             'translation_domain' => null,
             'linkGeneratorItem' => null,
+            'tooltip' => "title.tooltip.show.element",
         );
         $configsObjects = array();
 //        var_dump($configsObjectsDeft);
@@ -153,7 +154,12 @@ class LinkGeneratorService implements ContainerAwareInterface
         
         $icon = "";
         if($entityConfig['icon'] !== null){
-            $icon = sprintf('<i class="%s"></i>',$entityConfig['icon']);
+            $extraIcon = "";
+            if(!empty($entityConfig["tooltip"])){
+                $tooltip = $this->trans($entityConfig["tooltip"],array());
+                $extraIcon .= 'data-toggle="tooltip" title="'.$tooltip.'"';
+            }
+            $icon = sprintf('<i class="%s" %s></i>',$entityConfig['icon'],$extraIcon);
         }
         $buildUrl = $entityConfig["buildUrl"];
         if($buildUrl === null){
@@ -306,7 +312,7 @@ class LinkGeneratorService implements ContainerAwareInterface
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
     
-    public function trans($id, $parameters = array(), $domain = 'message')
+    public function trans($id, $parameters = array(), $domain = 'messages')
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
     }

@@ -1,0 +1,3 @@
+services:
+    tecnocreaciones_tools.service.statistics_manager:
+        class: Tecnoready\Common\Service\ObjectManager\StatisticManager\StatisticsManager

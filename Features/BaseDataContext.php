@@ -319,7 +319,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         return $this->scenarioParameters;
     }
 
-    protected function restartKernel() {
+    public function restartKernel() {
 //        $kernel = clone ($this->kernel);
         $kernel = $this->getKernel();
         $kernel->shutdown();
@@ -568,7 +568,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 $e2 = explode("=", $value);
 //                var_dump($e2);
                 if (count($e2) == 1) {
-                    $commandsParams[] = $e2[0];
+                    $commandsParams[$e2[0]] = true;
                 } else if (count($e2) == 2) {
                     $commandsParams[$e2[0]] = $e2[1];
                 }

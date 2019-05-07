@@ -5,15 +5,14 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Form\Tab;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /**
- * Formulario para subir documentos en la tab de documentos
+ * Formulario para agregar notas publicas y privadas
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class DocumentsType extends AbstractType
+class NotesType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -22,17 +21,20 @@ class DocumentsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder                
-                ->add('documents',FileType::class, [
-                'label' => ' ',
-                'multiple' => true,
-            ])
-                ->add('comments',TextType::class, [
+                ->add('publicNote',TextareaType::class, [
                 'label' => ' ',
                 'required' => false,
                 'attr' => [
-                    "class" => "form-control input-flat",
-                    "style" => "width: 20%;height: 30px;display: inline;",
-                    "placeholder" => "Comentarios (opcional)",
+                    "class" => "form-control",
+                    "placeholder" => "Nota publica (opcional)",
+                ],
+            ])
+                ->add('privateNote',TextareaType::class, [
+                'label' => ' ',
+                'required' => false,
+                'attr' => [
+                    "class" => "form-control",
+                    "placeholder" => "Nota privada (opcional)",
                 ],
             ])
                 ;
@@ -52,7 +54,6 @@ class DocumentsType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return "tab_documents";
+        return "tab_notes";
     }
-
 }
