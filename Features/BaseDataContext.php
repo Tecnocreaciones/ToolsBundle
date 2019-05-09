@@ -589,6 +589,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * Parsea un parametro para ver si es una constante o una traduccion con parametros
      * Constante seria "Pandco\Bundle\AppBundle\Model\Base\TransactionItemInterface__STATUS_FINISH"
      * Traduccion con 'validators.invalid.phone.nro::{"%phoneNro%":"02475550001"}'
+     * Fecha con now() y date::Y-m-d (date::2019-01-20)
      * @param type $value
      * @param array $parameters
      * @param type $domain
