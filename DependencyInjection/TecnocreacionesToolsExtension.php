@@ -41,7 +41,7 @@ class TecnocreacionesToolsExtension extends Extension
             $tablePrefixListerner
                     ->addArgument($tablePrefix)
                     ->addArgument($tableNameLowercase)
-                    ->addTag('doctrine.event_subscriber',["priority" => 1])
+                    ->addTag('doctrine.event_subscriber',["priority" => 10000])
                     ;
             $tablePrefixListerner->addMethodCall("setConfig",array($config['table_prefix']));
             $container->setDefinition('tecnocreaciones_tools.table_prefix_subscriber', $tablePrefixListerner);
