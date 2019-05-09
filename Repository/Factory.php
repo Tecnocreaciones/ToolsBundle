@@ -38,9 +38,7 @@ class Factory implements RepositoryFactory
         if(preg_match('/'. \Doctrine\Common\Persistence\Proxy::MARKER .'/',$entityName)){
             $entityName = \Doctrine\Common\Util\ClassUtils::getRealClass($entityName);
         }
-        if (isset($this->ids[$entityName])) {
-            return $this->container->get($this->ids[$entityName]);
-        }
+
         $repository = $this->default->getRepository($entityManager, $entityName);
         if($repository instanceof \Symfony\Component\DependencyInjection\ContainerAwareInterface){
             $repository->setContainer($this->container);
