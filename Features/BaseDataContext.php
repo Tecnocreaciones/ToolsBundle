@@ -436,7 +436,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $query = $em->createQuery('SELECT COUNT(u.id) FROM ' . $className . ' u');
         $count = $query->getSingleScalarResult();
         $expAmount = explode(" ", $expresion);
-        $amount2 = \Pandco\Bundle\AppBundle\Service\Util\CurrencyUtil::fotmatToNumber($expAmount[1]);
+        $amount2 = \Tecnocreaciones\Bundle\ToolsBundle\Service\Tools\StringUtil::fotmatToNumber($expAmount[1]);
         if (version_compare($count, $amount2, $expAmount[0]) === false) {
             throw new Exception(sprintf("Expected '%s' but there quantity is '%s'.", $expresion, $count));
         }

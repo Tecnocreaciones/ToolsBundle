@@ -79,5 +79,16 @@ class StringUtil
         }
         return (int) $iValue;
     }
+    
+    /**
+     * Formatea un número usando como decimales la coma (,)
+     * @param type $amount
+     * @param type $decimals
+     * @return type
+     */
+    public static function fotmatToNumber($amount, $decimals = 2) {
+        $numberFormated = number_format($amount, $decimals, ".", "");
+        return (double) $numberFormated;
+    }
 
 }
