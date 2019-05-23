@@ -41,6 +41,9 @@ if(class_exists("PHPUnit_Framework_Exception")){
 }else if(class_exists("PHPUnit\Exception")){
     $reflection = new \ReflectionClass("PHPUnit\Exception");
     require_once dirname($reflection->getFileName()) . '/Framework/Assert/Functions.php';
+}else if(class_exists("PHPUnit\Framework\Exception")){
+    $reflection = new \ReflectionClass("PHPUnit\Framework\Exception");
+    require_once dirname($reflection->getFileName()) . '/Assert/Functions.php';
 }
 
 /**
