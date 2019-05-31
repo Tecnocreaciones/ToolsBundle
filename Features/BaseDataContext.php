@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 //Version vieja PHPUnit\Framework\Assert
 if(!class_exists("PHPUnit\Framework\Assert") &&
-        !class_exists("PHPUnit\Exception") && php_sapi_name() === 'cli'){
+        !class_exists("PHPUnit\Exception") && (php_sapi_name() === 'cli' || $_ENV["APP_ENV"] === "test")){
     $base = realpath(__DIR__."/../../../");
     $pathPhpunit = $base."/bin/.phpunit";
     if(!file_exists($pathPhpunit)){
