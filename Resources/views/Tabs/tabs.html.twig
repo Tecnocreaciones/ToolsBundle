@@ -32,9 +32,9 @@
             <li>
                 <ul id="{{ tab.id }}" class="nav nav-tabs" role="tablist">
                     {% for tabContent in tab.tabsContent %}
-                        <li {% if tabContent.active %}class="active"{% endif%} role="tab">
+                        <li {% if tabContent.active %}class="active"{% endif %} role="tab">
                             {% set tabTitle = tabContent.title|trans %}
-                            <a class="nav-link{% if tabContent.active %} active{% endif%}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
+                            <a class="nav-link{% if tabContent.active %} active{% endif %}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
                                 {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
                                 <span class="hidden-xs-down">{{ tabTitle }}</span>
                             </a>
@@ -46,7 +46,7 @@
         
         <div class="tab-content">
             {% for tabContent in tab.tabsContent %}
-                 <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}"
+                 <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif %} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}"
                       >
                 </div>
             {% endfor %}
@@ -148,6 +148,10 @@
                             }, 0);
                         }
                     });
+                },
+                activeParent: function(tabItem){
+                    $("li.active").removeClass("active");
+                    tabItem.parent().addClass("active");
                 }
             };
         }
@@ -171,6 +175,7 @@
                 var current = jQuery.param({ {{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
                 clearTimeout(currentTabRequest);
                 currentTabRequest = setTimeout(function(){
+                    tabsService.activeParent($this);
                     $.ajax({
                         url: "{{ url("tabs_save_current") }}?"+current
                     });
@@ -191,6 +196,7 @@
                 }
                 tabsService.forceLoad = false;
                 tabsService.done();
+                tabsService.activeParent($this);
                 var loadurl = $(this).attr('data-url');
                 var current = $this.parent().parent().attr("id")+tabContent;
                 tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}':current,isInit: tabsService.isInit == true ? 1 : 0});
