@@ -1,164 +1,209 @@
-<style>
-    .hide {
-        display: none;
-    }
-    .loading-block {
-        height: 200px;
-        text-align: center;
-    }
-    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
-        color: #257dd5;
-        font-weight: 500;
-    }
-    .nav-link {
-        padding: 0.6rem 1rem;
-    }
-</style>
-<div class="nav-tabs-custom">
-    
-    <ul id="tabs" class="nav nav-tabs">
-        <li class="tab-title">
-            {% if tab.icon %}
-                <i class="{{ tab.icon }}"></i>
-            {% else %}
-                <i class="fa fa-check"></i>
-            {% endif %}
-            &nbsp;
-            {{ tab.name|trans({},"titles") }}
-        </li>
-        <li>
-            <ul id="{{ tab.id }}" class="nav nav-tabs" role="tablist">
-                {% for tabContent in tab.tabsContent %}
-                    <li {% if tabContent.active %}class="active"{% endif%} role="tab">
-                        {% set tabTitle = tabContent.title|trans %}
-                        <a class="nav-link{% if tabContent.active %} active{% endif%}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
-                            {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
-                            <span class="hidden-xs-down">{{ tabTitle }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
-    
-    <div class="tab-content">
-        {% for tabContent in tab.tabsContent %}
-             <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}">
-            </div>
-        {% endfor %}
-    </div>
-</div>
-<div id="lo-{{ tab.id }}" class="hide">
-    <div class="tab-pane l-loading-container loading-block">
-        <div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div>
-        {{ "Loading content"|trans }}
-        <div class='loading'><p class='blocktext'>
-                
-                <span class='ellipsis_animated-inner'>
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-            </span></p></div></div>
-</div>
+{% block tabs_stylesheets %}
+    <style>
+        .hide {
+            display: none;
+        }
+        .loading-block {
+            height: 200px;
+            text-align: center;
+        }
+        .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+            color: #257dd5;
+            font-weight: 500;
+        }
+        .nav-link {
+            padding: 0.6rem 1rem;
+        }
+    </style>
+{% endblock %}
 
-<script>
-    if(tabsService === undefined){
-        var tabsService = {
-            id: null,
-            isReloading: false,
-            forceLoad: false,
-            isInit: false,
-            lastTabContentId: null,
-            setId: function(id){
-                this.id = id;
-            },
-            reload: function(){
-                this.isReloading = true;
-                $("#"+tabsService.id+" > li.active > a").dblclick();
-            },
-            done: function(){
-                this.isReloading = false;
-            },
-            loading: function(){
-                $("#"+tabsService.id).html($("#lo-"+tabsService.id).html());
-            },
-            loadContent: function(url,tabContentId,parameters){
-                if(tabContentId){
-                    this.lastTabContentId = tabContentId;
-                }
-                var self = $(this.lastTabContentId);
-                if(!parameters){
-                    parameters = {};
-                }
-                parameters["ajax"] = "true";
-                {% set sortPropertyName = constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') %}
-                {% if app.request.get(sortPropertyName) is not null %}
-                    parameters["{{ sortPropertyName }}"] = "{{ app.request.get(sortPropertyName) }}";
+{% block tabs_base %}
+    <div class="nav-tabs-custom">
+        <ul id="tabs" class="nav nav-tabs">
+            <li class="tab-title">
+                {% if tab.icon %}
+                    <i class="{{ tab.icon }}"></i>
+                {% else %}
+                    <i class="fa fa-check"></i>
                 {% endif %}
-                {% set sortOrderName = constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') %}
-                {% if app.request.get(sortOrderName) is not null %}
-                    parameters["{{ sortOrderName }}"] = "{{ app.request.get(sortOrderName) }}";
-                {% endif %}
-                var qs = jQuery.param( parameters );
-                url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
-                $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());
-                $(this.lastTabContentId).load(url, function(response, status, xhr){
-                    //$('#'+tabsService.id).tab(); //reinitialize tabs
-                    if(status == "error"){
-                        self.html("<b>{{ "tab.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
-                    }else if(status == "success"){
-                        self.data("loaded",true);
+                &nbsp;
+                {{ tab.name|trans({},"titles") }}
+            </li>
+            <li>
+                <ul id="{{ tab.id }}" class="nav nav-tabs" role="tablist">
+                    {% for tabContent in tab.tabsContent %}
+                        <li {% if tabContent.active %}class="active"{% endif %} role="tab">
+                            {% set tabTitle = tabContent.title|trans %}
+                            <a class="nav-link{% if tabContent.active %} active{% endif %}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
+                                {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
+                                <span class="hidden-xs-down">{{ tabTitle }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+        
+        <div class="tab-content">
+            {% for tabContent in tab.tabsContent %}
+                 <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif %} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}"
+                      >
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block tabs_loading %}
+    <div id="lo-{{ tab.id }}" class="hide">
+        <div class="tab-pane l-loading-container loading-block">
+            <div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div>
+            {{ "Loading content"|trans }}
+            <div class='loading'>
+                <p class='blocktext'>                    
+                    <span class='ellipsis_animated-inner'>
+                        <span>.</span>
+                        <span>.</span>
+                        <span>.</span>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block tabs_javascripts %}
+    <script>
+        if(tabsService === undefined){
+            function compileAngularElement( elSelector) {
+                var elSelector = (typeof elSelector == 'string') ? elSelector : null ;  
+                    // The new element to be added
+                if (elSelector != null ) {
+                    var $div = $( elSelector );
+
+                        // The parent of the new element
+                        var $target = $("[ng-app]");
+
+                      angular.element($target).injector().invoke(['$compile', function ($compile) {
+                                var $scope = angular.element($target).scope();
+                                $compile($div)($scope);
+                                // Finally, refresh the watch expressions in the new element
+                                $scope.$apply();
+                            }]);
                     }
-                });
             }
-        };
-    }
-    $(function() {
-        tabsService.setId("{{ tab.id }}");
-        $('[tab-ajax="true"]').dblclick(function(e) {
-            e.preventDefault();
-            tabsService.forceLoad = true;
-            tabsService.typeClick = "dblclick";
-            $(this).click();
-        });
-        var currentTabRequest = null;
-        $('[data-toggle="tab"]').click(function(e) {
-            e.preventDefault();
-            $this = $(this);
-            if($this.parent().hasClass("active") == true){
+            var tabsService = {
+                id: null,
+                isReloading: false,
+                forceLoad: false,
+                isInit: false,
+                lastTabContentId: null,
+                setId: function(id){
+                    this.id = id;
+                },
+                reload: function(){
+                    this.isReloading = true;
+                    $("#"+tabsService.id+" > li.active > a").dblclick();
+                },
+                done: function(){
+                    this.isReloading = false;
+                },
+                loading: function(){
+                    $("#"+tabsService.id).html($("#lo-"+tabsService.id).html());
+                },
+                loadContent: function(url,tabContentId,parameters){
+                    if(tabContentId){
+                        this.lastTabContentId = tabContentId;
+                    }
+                    var idContent = this.lastTabContentId;
+                    var self = $(this.lastTabContentId);
+                    if(!parameters){
+                        parameters = {};
+                    }
+                    parameters["ajax"] = "true";
+                    {% set sortPropertyName = constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') %}
+                    {% if app.request.get(sortPropertyName) is not null %}
+                        parameters["{{ sortPropertyName }}"] = "{{ app.request.get(sortPropertyName) }}";
+                    {% endif %}
+                    {% set sortOrderName = constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') %}
+                    {% if app.request.get(sortOrderName) is not null %}
+                        parameters["{{ sortOrderName }}"] = "{{ app.request.get(sortOrderName) }}";
+                    {% endif %}
+                    var qs = jQuery.param( parameters );
+                    url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
+                    $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());
+                    $(this.lastTabContentId).load(url, function(response, status, xhr){
+                        //$('#'+tabsService.id).tab(); //reinitialize tabs
+                        if(status == "error"){
+                            self.html("<b>{{ "tab.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
+                        }else if(status == "success"){
+                            self.data("loaded",true);
+                            if(onLoadTabSuccess !== undefined && onLoadTabSuccess !== null){
+                                onLoadTabSuccess();
+                            }
+                        }
+                        if(angular !== undefined){
+                            setTimeout(function() {
+                                compileAngularElement(idContent);
+                            }, 0);
+                        }
+                    });
+                },
+                activeParent: function(tabItem){
+                    $("li.active").removeClass("active");
+                    tabItem.parent().addClass("active");
+                }
+            };
+        }
+        $(function() {
+            tabsService.setId("{{ tab.id }}");
+            $('[tab-ajax="true"]').dblclick(function(e) {
+                e.preventDefault();
+                tabsService.forceLoad = true;
+                tabsService.typeClick = "dblclick";
+                $(this).click();
+            });
+            var currentTabRequest = null;
+            $('[data-toggle="tab"]').click(function(e) {
+                e.preventDefault();
+                $this = $(this);
+                if($this.hasClass("active") == true){
+                    clearTimeout(currentTabRequest);
+                    return;
+                }
+                var tabContent = $this.attr('data-content-id');
+                var current = jQuery.param({ {{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
                 clearTimeout(currentTabRequest);
-                return;
-            }
-            var tabContent = $this.attr('data-content-id');
-            var current = jQuery.param({ {{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
-            clearTimeout(currentTabRequest);
-            currentTabRequest = setTimeout(function(){
-                $.ajax({
-                    url: "{{ url("tabs_save_current") }}?"+current
-                });
-            },300);
+                currentTabRequest = setTimeout(function(){
+                    tabsService.activeParent($this);
+                    $.ajax({
+                        url: "{{ url("tabs_save_current") }}?"+current
+                    });
+                },200);
+            });
+            $('[tab-ajax="true"]').click(function(e) {
+                e.preventDefault();
+                
+                $this = $(this);
+                var tabContent = $(this).attr('data-content-id');
+                var tabContentObj = $(tabContent);
+                var loaded = tabContentObj.data("loaded");
+                if(tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true){
+                    return;
+                }
+                if(tabsService.forceLoad === false && loaded === true){
+                    return;
+                }
+                tabsService.forceLoad = false;
+                tabsService.done();
+                tabsService.activeParent($this);
+                var loadurl = $(this).attr('data-url');
+                var current = $this.parent().parent().attr("id")+tabContent;
+                tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}':current,isInit: tabsService.isInit == true ? 1 : 0});
+                tabsService.isInit = true;
+            });
+            tabsService.forceLoad = true;
+            tabsService.reload();
         });
-        $('[tab-ajax="true"]').click(function(e) {
-            e.preventDefault();
-            
-            $this = $(this);
-            var tabContent = $(this).attr('data-content-id');
-            var tabContentObj = $(tabContent);
-            var loaded = tabContentObj.data("loaded");
-            if(tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true){
-                return;
-            }
-            if(tabsService.forceLoad === false && loaded === true){
-                return;
-            }
-            tabsService.forceLoad = false;
-            tabsService.done();
-            var loadurl = $(this).attr('data-url');
-            var current = $this.parent().parent().attr("id")+tabContent;
-            tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}':current,isInit: tabsService.isInit == true ? 1 : 0});
-            tabsService.isInit = true;
-        });
-        tabsService.forceLoad = true;
-        tabsService.reload();
-    });
-</script>
+    </script>
+{% endblock %}

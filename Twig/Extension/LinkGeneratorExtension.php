@@ -13,6 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService;
 use Twig_Extension;
+use Twig_SimpleFunction;
 
 /**
  * Extension de link generador
@@ -29,8 +30,8 @@ class LinkGeneratorExtension extends Twig_Extension
     
     public function getFunctions() {
         return [
-            new \Twig_SimpleFunction('path_object', array($this, 'pathObject'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('path_object_url', array($this, 'pathObjectUrl'), array('is_safe' => array('html'))),
+            new Twig_SimpleFunction('path_object', array($this, 'pathObject'), array('is_safe' => array('html'))),
+            new Twig_SimpleFunction('path_object_url', array($this, 'pathObjectUrl'), array('is_safe' => array('html'))),
         ];
     }
     

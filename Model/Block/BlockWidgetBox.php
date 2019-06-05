@@ -11,8 +11,6 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Block;
 
-use Sonata\BlockBundle\Model\Block;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**

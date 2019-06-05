@@ -257,4 +257,32 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     {
         return $this->container->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager'));
     }
+    
+    /**
+     * Retorna el repositorio principal
+     * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\EntityRepository
+     */
+    protected function getRepository($class = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        return $em->getRepository($class);
+    }
+    
+    /**
+     * Shortcut to return the Doctrine Registry service.
+     *
+     * @return \Symfony\Bridge\Doctrine\ManagerRegistry
+     *
+     * @throws \LogicException If DoctrineBundle is not available
+     *
+     * @final since version 3.4
+     */
+    protected function getDoctrine()
+    {
+        if (!$this->container->has('doctrine')) {
+            throw new \LogicException('The DoctrineBundle is not registered in your application. Try running "composer require symfony/orm-pack".');
+        }
+
+        return $this->container->get('doctrine');
+    }
 }

@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 //Version vieja PHPUnit\Framework\Assert
 if(!class_exists("PHPUnit\Framework\Assert") &&
-        !class_exists("PHPUnit\Exception") && php_sapi_name() === 'cli'){
+        !class_exists("PHPUnit\Exception") && (php_sapi_name() === 'cli' || $_ENV["APP_ENV"] === "test")){
     $base = realpath(__DIR__."/../../../");
     $pathPhpunit = $base."/bin/.phpunit";
     if(!file_exists($pathPhpunit)){
@@ -38,9 +38,12 @@ if(!class_exists("PHPUnit\Framework\Assert") &&
 if(class_exists("PHPUnit_Framework_Exception")){
     $reflection = new \ReflectionClass("PHPUnit_Framework_Exception");
     require_once dirname($reflection->getFileName()) . '/Assert/Functions.php';
-}else{
+}else if(class_exists("PHPUnit\Exception")){
     $reflection = new \ReflectionClass("PHPUnit\Exception");
     require_once dirname($reflection->getFileName()) . '/Framework/Assert/Functions.php';
+}else if(class_exists("PHPUnit\Framework\Exception")){
+    $reflection = new \ReflectionClass("PHPUnit\Framework\Exception");
+    require_once dirname($reflection->getFileName()) . '/Assert/Functions.php';
 }
 
 /**
@@ -319,7 +322,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         return $this->scenarioParameters;
     }
 
-    protected function restartKernel() {
+    public function restartKernel() {
 //        $kernel = clone ($this->kernel);
         $kernel = $this->getKernel();
         $kernel->shutdown();
@@ -436,7 +439,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $query = $em->createQuery('SELECT COUNT(u.id) FROM ' . $className . ' u');
         $count = $query->getSingleScalarResult();
         $expAmount = explode(" ", $expresion);
-        $amount2 = \Pandco\Bundle\AppBundle\Service\Util\CurrencyUtil::fotmatToNumber($expAmount[1]);
+        $amount2 = \Tecnocreaciones\Bundle\ToolsBundle\Service\Tools\StringUtil::fotmatToNumber($expAmount[1]);
         if (version_compare($count, $amount2, $expAmount[0]) === false) {
             throw new Exception(sprintf("Expected '%s' but there quantity is '%s'.", $expresion, $count));
         }
@@ -568,7 +571,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 $e2 = explode("=", $value);
 //                var_dump($e2);
                 if (count($e2) == 1) {
-                    $commandsParams[] = $e2[0];
+                    $commandsParams[$e2[0]] = true;
                 } else if (count($e2) == 2) {
                     $commandsParams[$e2[0]] = $e2[1];
                 }
@@ -589,6 +592,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * Parsea un parametro para ver si es una constante o una traduccion con parametros
      * Constante seria "Pandco\Bundle\AppBundle\Model\Base\TransactionItemInterface__STATUS_FINISH"
      * Traduccion con 'validators.invalid.phone.nro::{"%phoneNro%":"02475550001"}'
+     * Fecha con now() y date::Y-m-d (date::2019-01-20)
      * @param type $value
      * @param array $parameters
      * @param type $domain

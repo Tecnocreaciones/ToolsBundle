@@ -8,15 +8,21 @@ use Tecnoready\Common\Model\Tab\TabContent;
 use Tecnoready\Common\Service\ObjectManager\ObjectDataManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\NotesType;
+use RuntimeException;
+use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Manejador de tabs
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class TabsManager
+class TabsManager implements ConfigureInterface
 {
     use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
+    use \Tecnoready\Common\Service\ObjectManager\TraitConfigure;
     
     /**
      * @var RequestStack
@@ -42,28 +48,50 @@ class TabsManager
         $this->options = $options;
     }
     
+    public function configure($objectId, $objectType)
+    {
+        $this->objectId = $objectId;
+        $this->objectType = $objectType;
+        $this->getObjectDataManager()->configure($this->objectId, $this->objectType);
+    }
+    
     /**
      * @return Tab
      */
-    public function createNew(array $options = [],$objectId, $objectType)
+    public function createNew(array $options = [])
     {
+        if(!in_array($this->objectType,$this->options["object_types"])){
+            throw new RuntimeException(sprintf("The objectType '%s' is not managed. Olny are '%s'",$this->objectType,implode(",",$this->options["object_types"])));
+        }
         $request = $this->requestStack->getCurrentRequest();
         $this->parametersToView = [];
-        $this->getObjectDataManager()->configure($objectId, $objectType);
+        $this->getObjectDataManager()->configure($this->objectId, $this->objectType);
         $tab = new Tab($options);
         $tab->setRequest($request);
         $this->tab = $tab;
         $this->parametersToView["objectDataManager"] = $this->getObjectDataManager();
-        $this->parametersToView["parameters_to_route"] = [
-            "_conf" => [
-                "returnUrl" => $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
-                "objectId" => $objectId,
-                "objectType" => $objectType,
-            ]
-        ];
+        $this->parametersToView["tabsManager"] = $this;
+        $this->parametersToView["parameters_to_route"] = $this->getParametersToRoute();
         return $tab;
     }
     
+    /**
+     * Retorna los parametros para la ruta del manejador de objetos
+     * @return array
+     */
+    private function getParametersToRoute()
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        return [
+            "_conf" => [
+                "returnUrl" => $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
+                "objectId" => $this->objectId,
+                "objectType" => $this->objectType,
+            ]
+        ];
+    }
+
+
     public function addTabContent(TabContent $tabContent)
     {
         $this->tab->addTabContent($tabContent);
@@ -88,9 +116,6 @@ class TabsManager
         $folder = "uploaded";
         $this->getObjectDataManager()->documents()->folder($folder);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = $folder;
-//        $this->parametersToView["form"] = function(){
-//            
-//        };
         $this->parametersToView["form"] = $this->createForm(DocumentsType::class)->createView();
     }
     
@@ -105,11 +130,31 @@ class TabsManager
             "add_content_div" => false,
             "template" => $this->options["history_manager"]["template"],
             "title" => $this->trans("messages.tab.history", [], "messages"),
+            "icon" => "vf vf-history-clock",
         ]);
         $options = $resolver->resolve($options);
         $tabContentHistory = new TabContent($options);
         $this->tab->addTabContent($tabContentHistory);
-        
+        return $tabContentHistory;
+    }
+    
+    /**
+     * Añade la tab de historiales
+     * @param array $options
+     */
+    public function addNotes(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "add_content_div" => false,
+            "template" => $this->options["note_manager"]["template"],
+            "title" => $this->trans("messages.tab.notes", [], "messages"),
+            "icon" => "vf vf-draft",
+        ]);
+        $options = $resolver->resolve($options);
+        $tabContentHistory = new TabContent($options);
+        $this->tab->addTabContent($tabContentHistory);
+        $this->parametersToView["form_notes"] = $this->createForm(NotesType::class)->createView();
     }
     
     /**
@@ -120,9 +165,58 @@ class TabsManager
     {
         $tab = $this->tab;
         $tab->setParameters($this->parametersToView);
-        $this->tab = null;
-        $this->parametersToView = [];
+        $tab->resolveCurrentTab();
+        //$this->tab = null;
+        //$this->parametersToView = [];
         return $tab;
+    }
+    
+    /**
+     * Renderiza el modulo para generar archivos del moduloe
+     * @param $entity
+     * @param type $idChain
+     * @return type
+     */
+    public function renderFilesGenerated($entity) {
+        $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
+        $choices = [];
+        $models = $chain->getModels();
+        foreach ($models as $model) {
+            $choices[$this->trans($model->getName())." [".strtoupper($model->getFormat())."]"] = $model->getName();
+        }
+        $form = $this->createForm(ExporterType::class,$choices);
+        $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
+        return $this->container->get('templating')->render($this->options["exporter"]["template"], 
+            [
+                'chain' => $chain,
+                'entity' => $entity,
+                'objectDataManager' => $this->getObjectDataManager(),
+                'form' => $form->createView(),
+                'tab' => $this->tab,
+                'parametersToView' => $this->parametersToView,
+            ]
+        );
+    }
+    
+    /**
+     * Retorna la url de descarga de un archivo
+     * @param type $fileName
+     * @param type $disposition
+     * @return type
+     */
+    public function documentsDownloadUrl($fileName,$disposition = \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,$folder = "uploaded")
+    {
+        $url = null;
+        $this->getObjectDataManager()->documents()->folder($folder);
+        $file = $this->getObjectDataManager()->documents()->get($fileName);
+        if($file !== null){
+            $params = $this->getParametersToRoute();
+            $params["_conf"]["folder"] = $folder;
+            $params["filename"] = $fileName;
+            $params["disposition"] = $disposition;
+            $url = $this->generateUrl("tabs_object_manager_documents_get",$params);
+        }
+        return $url;
     }
     
     /**
@@ -159,5 +253,23 @@ class TabsManager
     protected function createForm($type, $data = null, array $options = array())
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
+    }
+    
+    /**
+     * Generates a URL from the given parameters.
+     *
+     * @param string $route         The name of the route
+     * @param array  $parameters    An array of parameters
+     * @param int    $referenceType The type of reference (one of the constants in UrlGeneratorInterface)
+     *
+     * @return string The generated URL
+     *
+     * @see UrlGeneratorInterface
+     *
+     * @final since version 3.4
+     */
+    protected function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
 }

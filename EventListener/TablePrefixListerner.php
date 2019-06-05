@@ -3,6 +3,7 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\EventListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 
 /**
  * Description of TablePrefixListerner
@@ -25,7 +26,7 @@ class TablePrefixListerner implements \Doctrine\Common\EventSubscriber {
     }
         
     public function getSubscribedEvents() {
-        return array('loadClassMetadata');
+        return array(Events::loadClassMetadata);
     }
     
     public function loadClassMetadata(LoadClassMetadataEventArgs $args)

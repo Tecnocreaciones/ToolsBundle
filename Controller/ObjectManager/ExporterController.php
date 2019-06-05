@@ -2,31 +2,36 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Controller\ObjectManager;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use FOS\RestBundle\Util\Codes;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
 
 /**
- * Controlador de manejador de documentos
+ * Controlador para exportar los documentos
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class DocumentManagerController extends ManagerController
+class ExporterController extends ManagerController
 {
-    public function uploadAction(Request $request)
+    /**
+     * Genera un documento
+     */
+    public function generateAction(Request $request) 
     {
         $objectDataManager = $this->getObjectDataManager($request);
-        
-        $form = $this->createForm(DocumentsType::class);
+        $chain = $objectDataManager->exporter()->resolveChainModel();
+        $choices = [];
+        $models = $chain->getModels();
+        foreach ($models as $model) {
+            $choices[$model->getName()] = $model->getName();
+        }
+        $form = $this->createForm(ExporterType::class,$choices);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            $documents = $form->get("documents")->getData();
-            $comments = $form->get("comments")->getData();
-            foreach ($documents as $document) {
-                $objectDataManager->documents()->upload($document,[
-                    "comments" => $comments,
-                ]);
-            }
+            $name = $form->get("name")->getData();
+            $objectDataManager->exporter()->generateWithSource($name);
         }
         return $this->toReturnUrl();
     }
@@ -40,13 +45,12 @@ class DocumentManagerController extends ManagerController
     
     public function getAction(Request $request)
     {
-        $fileName = $request->get("filename");
         $objectDataManager = $this->getObjectDataManager($request);
-        $disposition = $request->get("disposition",ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-        $file = $objectDataManager->documents()->get($fileName);
+        $file = $objectDataManager->documents()->get($request->get("filename"));
         $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
-        $response->setContentDisposition($disposition);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         return $response;
     }
     
+
 }

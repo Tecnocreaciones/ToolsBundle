@@ -41,7 +41,7 @@ class TecnocreacionesToolsExtension extends Extension
             $tablePrefixListerner
                     ->addArgument($tablePrefix)
                     ->addArgument($tableNameLowercase)
-                    ->addTag('doctrine.event_subscriber')
+                    ->addTag('doctrine.event_subscriber',["priority" => 10000])
                     ;
             $tablePrefixListerner->addMethodCall("setConfig",array($config['table_prefix']));
             $container->setDefinition('tecnocreaciones_tools.table_prefix_subscriber', $tablePrefixListerner);
@@ -221,10 +221,7 @@ class TecnocreacionesToolsExtension extends Extension
            $container->setParameter("tecnoready.swiftmailer_db.spool.email_queue_class", $config['database_spool']["email_queue_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.email_template_class", $config['database_spool']["email_template_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.email_component_class", $config['database_spool']["email_component_class"]);
-        }
-        
-        if($config['exporter']['enable'] === true){
-           $loaderYml->load('services/exporter.yml');
+           $container->setParameter("tecnoready.swiftmailer_db.email_repository_manager", $config['database_spool']["email_repository_manager"]);
         }
         
         if($config['tabs']['enable'] === true){
@@ -247,6 +244,12 @@ class TecnocreacionesToolsExtension extends Extension
         $container->setParameter('tecnocreaciones_tools.service.link_generator.enable', $config['link_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.link_generator.color', $config['link_generator']['color']);        
         $container->setParameter('tecnocreaciones_tools.service.search.enable', $config['search']['enable']);
-        $container->setParameter('tecnocreaciones_tools.service.exporter.enable', $config['exporter']['enable']);
+        $container->setParameter('tecnocreaciones_tools.service.database_spool.enable', $config['database_spool']['enable']);
+
+        if($config['statistic_manager']['enable'] === true){
+            $loaderYml->load('services/statistic.yml');
+            $container->setParameter('tecnocreaciones_tools.service.statistic',$config['statistic_manager']);
+        }
+        $container->setParameter('tecnocreaciones_tools.service.statistic.enable',$config['statistic_manager']['enable']);        
     }
 }
