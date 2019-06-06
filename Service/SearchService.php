@@ -165,19 +165,16 @@ class SearchService
         if(empty($groupFilter)){
             return "Error de filtro: ".$filterName." - ref: ".$filter->getRef();
         }
+        
         $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
-        $this->twig->addGlobal("currentFilter", $filter);
-        $this->twig->addGlobal("searchService", $this);
-//        $reflection = new \ReflectionClass($template);
         
-//        var_dump($reflection->getFileName());
-//        var_dump($template);
-                
-        
-        $filterName = "get".$filterName;
-//        $subject = $template->renderBlock($filterName,[]);
-//        var_dump($filter);
-        return (string)$template->$filterName($filter->getLabel(),$filter->getModelName());
+        return $template->renderBlock($filterName,[
+            "id" => null,
+            "label" => $filter->getLabel(),
+            "modelName" => $filter->getModelName(),
+            "searchService" => $this,
+            "currentFilter" => $filter
+        ]);
     }
 
     public function getTransDefaultDomains() {
