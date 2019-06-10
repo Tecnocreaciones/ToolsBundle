@@ -16,3 +16,4 @@ documents.generated.model.placeholder: 'Seleccione un modelo'
 title.tooltip.show.element: "Ver"
 messages.tab.notes: 'Notas'
 email.component.empty.select: '< Seleccione >'
+"Loading content": "Por favor espere, cargando contenido..."
