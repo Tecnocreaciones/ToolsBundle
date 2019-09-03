@@ -284,6 +284,10 @@ abstract class BaseOAuth2Context implements Context
         $this->dataContext->setRequestBody('username', $this->parameters['oauth2']['username']);
         $this->dataContext->setRequestBody('password', $this->parameters['oauth2']['password']);
     }
+    
+    protected function trans($id, array $parameters = array(), $domain = 'flashes') {
+        return $this->getContainer()->get('translator')->trans($id, $parameters, $domain);
+    }
 
     public function getKernel()
     {
