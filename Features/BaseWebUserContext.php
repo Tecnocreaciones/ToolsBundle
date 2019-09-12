@@ -85,7 +85,7 @@ abstract class BaseWebUserContext extends MinkContext
      /**
      * Se dirige a una ruta de symfony
      * Example: Given I am on "withdraw_config_smart" page
-     * @Given I am on ":route" page
+     * @Given I am on ":route" page 
      */
     public function iAmOnPage($route)
     {
@@ -94,6 +94,7 @@ abstract class BaseWebUserContext extends MinkContext
         if($requestBody != null){
             $parameters = $requestBody;
         }
+        var_dump($this->generatePageUrl($route,$parameters));
         $this->getSession()->visit($this->generatePageUrl($route,$parameters));
         if($this->isOpenBrowser()){
             $this->getSession()->wait(2000);
@@ -271,8 +272,8 @@ abstract class BaseWebUserContext extends MinkContext
     */
    public function iWaitForTextToAppear($text)
    {
+       
        $text = $this->dataContext->parseParameter($text,[],"titles");
-//                   var_dump($text);
        $this->spin(function($context) use ($text) {
            /** @var $context FeatureContext */
            return $context->getSession()->getPage()->hasContent($text);

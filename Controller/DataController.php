@@ -23,6 +23,7 @@ class DataController extends \FOS\RestBundle\Controller\FOSRestController
 {
     public function searchAction(Request $request) 
     {
+        $em = $this->getDoctrine()->getManager();
         $query = $request->get("q");
         $master = $request->get("m");
         if(empty($master)){
@@ -34,12 +35,17 @@ class DataController extends \FOS\RestBundle\Controller\FOSRestController
         }
         if(!$useDataManager){
             $criteria = [
-                'query' => $query,
+                'query' => $query, 
             ];
-            $paginator = $this->get($master)->findForSearch($criteria);
+            if(class_exists($master)){
+                $paginator = $em->getRepository($master)->findForSearch($criteria);;
+            }else{
+                $paginator = $this->get($master)->findForSearch($criteria);
+            }
             $paginator->setCurrentPage($request->get("page",1));
             $paginator->setDefaultFormat(\Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator::FORMAT_ARRAY_STANDARD);
             return new \Symfony\Component\HttpFoundation\JsonResponse($paginator->toArray());
+            
         }else {
             $config = $this->container->getParameter("tecnocreaciones_tools.search.config");
             $view = $this->view();
