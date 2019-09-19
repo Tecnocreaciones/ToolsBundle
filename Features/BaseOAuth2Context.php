@@ -18,9 +18,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 abstract class BaseOAuth2Context implements Context
 {
 
+    /**
+     *
+     * @var DataContext
+     */
+    protected $dataContext;
+    
     protected $serverParameters;
     protected $lastRequestBody;
     protected $parameters;
+    protected $requestFiles;
 
     /**
      *
@@ -515,6 +522,30 @@ abstract class BaseOAuth2Context implements Context
         $propertiesName = explode(",", $propertiesName);
         foreach ($propertiesName as $propertyName) {
             $this->theResponseHasAProperty($propertyName);
+        }
+    }
+    
+    /**
+     * Verifica que exista un mensaje de error
+     * @example And the response has a errors property and contains "Por motivos de seguridad, debe validar su cuenta mPandco antes de usar sus tarjetas de crédito."
+     * @Then the response has a errors property and contains :message
+     */
+    public function theResponseHasAErrorsPropertyAndContains($message) {
+        $message = $this->dataContext->parseParameter($message, [], "validators");
+        $errors = $this->getPropertyValue("errors");
+        $found = false;
+        if (is_array($errors['errors'])) {
+            foreach ($errors['errors'] as $error) {
+                if ($error === $message) {
+                    $found = true;
+                    break;
+                }
+            }
+        } else {
+            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
+        }
+        if ($found === false) {
+            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
         }
     }
     

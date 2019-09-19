@@ -658,6 +658,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @return \Symfony\Bundle\FrameworkBundle\Client
      */
     function getClient() {
+        if($this->client === null){
+            $this->createClient();
+        }
         return $this->client;
     }
 
