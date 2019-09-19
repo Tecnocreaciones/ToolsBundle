@@ -8,6 +8,7 @@ use Exception;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Behat\Gherkin\Node\PyStringNode;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Base para peticiones oauth2
@@ -356,6 +357,165 @@ abstract class BaseOAuth2Context implements Context
     public function iMakeAAccessTokenRequestWithGivenRefreshToken() {
         $this->dataContext->setRequestBody('refresh_token', $this->refreshToken);
         $this->iMakeAAccessTokenRequest();
+    }
+    
+        /**
+     * Ejecuta un request con la ultima data enviada en otro request
+     * @example When I send last request body to "POST /api/payment-intent/execute/request.json"
+     * @When I send last request body to :fullUrl
+     */
+    public function iSendLastRequestBodyTo($fullUrl)
+    {
+        $this->iRequest($fullUrl, $this->lastRequestBodySave);
+    }
+    /**
+     * Realiza una peticion a la API Rest
+     * @When I request :fullUrl with options :options
+     */
+    public function iRequestOptions($fullUrl, $options) {
+        $options = json_decode($options, true);
+        $this->iRequest($fullUrl,null,null,$options);
+    }
+    
+    /**
+     * Realiza una peticion a la API Rest
+     * @When I request :fullUrl
+     */
+    public function iRequest($fullUrl, array $parameters = null, array $files = null,array $options = []) {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "clear_request" => true,
+        ]);
+        $options = $resolver->resolve($options);
+        $explode = explode(" ", $fullUrl);
+        $method = $explode[0];
+        $url = $explode[1];
+        if ($parameters === null) {
+            $parameters = $this->dataContext->getRequestBody();
+        }
+        if ($files === null) {
+            $files = $this->requestFiles;
+        }
+        if ($parameters === null) {
+            $parameters = [];
+        }
+        if ($files === null) {
+            $files = [];
+        }
+        $this->dataContext->getClient()->request($method, $url, $parameters, $files);
+        $this->response = $this->dataContext->getClient()->getResponse();
+        if($options["clear_request"] === true){
+            $this->initRequest();
+        }
+        $contentType = (string) $this->response->headers->get('Content-type');
+        if ($this->response->getStatusCode() != 404 && !empty($contentType) && $contentType !== 'application/json') {
+            throw new \Exception(sprintf("Content-type must be application/json received '%s' \n%s", $contentType, $this->echoLastResponse()));
+        }
+        $content = $this->response->getContent();
+        $this->data = [];
+        if ($content) {
+            $this->data = json_decode($this->response->getContent(), true);
+            $this->lastErrorJson = json_last_error();
+            if ($this->response->getStatusCode() != 404 && $this->lastErrorJson != JSON_ERROR_NONE) {
+                throw new \Exception(sprintf("Error parsing response JSON " . "\n\n %s", $this->echoLastResponse()));
+            }
+        }
+        if (isset($this->data["id"])) {
+            $this->dataContext->setScenarioParameter("%lastId%", $this->data["id"]);
+        }
+        $this->dataContext->setScenarioParameter("request",$this->data);
+        $this->dataContext->restartKernel();
+    }
+    
+    /**
+     * Verifica que en la propiedad global contiene un error
+     * @example Then the response has a errors in property "nombre"
+     * @Then the response has a errors in property :propertyName
+     */
+    public function theResponseHasAErrorsInProperty($propertyName) {
+        $this->theResponseHasAErrorsInPropertyAndContains($propertyName);
+    }
+
+    /**
+     * @Then the response has a errors in property :propertyName and not contains :message
+     */
+    public function theResponseHasAErrorsInPropertyAndNotContains($propertyName, $message = null) {
+        $this->theResponseHasAErrorsInPropertyAndContains($propertyName,$message,true);
+    }
+    
+    /**
+     * Verifica que una propiedad x contiene un error
+     * @example And the response has a errors in property "number" and contains "El número de la cuenta bancaria debe tener minimo 19 digitos."
+     * @Then the response has a errors in property :propertyName and contains :message
+     */
+    public function theResponseHasAErrorsInPropertyAndContains($propertyName, $message = null,$negate = false) {
+        $properties = explode(".", $propertyName);
+        $errors = $this->getPropertyValue("errors");
+        $children = $errors["children"];
+        if (count($properties) > 1) {
+            $data = $children;
+            foreach ($properties as $property) {
+//                echo(var_export($data,true));
+                if (isset($data[$property]) && isset($data[$property]["children"])) {
+                    $data = $data[$property]["children"];
+                }
+                if (isset($data[$property]) && isset($data[$property]["errors"])) {
+                    $children = $data;
+                    $propertyName = $property;
+                    break;
+                }
+            }
+        }
+        if (!isset($children[$propertyName])) {
+            throw new Exception(sprintf("The response no contains error property '%s' \n Available are %s", $propertyName, implode(", ", array_keys($children))));
+        }
+        $message = $this->dataContext->parseParameter($message, [], 'validators');
+        if (isset($children[$propertyName]["errors"])) {
+            if ($message === null) {
+                if (count($children[$propertyName]["errors"]) == 0) {
+                    throw new Exception(sprintf("The error property no contains errors in '%s', response with '%s'", $propertyName, var_export($errors, true)));
+                }
+            } else {
+                $found = false;
+                foreach ($children[$propertyName]["errors"] as $error) {
+                    if ($error === $message) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if ($negate === false && $found === false) {
+                    throw new Exception(sprintf("The error property no contains error message '%s', response with '%s'", $propertyName, implode(", ", $children[$propertyName]["errors"])));
+                }else if ($negate === true && $found === true) {
+                    throw new Exception(sprintf("The error property contains error message '%s', response with '%s'", $propertyName, implode(", ", $children[$propertyName]["errors"])));
+                }
+            }
+        } else {
+            throw new Exception(sprintf("The error property no contains errors '%s', response with '%s'", $propertyName, var_export($errors, true)));
+        }
+    }
+
+    /**
+     * Afirma que la respuesta es un paginador
+     * @Then the response is a paginator
+     */
+    public function theResponseIsAPaginator() {
+        $this->theResponseHasAProperty("links");
+        $this->theResponseHasAProperty("meta");
+        $this->theResponseHasAProperty("data");
+        \assertCount(3, $this->data);
+//        echo json_encode($this->data,JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Verifica que el ultimo resultado tenga unas propiedades separadas por coma (id,name,description)
+     * @example And the response has a "id,number,secure_label,email,bank,alias,digital_account" properties
+     * @Then the response has a :propertiesName properties
+     */
+    public function theResponseHasAProperties($propertiesName) {
+        $propertiesName = explode(",", $propertiesName);
+        foreach ($propertiesName as $propertyName) {
+            $this->theResponseHasAProperty($propertyName);
+        }
     }
     
     protected function trans($id, array $parameters = array(), $domain = 'flashes') {
