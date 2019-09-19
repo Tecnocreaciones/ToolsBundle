@@ -150,6 +150,7 @@ class SearchService
                 break;
             }
         }
+
         return $foundGroupFilter;
     }
     
@@ -162,10 +163,10 @@ class SearchService
      */
     public function renderFilter($groupFilter,$filterName,\Tecnocreaciones\Bundle\ToolsBundle\Model\Search\BaseFilter $filter)
     { 
+
         if(empty($groupFilter)){
-            return "Error de filtro: ".$filterName." - ref: ".$filter->getRef();
+             return "Error de filtro: ".$filterName." - ref: ".$filter->getRef();
         }
-        
         $template = $this->twig->loadTemplate($groupFilter->getMacroTemplate());
         
         return $template->renderBlock($filterName,[
