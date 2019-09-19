@@ -7,6 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 use Exception;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
+use Behat\Gherkin\Node\PyStringNode;
 
 /**
  * Base para peticiones oauth2
@@ -283,6 +284,78 @@ abstract class BaseOAuth2Context implements Context
     public function iAddResourceOwnerCredentials() {
         $this->dataContext->setRequestBody('username', $this->parameters['oauth2']['username']);
         $this->dataContext->setRequestBody('password', $this->parameters['oauth2']['password']);
+    }
+    
+    /**
+     * @When I log in with client credentials
+     */
+    public function iLogInWithClientCredentials() {
+        $this->iCreateOAuth2Request();
+        $this->dataContext->setRequestBody('grant_type', 'client_credentials');
+        $this->iAddResourceOwnerCredentials();
+        $this->iMakeAAccessTokenRequest();
+        $this->theResponseStatusCodeIs('200');
+        $this->theResponseHasTheOAuth2Format();
+        $this->dataContext->getClient()->setServerParameter("HTTP_AUTHORIZATION", sprintf("Bearer %s", $this->getPropertyValue("access_token")));
+    }
+    
+    /**
+     * @When I log in with password
+     */
+    public function iLogInWithPassword() {
+        $this->iCreateOAuth2Request();
+        $this->dataContext->setRequestBody('grant_type', 'password');
+        $this->iAddResourceOwnerCredentials();
+        $this->iMakeAAccessTokenRequest();
+        $this->theResponseStatusCodeIs('200');
+        $this->theResponseHasTheOAuth2Format();
+    }
+    
+    /**
+     * Agrega data tipo json al siguiente request
+     * @Given I add the request data:
+     */
+    public function iAddTheRequestData(PyStringNode $string,$andSave = false) {
+//        $string = $this->replaceParameters((string) $string);
+//        $parameters = json_decode($string, true);
+        $parameters = json_decode((string) $string, true);
+        if ($parameters === null) {
+            throw new Exception(sprintf("Json invalid: %s, %s", json_last_error_msg(), json_last_error()));
+        }
+        $this->dataContext->replaceParameters($parameters);
+        foreach ($parameters as $key => $row) {
+            $this->dataContext->setRequestBody($key, $row);
+        }
+        if($andSave === true){
+            $this->lastRequestBodySave = $parameters;
+        }else{
+            $this->lastRequestBodySave = null;
+        }
+    }
+    
+     /**
+     * @Given that I have an refresh token
+     */
+    public function thatIHaveAnRefreshToken() {
+        $this->dataContext->createClient();
+        $parameters = $this->parameters['oauth2'];
+        $parameters['grant_type'] = 'password';
+        $url = $this->parameters['token_url'];
+        $this->dataContext->getClient()->request('GET', $url, $parameters);
+        $response = $this->dataContext->getClient()->getResponse();
+        $data = json_decode($response->getContent(), true);
+        if (!isset($data['refresh_token'])) {
+            throw new Exception(sprintf("Error refresh token. Response: %s", $response->getContent()));
+        }
+        $this->refreshToken = $data['refresh_token'];
+    }
+    
+    /**
+     * @When I make a access token request with given refresh token
+     */
+    public function iMakeAAccessTokenRequestWithGivenRefreshToken() {
+        $this->dataContext->setRequestBody('refresh_token', $this->refreshToken);
+        $this->iMakeAAccessTokenRequest();
     }
     
     protected function trans($id, array $parameters = array(), $domain = 'flashes') {
