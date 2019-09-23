@@ -9,6 +9,8 @@ use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * Base para peticiones oauth2
@@ -41,6 +43,17 @@ abstract class BaseOAuth2Context implements Context
      */
     protected $data;
     protected $kernel;
+    
+    /**
+     * Localizador de archivos en %kernel.root_dir%/Resources
+     * @var FileLocator
+     */
+    protected $fileLocator;
+
+    public function __construct(FileLocator $fileLocator)
+    {
+        $this->fileLocator = $fileLocator;
+    }
 
     public function setDataContext(BaseDataContext $dataContext)
     {
@@ -549,6 +562,46 @@ abstract class BaseOAuth2Context implements Context
         }
     }
     
+        /**
+     * Agrega archivos a partir del json al siguiente request
+     * @Given I add the request files:
+     */
+    public function iAddTheRequestF1iles(PyStringNode $string) {
+//        $string = $this->replaceParameters((string) $string);
+        $parameters = json_decode((string) $string, true);
+        if ($parameters === null) {
+            throw new \Exception(sprintf("Json invalid: %s, %s", json_last_error_msg(), json_last_error()));
+        }
+        $this->dataContext->replaceParameters($parameters);
+        foreach ($parameters as $key => $row) {
+            $this->requestFiles[$key] = $row;
+        }
+    }
+
+    /**
+     * Prepara un archivo y lo añade a un parametro para ser enviado por POST
+     * @Given a file :filepath name :nameParameter
+     */
+    public function aFileName($filepath, $nameParameter) {
+//        $filename = $this->getKernel()->locateResource($filepath);//deprecated
+        $filename = $this->fileLocator->locate($filepath);
+        $file = new \Symfony\Component\HttpFoundation\File\File($filename);
+        if (!$file->isFile() || !$file->isReadable()) {
+            throw new Exception(sprintf("The file '%s' is not exist or is not readable", $filename));
+        }
+        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $file->getBasename();
+        $fs = new \Symfony\Component\Filesystem\Filesystem();
+        $fs->copy($filename, $tmpFile);
+        if (!$fs->exists($tmpFile)) {
+            throw new Exception(sprintf("The tmp file '%s' is not exist", $tmpFile));
+        }
+
+        $file = new UploadedFile(
+                $tmpFile, $file->getFilename(), $file->getMimeType(), $file->getSize()
+        );
+        $this->dataContext->setScenarioParameter($nameParameter, $file);
+    }
+    
     protected function trans($id, array $parameters = array(), $domain = 'flashes') {
         return $this->getContainer()->get('translator')->trans($id, $parameters, $domain);
     }
@@ -572,5 +625,5 @@ abstract class BaseOAuth2Context implements Context
     {
         echo sprintf("\n\033[36m| %s\033[0m\n\n", strtr($string, ["\n" => "\n|  "]));
     }
-
+    
 }

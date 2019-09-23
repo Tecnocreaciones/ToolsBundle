@@ -261,6 +261,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 throw new Exception(sprintf("The scenario parameter '%s' is not defined", $key));
             }
         }
+        if($value !== null){
+            if(is_object($value) && method_exists($value,"getId")){
+                $value = $value->getId();
+            }
+        }
         return $value;
     }
 
