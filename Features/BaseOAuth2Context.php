@@ -602,6 +602,21 @@ abstract class BaseOAuth2Context implements Context
         $this->dataContext->setScenarioParameter($nameParameter, $file);
     }
     
+    /**
+     * Busca una propiedad y verifica que la cantidad de elmentos sea la deseada
+     * @example Then the response has a "transactions.0.pay_tokens" property and contains "= 0" values
+     * @Then the response has a :propertyName property and contains :expresion values
+     */
+    public function theResponseHasAPropertyAndContainsValues($propertyName, $expresion) {
+        $this->theResponseHasAPropertyAndItsTypeIs($propertyName, "array");
+        $value = $this->theResponseHasAProperty($propertyName);
+        $expresionExplode = explode(" ", $expresion);
+        $quantity = count($value);
+        if (version_compare($quantity, (int) $expresionExplode[1], $expresionExplode[0]) === false) {
+            throw new Exception(sprintf("Expected '%s' but there is '%s' elements.\n%s", $expresion, $quantity, var_export($value, true)));
+        }
+    }
+    
     protected function trans($id, array $parameters = array(), $domain = 'flashes') {
         return $this->getContainer()->get('translator')->trans($id, $parameters, $domain);
     }
