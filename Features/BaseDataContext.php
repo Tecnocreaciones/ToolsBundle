@@ -524,7 +524,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         if ($em->getFilters()->isEnabled('softdeleteable')) {
             $em->getFilters()->disable('softdeleteable');
         }
-        $query = $em->createQuery("DELETE FROM " . $this->userClass . " e WHERE e.username = '" . $username . "'");
+        $query = $em->createQuery("DELETE FROM " . $this->userClass . " e WHERE e.username = '" . $username . "' OR e.email='".$username."'");
         $query->execute();
         $em->flush();
 //        $em->clear();
@@ -622,6 +622,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $valueExplode = explode("__", $value);
         if (is_array($valueExplode) && count($valueExplode) == 2) {
 //            var_dump($valueExplode[0]);
+            $valueExplode[0] = str_replace("\\\\","\\", $valueExplode[0]);//Fix de clases con doble \\
             $reflection = new \ReflectionClass($valueExplode[0]);
             if (!$reflection->hasConstant($valueExplode[1])) {
                 throw new \RuntimeException(sprintf("The class '%s' no has a constant name '%s'", $valueExplode[0], $valueExplode[1]));
@@ -656,7 +657,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $this->requestBody = $body;
         return $this;
     }
-
+    
     /**
      * 
      *  \Symfony\Component\BrowserKit\Client

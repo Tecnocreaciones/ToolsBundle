@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Config\FileLocator;
 abstract class BaseOAuth2Context implements Context
 {
 
+    use TraitContext;
     /**
      *
      * @var DataContext
@@ -330,6 +331,7 @@ abstract class BaseOAuth2Context implements Context
         $this->iMakeAAccessTokenRequest();
         $this->theResponseStatusCodeIs('200');
         $this->theResponseHasTheOAuth2Format();
+        $this->dataContext->getClient()->setServerParameter("HTTP_AUTHORIZATION", sprintf("Bearer %s", $this->getPropertyValue("access_token")));
     }
     
     /**
