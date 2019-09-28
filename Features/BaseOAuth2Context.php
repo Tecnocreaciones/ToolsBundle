@@ -11,6 +11,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Config\FileLocator;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\ToolsUtils;
 
 /**
  * Base para peticiones oauth2
@@ -616,6 +617,38 @@ abstract class BaseOAuth2Context implements Context
         $quantity = count($value);
         if (version_compare($quantity, (int) $expresionExplode[1], $expresionExplode[0]) === false) {
             throw new Exception(sprintf("Expected '%s' but there is '%s' elements.\n%s", $expresion, $quantity, var_export($value, true)));
+        }
+    }
+    
+    /**
+     * @example And the response its type is "array" and contains "= 1" values
+     * @Then the response its type is :typeString and contains :expresion values
+     * @Then the response its type is :typeString
+     */
+    public function theResponseItsTypeIsAndContainsValues($typeString, $expresion = null) {
+        $value = $this->data;
+
+        // check our type
+        switch (strtolower($typeString)) {
+            case 'numeric':
+                if (is_numeric($value)) {
+                    break;
+                }
+            case 'array':
+                if (is_array($value)) {
+                    break;
+                }
+            case 'null':
+                if ($value === NULL) {
+                    break;
+                }
+            default:
+                throw new \Exception(sprintf("Property %s is not of the correct type: %s!\n\n %s", $propertyName, $typeString, $this->echoLastResponse()));
+        }
+        
+        if ($expresion !== null) {
+            $quantity = count($value);
+            ToolsUtils::testQuantityExp($expresion, $quantity);
         }
     }
     
