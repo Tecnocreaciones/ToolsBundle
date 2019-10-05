@@ -605,6 +605,13 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @throws \RuntimeException
      */
     public function parseParameter($value, $parameters = [], $domain = "flashes") {
+        if (is_string($value)) {
+            $jsonObject = json_decode((string) $value, true);
+            if(is_array($jsonObject)){
+                $this->replaceParameters($jsonObject);
+                return $jsonObject;
+            }
+        }
         if ($value === "now()") {
             return new \DateTime();
         }
