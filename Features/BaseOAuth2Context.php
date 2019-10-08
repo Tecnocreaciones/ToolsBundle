@@ -32,6 +32,11 @@ abstract class BaseOAuth2Context implements Context
     protected $lastRequestBody;
     protected $parameters;
     protected $requestFiles;
+    /**
+     * Headers adicionales
+     * @var array
+     */
+    protected $requestHeaders;
 
     /**
      *
@@ -150,6 +155,7 @@ abstract class BaseOAuth2Context implements Context
         $this->lastResponse = $this->response;
         $this->dataContext->initRequestBody();
         $this->requestFiles = [];
+        $this->requestHeaders = [];
     }
 
     /**
@@ -425,7 +431,12 @@ abstract class BaseOAuth2Context implements Context
         if ($files === null) {
             $files = [];
         }
-        $this->dataContext->getClient()->request($method, $url, $parameters, $files);
+        $server = $this->requestHeaders;
+        if(!is_array($server)){
+            $server = [];
+        }
+        
+        $this->dataContext->getClient()->request($method, $url, $parameters, $files,$server);
         $this->response = $this->dataContext->getClient()->getResponse();
         if($options["clear_request"] === true){
             $this->initRequest();
@@ -650,6 +661,19 @@ abstract class BaseOAuth2Context implements Context
             $quantity = count($value);
             ToolsUtils::testQuantityExp($expresion, $quantity);
         }
+    }
+    
+    /**
+     * Agrega un header al siguiente request
+     * Ejemplo: And I add header "HTTP_USER_AGENT" value "Google-HTTP-Java-Client"
+     * @Given I add header :header value :value
+     */
+    public function iAddHeaderValue($header, $value)
+    {
+        if(!is_array($this->requestHeaders)){
+            $this->requestHeaders = [];
+        }
+        $this->requestHeaders[$header] = $value;
     }
     
     protected function trans($id, array $parameters = array(), $domain = 'flashes') {
