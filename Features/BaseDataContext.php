@@ -228,7 +228,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @return type
      * @throws Exception
      */
-    public function getScenarioParameter($key, $checkExp = false) {
+    public function getScenarioParameter($key, $checkExp = false,$returnObject = false) {
         $parameters = $this->getScenarioParameters();
         // var_dump(array_keys($parameters));
         $user = null;
@@ -262,7 +262,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             }
         }
         if($value !== null){
-            if(is_object($value) && method_exists($value,"getId")){
+            if($returnObject == false && is_object($value) && method_exists($value,"getId")){
                 $value = $value->getId();
             }
         }
