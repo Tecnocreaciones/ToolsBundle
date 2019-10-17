@@ -176,11 +176,11 @@ trait TraitEntityRepository
     }
     
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder $qb
      *
      * @param array $sorting
      */
-    protected function applySorting(QueryBuilder $queryBuilder, array $sorting = null)
+    protected function applySorting(QueryBuilder $qb, array $sorting = null)
     {
         if (null === $sorting) {
             return;
@@ -188,7 +188,7 @@ trait TraitEntityRepository
 
         foreach ($sorting as $property => $order) {
             if (!empty($order)) {
-                $queryBuilder->orderBy($this->getPropertyName($property), $order);
+                $qb->orderBy($this->getPropertyName($property), $order);
             }
         }
     }
