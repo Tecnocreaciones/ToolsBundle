@@ -17,6 +17,7 @@ use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 //Version vieja PHPUnit\Framework\Assert
 if(!class_exists("PHPUnit\Framework\Assert") &&
@@ -347,7 +348,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         foreach ($table as $row) {
             $entity = new $entityClass();
             foreach ($row as $propertyPath => $value) {
-                $value = $this->parseParameter($value);
+                $value = $this->parseParameter($value,[],"flashes",[
+                    "return_object" => true,
+                ]);
                 $this->accessor->setValue($entity, $propertyPath, $value);
             }
             $this->saveEntity($entity, true);
@@ -604,7 +607,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @return type
      * @throws \RuntimeException
      */
-    public function parseParameter($value, $parameters = [], $domain = "flashes") {
+    public function parseParameter($value, $parameters = [], $domain = "flashes",array $options = []) {
         if (is_string($value)) {
             $jsonObject = json_decode((string) $value, true);
             if(is_array($jsonObject)){
@@ -612,6 +615,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 return $jsonObject;
             }
         }
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "return_object" => false,
+        ]);
+        $options = $resolver->resolve($options);
         if ($value === "now()") {
             return new \DateTime();
         }
@@ -636,7 +644,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             }
             $value = $reflection->getConstant($valueExplode[1]);
         } else if ($this->isScenarioParameter($value)) {
-            $value = $this->getScenarioParameter($value);
+            $value = $this->getScenarioParameter($value,false,$options["return_object"]);
         } else {
             if ($parameters === null) {
                 $parameters = [];
