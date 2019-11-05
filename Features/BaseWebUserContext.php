@@ -94,7 +94,7 @@ abstract class BaseWebUserContext extends MinkContext
         if($requestBody != null){
             $parameters = $requestBody;
         }
-        var_dump($this->generatePageUrl($route,$parameters));
+        
         $this->getSession()->visit($this->generatePageUrl($route,$parameters));
         if($this->isOpenBrowser()){
             $this->getSession()->wait(2000);
