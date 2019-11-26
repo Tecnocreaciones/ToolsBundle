@@ -30,9 +30,13 @@ class ExporterController extends ManagerController
         $form = $this->createForm(ExporterType::class,$choices);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
+            $options = [
+                "fileName" => $request->get("fileName")
+            ];
             $name = $form->get("name")->getData();
-            $objectDataManager->exporter()->generateWithSource($name);
+            $objectDataManager->exporter()->generateWithSource($name,$options);
         }
+        
         return $this->toReturnUrl();
     }
     
