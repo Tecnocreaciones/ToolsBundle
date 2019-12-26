@@ -24,7 +24,7 @@ abstract class BaseOAuth2Context implements Context
     use TraitContext;
     /**
      *
-     * @var DataContext
+     * @var BaseDataContext
      */
     protected $dataContext;
     
