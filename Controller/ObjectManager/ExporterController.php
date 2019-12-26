@@ -55,6 +55,14 @@ class ExporterController extends ManagerController
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         return $response;
     }
-    
 
+    public function downloadAction(Request $request)
+    {
+        $objectDataManager = $this->getObjectDataManager($request);
+        $file = $objectDataManager->documents()->get($request->get("filename"));
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($file->getRealPath());
+        $response->setContentDisposition(\Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        return $response;
+    }
 }
