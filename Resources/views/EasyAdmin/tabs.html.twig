@@ -1,0 +1,153 @@
+<ul class="nav nav-tabs" style="margin: 0;">
+    <li class="tab-title">
+        {% if tab.icon %}<i class="{{ tab.icon }}"></i>{% else %}<i class="fa fa-check"></i>{% endif %}&nbsp;<span>{{ tab.name|trans }}</span>
+    </li>
+    <li>
+        <ul id="{{ tab.id }}" class="nav nav-tabs" style="margin: 0;">
+            {% for tabContent in tab.tabsContent if tabContent.type == constant("Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::TAB_CONTENT") %}
+                <li {% if tabContent.active %}class="active"{% endif%}>
+                    {% set tabTitle = tabContent.title|trans %}
+                    <a data-toggle="tab" href="#{{ tabContent.id }}" title="{{ tabTitle }}" {% if tabContent.route is not null %}tab-ajax="true" data-url="{{ url(tabContent.route,tabContent.routeParameters) }}"{% else %}tab-ajax="false"{% endif %}>
+                        {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}{{ tabTitle }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>
+<div class="tab-content">
+    {% for tabContent in tab.tabsContent if tabContent.type == constant("Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::TAB_CONTENT") %}
+        <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%}" id="{{ tabContent.id }}">
+            {% for field, metadata in tabContent.fields %}
+                {% if metadata.type == "divider"%}
+                    {% include metadata.template %}
+                {% else %}
+                    {% include 'TecnocreacionesToolsBundle:EasyAdmin:field_show.html.twig' %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+<div id="lo-{{ tab.id }}" class="hide">
+    <div class="tab-pane l-loading-container">
+        {{ "Loading content"|trans }}
+        <div class='loading'><p class='blocktext'>
+                
+                <span class='ellipsis_animated-inner'>
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+            </span></p></div></div>
+</div>
+<script>
+    if(tabsService === undefined){
+        var tabsService = {
+            id: null,
+            isReloading: false,
+            forceLoad: false,
+            lastTabContentId: null,
+            setId: function(id){
+                this.id = id;
+            },
+            reload: function(){
+                this.isReloading = true;
+                $("#"+tabsService.id+" > li.active > a").dblclick();
+            },
+            done: function(){
+                this.isReloading = false;
+            },
+            loading: function(){
+                $("#"+tabsService.id).html($("#lo-"+tabsService.id).html());
+            },
+            loadContent: function(url,tabContentId,parameters){
+                if(tabContentId){
+                    this.lastTabContentId = tabContentId;
+                }
+                var self = $(this.lastTabContentId);
+                if(!parameters){
+                    parameters = {};
+                }
+                parameters["ajax"] = "true";
+                var qs = jQuery.param( parameters );
+                url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
+                $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());
+                $(this.lastTabContentId).load(url, function(response, status, xhr){
+                    $('#'+tabsService.id).tab(); //reinitialize tabs
+                    if(status == "error"){
+                        self.html("<b>{{ "modal.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
+                    }else if(status == "success"){
+                        self.data("loaded",true);
+                    }
+                });
+            }
+        };
+    }
+    $(function() {
+        tabsService.setId("{{ tab.id }}");
+        $('[tab-ajax="true"]').dblclick(function(e) {
+            e.preventDefault();
+            tabsService.forceLoad = true;
+            $(this).click();
+        });
+        var currentTabRequest = null;
+        $('[data-toggle="tab"]').click(function(e) {
+            e.preventDefault();
+            $this = $(this);
+            if($this.parent().hasClass("active") == true){
+                clearTimeout(currentTabRequest);
+                return;
+            }
+            var tabContent = $this.attr('href');
+            var current = jQuery.param({ {{ constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
+            clearTimeout(currentTabRequest);
+            currentTabRequest = setTimeout(function(){  
+                $.ajax({
+                    url: "{{ path("easyadmin_tab") }}?"+current
+                });
+            }, 2000);
+        });
+        $('[tab-ajax="true"]').click(function(e) {
+            e.preventDefault();
+            $this = $(this);
+            var tabContent = $(this).attr('href');
+            var tabContentObj = $(tabContent);
+            var loaded = tabContentObj.data("loaded");
+            if(tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true){
+                return;
+            }
+            if(tabsService.forceLoad === false && loaded === true){
+                return;
+            }
+            tabsService.forceLoad = false;
+            tabsService.done();
+            var loadurl = $(this).attr('data-url');
+            var current = $this.parent().parent().attr("id")+tabContent;
+            tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::NAME_CURRENT_TAB') }}':current});
+        });
+        tabsService.forceLoad = true;
+        tabsService.reload();
+    });
+</script>
+<style>
+    .tab-title {
+        padding: 11px;
+        background-color: #0071BD;
+        color: #fff;
+    }
+    .tab-title span {
+        vertical-align: middle;
+    }
+    .tab-content {
+        background-color: #ffffff;
+        padding: 16px 12px;
+        position: relative;
+        -webkit-box-shadow: 1px 0 10px 1px rgba(0, 0, 0, 0.3);
+        -moz-box-shadow: 1px 0 10px 1px rgba(0, 0, 0, 0.3);
+        box-shadow: 1px 0 10px 1px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+        min-height: 16em;
+    }
+    .hide {
+        display: none;
+    }
+</style>

@@ -1,0 +1,30 @@
+{% block stylesheets '' %}
+    
+<div class="tab-container">
+    {% block content %}
+        {{ "{% block content %}" }}
+        {{ "{% endblock content %}" }}
+    {% endblock content %}
+    <br/>
+
+    <div class="text-right">
+        {% block buttons '' %}
+    </div>
+</div>
+<script>
+    $(function(){
+        $("div.navigation > ul > li > a").click(function(e){
+            e.preventDefault();
+            var href = $(this).attr("href");
+            tabsService.loadContent(href);
+            return false;
+        });
+        $("table.table-paginate > thead > tr:nth-child(1) > th > a").click(function(e){
+            e.preventDefault();
+            var href = $(this).attr("href");
+            tabsService.loadContent(href);
+            return false;
+        });
+    });
+</script>
+{% block javascript '' %}
