@@ -1,3 +1,27 @@
+{#<div class="row">
+    <div class="col-12">
+        <div class="nav-tabs-custom form-tabs">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#_easyadmin_form_design_element_0" id="_easyadmin_form_design_element_0-tab" data-toggle="tab"><i class="fa fa-fw fa-inbox"></i>Basicos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#_easyadmin_form_design_element_6" id="_easyadmin_form_design_element_6-tab" data-toggle="tab"><i class="fa fa-fw fa-microchip"></i>Parametros</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="_easyadmin_form_design_element_0" class="tab-pane active">
+
+                    ss
+                </div>
+                <div id="_easyadmin_form_design_element_6" class="tab-pane">
+
+                    fff
+                </div>
+            </div>
+        </div>
+    </div>
+</div>#}
 <ul class="nav nav-tabs" style="margin: 0;">
     <li class="tab-title">
         {% if tab.icon %}<i class="{{ tab.icon }}"></i>{% else %}<i class="fa fa-check"></i>{% endif %}&nbsp;<span>{{ tab.name|trans }}</span>
@@ -32,97 +56,97 @@
     <div class="tab-pane l-loading-container">
         {{ "Loading content"|trans }}
         <div class='loading'><p class='blocktext'>
-                
+
                 <span class='ellipsis_animated-inner'>
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-            </span></p></div></div>
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                </span></p></div></div>
 </div>
 <script>
-    if(tabsService === undefined){
+    if (tabsService === undefined) {
         var tabsService = {
             id: null,
             isReloading: false,
             forceLoad: false,
             lastTabContentId: null,
-            setId: function(id){
+            setId: function (id) {
                 this.id = id;
             },
-            reload: function(){
+            reload: function () {
                 this.isReloading = true;
-                $("#"+tabsService.id+" > li.active > a").dblclick();
+                $("#" + tabsService.id + " > li.active > a").dblclick();
             },
-            done: function(){
+            done: function () {
                 this.isReloading = false;
             },
-            loading: function(){
-                $("#"+tabsService.id).html($("#lo-"+tabsService.id).html());
+            loading: function () {
+                $("#" + tabsService.id).html($("#lo-" + tabsService.id).html());
             },
-            loadContent: function(url,tabContentId,parameters){
-                if(tabContentId){
+            loadContent: function (url, tabContentId, parameters) {
+                if (tabContentId) {
                     this.lastTabContentId = tabContentId;
                 }
                 var self = $(this.lastTabContentId);
-                if(!parameters){
+                if (!parameters) {
                     parameters = {};
                 }
                 parameters["ajax"] = "true";
-                var qs = jQuery.param( parameters );
+                var qs = jQuery.param(parameters);
                 url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
-                $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());
-                $(this.lastTabContentId).load(url, function(response, status, xhr){
-                    $('#'+tabsService.id).tab(); //reinitialize tabs
-                    if(status == "error"){
-                        self.html("<b>{{ "modal.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
-                    }else if(status == "success"){
-                        self.data("loaded",true);
+                $(this.lastTabContentId).html($("#lo-" + tabsService.id).html());
+                $(this.lastTabContentId).load(url, function (response, status, xhr) {
+                    $('#' + tabsService.id).tab(); //reinitialize tabs
+                    if (status == "error") {
+                        self.html("<b>{{ "modal.error.loading.content"|trans }}</b> <br/><br/>" + xhr.status + " " + xhr.statusText);
+                    } else if (status == "success") {
+                        self.data("loaded", true);
                     }
                 });
             }
         };
     }
-    $(function() {
+    $(function () {
         tabsService.setId("{{ tab.id }}");
-        $('[tab-ajax="true"]').dblclick(function(e) {
+        $('[tab-ajax="true"]').dblclick(function (e) {
             e.preventDefault();
             tabsService.forceLoad = true;
             $(this).click();
         });
         var currentTabRequest = null;
-        $('[data-toggle="tab"]').click(function(e) {
+        $('[data-toggle="tab"]').click(function (e) {
             e.preventDefault();
             $this = $(this);
-            if($this.parent().hasClass("active") == true){
+            if ($this.parent().hasClass("active") == true) {
                 clearTimeout(currentTabRequest);
                 return;
             }
             var tabContent = $this.attr('href');
-            var current = jQuery.param({ {{ constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id")+tabContent});
+            var current = jQuery.param({ {{ constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::NAME_CURRENT_TAB') }}:$this.parent().parent().attr("id") + tabContent});
             clearTimeout(currentTabRequest);
-            currentTabRequest = setTimeout(function(){  
+            currentTabRequest = setTimeout(function () {
                 $.ajax({
-                    url: "{{ path("easyadmin_tab") }}?"+current
+                    url: "{{ path("easyadmin_tab") }}?" + current
                 });
             }, 2000);
         });
-        $('[tab-ajax="true"]').click(function(e) {
+        $('[tab-ajax="true"]').click(function (e) {
             e.preventDefault();
             $this = $(this);
             var tabContent = $(this).attr('href');
             var tabContentObj = $(tabContent);
             var loaded = tabContentObj.data("loaded");
-            if(tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true){
+            if (tabsService.forceLoad === false && tabsService.isReloading === false && $this.parent().hasClass("active") == true) {
                 return;
             }
-            if(tabsService.forceLoad === false && loaded === true){
+            if (tabsService.forceLoad === false && loaded === true) {
                 return;
             }
             tabsService.forceLoad = false;
             tabsService.done();
             var loadurl = $(this).attr('data-url');
-            var current = $this.parent().parent().attr("id")+tabContent;
-            tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::NAME_CURRENT_TAB') }}':current});
+            var current = $this.parent().parent().attr("id") + tabContent;
+            tabsService.loadContent(loadurl, tabContent, {'{{ constant('Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::NAME_CURRENT_TAB') }}': current});
         });
         tabsService.forceLoad = true;
         tabsService.reload();
