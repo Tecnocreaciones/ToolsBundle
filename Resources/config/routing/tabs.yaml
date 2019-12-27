@@ -59,6 +59,15 @@ tabs_object_exporter_download:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:download
         _format: html
     requirements: { _method: GET }
+
+tabs_object_exporter_upload:
+    path: /tabs/object-manager/exporter/upload
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:upload
+        _format: html
+    requirements: { _method: POST }
+    options:
+        expose: true
     
 tabs_object_note_add:
     path: /tabs/object-manager/note/add

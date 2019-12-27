@@ -1,0 +1,61 @@
+
+<div class="card">
+    <div class="card-title">
+        <h6 class="title-section">{{ "documents.uploaded.title"|trans }}</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            {% set params = parametersToView["parameters_to_route"]|merge({}) %}
+            <form action="{{ path("tabs_object_exporter_upload",params) }}" method="POST" enctype="multipart/form-data">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                {{ form_widget(form.file) }}
+                            </th>
+                            <th class="text-right">
+                                <button type="submit" class="btn btn-sm btn-primary">{{ "documents.uploaded.button.generate"|trans }}</button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set files = objectDataManager.exporter.documents("uploaded").all() %}
+                        <tr>
+                            <td colspan="2" style="padding: 0px;">
+                                <table class="table table-striped {#table table-striped table-hover#}" style="width: 100%">
+                                    <tbody>
+                                        {% for file in files %}
+                                        {% set params = parametersToView["parameters_to_route"]|merge({filename: file.filename}) %}
+                                            <tr>
+                                                <td class="bold" style="width: 5%">{{ loop.index }}</td>
+                                                <td style="width: 55%" class="text-left">
+                                                    <a href="{{ path("tabs_object_exporter_get",params) }}">
+                                                        {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\ToolsUtils","iconExtension",[file.extension])|raw }}
+                                                        {{ file.filename }}
+                                                    </a>
+                                                </td>
+                                                <td style="width: 35%">
+                                                    {{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}
+                                                </td>
+                                                <td style="width: 5%">
+                                                    <a class="color-black" href="{{ path("tabs_object_exporter_delete",params) }}">
+                                                        <i class="vf vf-delete" data-toggle="tooltip" data-original-title="{{ "documents.generated.button.delete"|trans }}"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="4" class="text-center bold">{{ "documents.generated.empty"|trans }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {{ form_rest(form) }}
+            </form>
+        </div>
+    </div>
+</div>

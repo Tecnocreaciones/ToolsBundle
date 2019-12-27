@@ -9,6 +9,7 @@ use Tecnoready\Common\Service\ObjectManager\ObjectDataManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\UploadType;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\NotesType;
 use RuntimeException;
 use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
@@ -208,13 +209,8 @@ class TabsManager implements ConfigureInterface
     public function renderFilesUploaded($entity)
     {
         $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
-        $choices = [];
-        $models = $chain->getModels();
-        foreach ($models as $model) {
-            $choices[$this->trans($model->getName())." [".strtoupper($model->getFormat())."]"] = $model->getName();
-        }
-        $form = $this->createForm(ExporterType::class,$choices);
-        $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
+        $form = $this->createForm(UploadType::class);
+        $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "uploaded";
         return $this->container->get('templating')->render($this->options["exporter"]["template_upload"], 
             [
                 'chain' => $chain,

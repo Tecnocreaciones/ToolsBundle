@@ -13,6 +13,8 @@ documents.generated.button.delete: 'Eliminar'
 documents.generated.empty: 'No hay documentos generados'
 documents.generated.title.model: 'Modelo'
 documents.generated.model.placeholder: 'Seleccione un modelo'
+documents.uploaded.title: 'Documentos Subidos'
+documents.uploaded.button.generate: 'Subir'
 title.tooltip.show.element: "Ver"
 messages.tab.notes: 'Notas'
 email.component.empty.select: '< Seleccione >'
