@@ -277,6 +277,7 @@ class Configuration implements ConfigurationInterface
                                 ->addDefaultsIfNotSet()
                                 ->children()
                                     ->scalarNode('template')->defaultValue("@TecnocreacionesToolsBundle/Resources/views/Exporter/documents.html.twig")->end()
+                                    ->scalarNode('template_upload')->defaultValue("@TecnocreacionesToolsBundle/Resources/views/Exporter/documents_upload.html.twig")->end()
                                 ->end()
                             ->end()
                         ->end()

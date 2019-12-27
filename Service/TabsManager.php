@@ -177,7 +177,8 @@ class TabsManager implements ConfigureInterface
      * @param type $idChain
      * @return type
      */
-    public function renderFilesGenerated($entity) {
+    public function renderFilesGenerated($entity)
+    {
         $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
         $choices = [];
         $models = $chain->getModels();
@@ -187,6 +188,34 @@ class TabsManager implements ConfigureInterface
         $form = $this->createForm(ExporterType::class,$choices);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
         return $this->container->get('templating')->render($this->options["exporter"]["template"], 
+            [
+                'chain' => $chain,
+                'entity' => $entity,
+                'objectDataManager' => $this->getObjectDataManager(),
+                'form' => $form->createView(),
+                'tab' => $this->tab,
+                'parametersToView' => $this->parametersToView,
+            ]
+        );
+    }
+
+    /**
+     * Renderiza el modulo para generar archivos del moduloe
+     * @param $entity
+     * @param type $idChain
+     * @return type
+     */
+    public function renderFilesUploaded($entity)
+    {
+        $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
+        $choices = [];
+        $models = $chain->getModels();
+        foreach ($models as $model) {
+            $choices[$this->trans($model->getName())." [".strtoupper($model->getFormat())."]"] = $model->getName();
+        }
+        $form = $this->createForm(ExporterType::class,$choices);
+        $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
+        return $this->container->get('templating')->render($this->options["exporter"]["template_upload"], 
             [
                 'chain' => $chain,
                 'entity' => $entity,
