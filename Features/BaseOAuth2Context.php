@@ -459,6 +459,7 @@ abstract class BaseOAuth2Context implements Context
         }
         $this->dataContext->setScenarioParameter("request",$this->data);
         $this->dataContext->restartKernel();
+        return $this->data;
     }
     
     /**
