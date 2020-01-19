@@ -1,3 +1,4 @@
 services:
     tecnocreaciones_tools.service.statistics_manager:
+        public: true
         class: Tecnoready\Common\Service\ObjectManager\StatisticManager\StatisticsManager
