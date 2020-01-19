@@ -222,6 +222,16 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         }
         return $result;
     }
+    
+    /**
+     * Verifica si el parametro existe
+     * @param type $key
+     * @return bool
+     */
+    public function hasScenarioParameter($key)
+    {
+        return isset($this->scenarioParameters[$key]);
+    }
 
     /**
      * Obtiene el valor de un parametro en el escenario
