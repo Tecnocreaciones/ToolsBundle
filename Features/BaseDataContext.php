@@ -290,11 +290,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         return $this->getDoctrine()->getManager()->find($className, $id);
     }
 
-    public function setScenarioParameter($key, $value) {
+    public function setScenarioParameter($key, $value,$saveArray = false) {
         if ($this->scenarioParameters === null) {
             $this->initParameters();
         }
-        if (is_array($value)) {
+        if ($saveArray === false && is_array($value)) {
             foreach ($value as $subKey => $val) {
                 $newKey = $key . "." . $subKey;
                 $this->setScenarioParameter($newKey, $val);
@@ -639,6 +639,13 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             if ($value === null) {
                 throw new \RuntimeException(sprintf("The date format must be Y-m-d of '%s'", $exploded[1]));
             }
+            return $value;
+        }
+        if (strpos($value, "lastResponse::") !== false) {
+            $exploded = explode("::", $value);
+            $propertyPath = $exploded[1];
+            $lastResponse = $this->getScenarioParameter("%lastResponse%");
+            $value = $this->accessor->getValue($lastResponse, $propertyPath);
             return $value;
         }
         if($this->parseParameterCallBack){

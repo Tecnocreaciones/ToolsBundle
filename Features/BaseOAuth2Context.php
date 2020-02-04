@@ -458,6 +458,7 @@ abstract class BaseOAuth2Context implements Context
             $this->dataContext->setScenarioParameter("%lastId%", $this->data["id"]);
         }
         $this->dataContext->setScenarioParameter("request",$this->data);
+        $this->dataContext->setScenarioParameter("%lastResponse%",$this->data,true);
         $this->dataContext->restartKernel();
         return $this->data;
     }
