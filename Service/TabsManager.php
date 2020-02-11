@@ -9,6 +9,7 @@ use Tecnoready\Common\Service\ObjectManager\ObjectDataManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\DocumentsType;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\ExporterType;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\UploadType;
 use Tecnocreaciones\Bundle\ToolsBundle\Form\Tab\NotesType;
 use RuntimeException;
 use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
@@ -177,7 +178,8 @@ class TabsManager implements ConfigureInterface
      * @param type $idChain
      * @return type
      */
-    public function renderFilesGenerated($entity) {
+    public function renderFilesGenerated($entity)
+    {
         $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
         $choices = [];
         $models = $chain->getModels();
@@ -187,6 +189,29 @@ class TabsManager implements ConfigureInterface
         $form = $this->createForm(ExporterType::class,$choices);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
         return $this->container->get('templating')->render($this->options["exporter"]["template"], 
+            [
+                'chain' => $chain,
+                'entity' => $entity,
+                'objectDataManager' => $this->getObjectDataManager(),
+                'form' => $form->createView(),
+                'tab' => $this->tab,
+                'parametersToView' => $this->parametersToView,
+            ]
+        );
+    }
+
+    /**
+     * Renderiza el modulo para generar archivos del moduloe
+     * @param $entity
+     * @param type $idChain
+     * @return type
+     */
+    public function renderFilesUploaded($entity)
+    {
+        $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
+        $form = $this->createForm(UploadType::class);
+        $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "uploaded";
+        return $this->container->get('templating')->render($this->options["exporter"]["template_upload"], 
             [
                 'chain' => $chain,
                 'entity' => $entity,

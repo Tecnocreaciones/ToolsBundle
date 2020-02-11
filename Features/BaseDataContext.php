@@ -17,6 +17,7 @@ use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 //Version vieja PHPUnit\Framework\Assert
 if(!class_exists("PHPUnit\Framework\Assert") &&
@@ -221,6 +222,16 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         }
         return $result;
     }
+    
+    /**
+     * Verifica si el parametro existe
+     * @param type $key
+     * @return bool
+     */
+    public function hasScenarioParameter($key)
+    {
+        return isset($this->scenarioParameters[$key]);
+    }
 
     /**
      * Obtiene el valor de un parametro en el escenario
@@ -228,7 +239,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @return type
      * @throws Exception
      */
-    public function getScenarioParameter($key, $checkExp = false) {
+    public function getScenarioParameter($key, $checkExp = false,$returnObject = false) {
         $parameters = $this->getScenarioParameters();
         // var_dump(array_keys($parameters));
         $user = null;
@@ -261,6 +272,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 throw new Exception(sprintf("The scenario parameter '%s' is not defined", $key));
             }
         }
+        if($value !== null){
+            if($returnObject == false && is_object($value) && method_exists($value,"getId")){
+                $value = $value->getId();
+            }
+        }
         return $value;
     }
 
@@ -274,11 +290,11 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         return $this->getDoctrine()->getManager()->find($className, $id);
     }
 
-    public function setScenarioParameter($key, $value) {
+    public function setScenarioParameter($key, $value,$saveArray = false) {
         if ($this->scenarioParameters === null) {
             $this->initParameters();
         }
-        if (is_array($value)) {
+        if ($saveArray === false && is_array($value)) {
             foreach ($value as $subKey => $val) {
                 $newKey = $key . "." . $subKey;
                 $this->setScenarioParameter($newKey, $val);
@@ -342,7 +358,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         foreach ($table as $row) {
             $entity = new $entityClass();
             foreach ($row as $propertyPath => $value) {
-                $value = $this->parseParameter($value);
+                $value = $this->parseParameter($value,[],"flashes",[
+                    "return_object" => true,
+                ]);
                 $this->accessor->setValue($entity, $propertyPath, $value);
             }
             $this->saveEntity($entity, true);
@@ -519,7 +537,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         if ($em->getFilters()->isEnabled('softdeleteable')) {
             $em->getFilters()->disable('softdeleteable');
         }
-        $query = $em->createQuery("DELETE FROM " . $this->userClass . " e WHERE e.username = '" . $username . "'");
+        $query = $em->createQuery("DELETE FROM " . $this->userClass . " e WHERE e.username = '" . $username . "' OR e.email='".$username."'");
         $query->execute();
         $em->flush();
 //        $em->clear();
@@ -599,7 +617,19 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @return type
      * @throws \RuntimeException
      */
-    public function parseParameter($value, $parameters = [], $domain = "flashes") {
+    public function parseParameter($value, $parameters = [], $domain = "flashes",array $options = []) {
+        if (is_string($value)) {
+            $jsonObject = json_decode((string) $value, true);
+            if(is_array($jsonObject)){
+                $this->replaceParameters($jsonObject);
+                return $jsonObject;
+            }
+        }
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "return_object" => false,
+        ]);
+        $options = $resolver->resolve($options);
         if ($value === "now()") {
             return new \DateTime();
         }
@@ -611,19 +641,27 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             }
             return $value;
         }
+        if (strpos($value, "lastResponse::") !== false) {
+            $exploded = explode("::", $value);
+            $propertyPath = $exploded[1];
+            $lastResponse = $this->getScenarioParameter("%lastResponse%");
+            $value = $this->accessor->getValue($lastResponse, $propertyPath);
+            return $value;
+        }
         if($this->parseParameterCallBack){
             $value = call_user_func_array($this->parseParameterCallBack, [$value, $parameters,$domain,$this]);
         }
         $valueExplode = explode("__", $value);
         if (is_array($valueExplode) && count($valueExplode) == 2) {
 //            var_dump($valueExplode[0]);
+            $valueExplode[0] = str_replace("\\\\","\\", $valueExplode[0]);//Fix de clases con doble \\
             $reflection = new \ReflectionClass($valueExplode[0]);
             if (!$reflection->hasConstant($valueExplode[1])) {
                 throw new \RuntimeException(sprintf("The class '%s' no has a constant name '%s'", $valueExplode[0], $valueExplode[1]));
             }
             $value = $reflection->getConstant($valueExplode[1]);
         } else if ($this->isScenarioParameter($value)) {
-            $value = $this->getScenarioParameter($value);
+            $value = $this->getScenarioParameter($value,false,$options["return_object"]);
         } else {
             if ($parameters === null) {
                 $parameters = [];
@@ -651,13 +689,16 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $this->requestBody = $body;
         return $this;
     }
-
+    
     /**
      * 
      *  \Symfony\Component\BrowserKit\Client
      * @return \Symfony\Bundle\FrameworkBundle\Client
      */
     function getClient() {
+        if($this->client === null){
+            $this->createClient();
+        }
         return $this->client;
     }
 

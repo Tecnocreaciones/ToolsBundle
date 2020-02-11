@@ -19,6 +19,8 @@ services:
     Tecnoready\Common\Service\Email\TwigSwiftMailer:
         public: false
         arguments: ["@mailer","@twig","@tecnoready.swiftmailer.adapter.orm",{ debug_mail: "%debug_mail%", env: "%kernel.environment%",from_email: "%mailer_user%", from_name: "%from_name%",debug: "%kernel.debug%" }]
+        calls:
+            - [ setContainer, ["@service_container"]  ]
     tecnoready.swiftmailer:
         alias: Tecnoready\Common\Service\Email\TwigSwiftMailer
         public: true

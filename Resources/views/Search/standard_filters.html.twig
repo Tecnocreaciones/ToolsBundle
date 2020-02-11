@@ -1,4 +1,4 @@
-{% macro label_filter(label,id,type) %}
+{% macro label_filter(label,id,type,searchService) %}
     {% import _self as filters %}
     <label class="label-filter">
         {{ label|trans({},searchService.transDefaultDomains["labels"]) }}
@@ -127,8 +127,8 @@
     {{ filters.select(label,modelName,values) }}
 {% endmacro %}
 
-{% macro input(label,modelName,id) %}
-    {% set modelName = modelName|replace(".","__") %}
+{% block input %}
+    {% set modelName = modelName|replace({'.': '__'}) %}
     {% import _self as filters %}
     {% if id is null %}
         {% set id = uniqueId() %}
@@ -136,15 +136,15 @@
 
     <div {{ filters.divParameters() }}>
         <div class="with-mid-padding" ng-init="initWatch('{{ modelName }}')">
-            {{ filters.label_filter(label,id,'input') }}
+            {{ filters.label_filter(label,id,'input',searchService) }}
             <div class="filters">
                 <input id="{{ id }}" style="width: 200px" class="form-control input-sm" ng-model="model.{{ modelName }}" />
             </div>
         </div>
     </div>
-{% endmacro %}
+{% endblock %}
 
-{% macro inputFromTo(label,modelName) %}
+{% block inputFromTo %}
     {% set modelNameFrom = modelName ~ "_from" %}
     {% set modelNameTo = modelName ~ "_to" %}
 
@@ -154,7 +154,7 @@
 
     <div {{ filters.divParameters() }}>
         <div class="with-mid-padding">
-            {{ filters.label_filter(label,[idFrom,idTo],'input') }}
+            {{ filters.label_filter(label,[idFrom,idTo],'input',searchService) }}
             <style>
                 .fromTo > input {
                     display: inline;
@@ -168,10 +168,10 @@
             </div>
         </div>
     </div>
-{% endmacro %}
+{% endblock %}
 
-{% macro date(label,modelName,parameters) %}
-    {% set modelName = modelName|replace(".","__") %}
+{% block date %}
+    {% set modelName = modelName|replace({'.': '__'}) %}
 
     {% set modelNameDay = "day_" ~ modelName %}
     {% set modelNameMonth = "month_" ~ modelName %}
@@ -181,7 +181,7 @@
     {% set idMonth = uniqueId() %}
     {% set idYear = uniqueId() %}
     {% set commonClass = "" %}
-    {% if parameters %}
+    {% if parameters is defined %}
         {% if parameters["commonClass"] %}
             {% set commonClass = parameters["commonClass"] %}
         {% endif %}
@@ -189,7 +189,7 @@
 
     <div {{ filters.divParameters() }}>
         <div class="with-mid-padding">
-            {{ filters.label_filter(label,[idDay,idMonth,idYear],'select') }}
+            {{ filters.label_filter(label,[idDay,idMonth,idYear],'select',searchService) }}
             <div class="filters">
                 <select id="{{ idDay }}" style="width: 60px" ng-model="model.{{ modelNameDay }}" ng-init="initWatch('{{ modelNameDay }}')" class="{{ commonClass }}">
                     <option value="">Día</option>
@@ -233,34 +233,38 @@
                         dropdownAutoWidth: true,
                 });
         });</script>
-{% endmacro %}
+{% endblock %}
 
-{% macro dateFromTo(label,modelName) %}
-    {% set modelNameFrom = "from_"~modelName %}
-    {% set modelNameTo = "to_" ~ modelName %}
-    
+{% block dateFromTo %}    
     {% import _self as filters %}
     {% set idFrom = uniqueId() %}
     {% set idTo = uniqueId() %}
-    
+        
     <div {{ filters.divParameters() }}>
         <div class="with-mid-padding">
-            {{ filters.label_filter(currentFilter.label,[idFrom,idTo],'select') }}
+            {{ filters.label_filter(currentFilter.label,[idFrom,idTo],'select',searchService) }}
             {#<style>
                 .fromTo > input {
                     display: inline;
                 }
             </style>#}
             <div class="filters fromTo">
-                {{ filters.date("labels.filter.from",modelNameFrom,{commonClass: idFrom}) }}
-                {{ filters.date("labels.filter.to",modelNameTo,{commonClass: idTo}) }}
+                {% set label = "labels.filter.from" %}
+                {% set modelName = "from_"~modelName %}
+                {% set parameters = {commonClass: idFrom} %}
+                {{ block('date') }}
+
+                {% set label = "labels.filter.to" %}
+                {% set modelName = "to_" ~ modelName %}
+                {% set parameters = {commonClass: idTo} %}
+                {{ block('date') }}
             </div>
         </div>
     </div>
-{% endmacro %}
+{% endblock %}
 
 {% macro select(label,modelName,values,parameters) %}
-    {% set modelName = modelName|replace(".","__") %}
+    {% set modelName = modelName|replace({'.': '__'}) %}
 
     {% import _self as filters %}
     {% set multiple = true %}
@@ -302,7 +306,7 @@
 {% endmacro %}
 
 {% macro select2(label,route,property,modelName,master,groupBy,parameters) %}
-    {% set modelName = modelName|replace(".","__") %}
+    {% set modelName = modelName|replace({'.': '__'}) %}
 
     {% import _self as filters %}
     {% set custom_property = null %}
@@ -426,7 +430,7 @@
 {% endmacro %}
 
 {% macro textArea(label,modelName,id) %}
-    {% set modelName = modelName|replace(".","__") %}
+    {% set modelName = modelName|replace({'.': '__'}) %}
     {% import _self as filters %}
     {% if id is null %}
         {% set id = uniqueId() %}

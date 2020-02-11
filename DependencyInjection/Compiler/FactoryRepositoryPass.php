@@ -47,8 +47,16 @@ class FactoryRepositoryPass implements CompilerPassInterface
  
                 $definition = new Definition;
                 $definition->setClass('Doctrine\ORM\Mapping\ClassMetadata');
-                $definition->setFactoryService('doctrine.orm.default_entity_manager');
-                $definition->setFactoryMethod('getClassMetadata');
+                
+                if (method_exists($definition,"setFactoryService")) {
+                    // support for symfony < 2.8.0
+                    $definition->setFactoryService('doctrine.orm.default_entity_manager');
+                }
+
+                if (method_exists($definition,"setFactoryMethod")) {
+                    // support for symfony < 2.8.0
+                    $definition->setFactoryMethod('getClassMetadata');
+                }
                 $definition->setArguments(array($class));
                 
                 $reflectionClass = new \ReflectionClass($repository->getClass());

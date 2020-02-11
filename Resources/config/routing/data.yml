@@ -1,5 +1,5 @@
 tools_bundle_data:
-    pattern: /search.json
+    path: /search.json
     defaults:
         _controller:  TecnocreacionesToolsBundle:Data:search
         _format: json

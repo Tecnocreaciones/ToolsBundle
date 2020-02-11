@@ -31,6 +31,8 @@ class StandardFilters implements GroupFilterInterface
     const TYPE_SELECT = "select";
     const TYPE_TODO = "todo";
     const TYPE_YEAR = "year";
+    const TYPE_WITHDRAW_STATUS = "withdrawStatus";
+    
     
     public static function setMacroTemplate($macroTemplate) 
     {   

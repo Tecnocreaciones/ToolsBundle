@@ -11,6 +11,8 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 
+use Exception;
+
 /**
  * Description of ToolsUtils
  *
@@ -130,5 +132,27 @@ class ToolsUtils {
         }
         $icon = '<i class="file file-'.$sprite.'"></i>';
         return $icon;
+    }
+    
+    public static function testQuantityExp($expresion,$quantity){
+        $expAmount = explode(" ", $expresion);
+        if(count($expAmount) == 1){
+            throw new Exception(sprintf("The expresion '%s' is malformed",$expresion));
+        }
+        $quantityExpected = self::fotmatToNumber($expAmount[1]);
+        if (version_compare($quantity, $quantityExpected, $expAmount[0]) === false) {
+            throw new Exception(sprintf("Value expected '%s' but there value is '%s' on expresion '%s'.", $quantityExpected,$quantity, $expresion));
+        }
+    }
+    
+    /**
+     * Formatea un número usando como decimales la coma (,)
+     * @param type $amount
+     * @param type $decimals
+     * @return type
+     */
+    public static function fotmatToNumber($amount, $decimals = 2) {
+        $numberFormated = number_format($amount, $decimals, ".", "");
+        return (double) $numberFormated;
     }
 }
