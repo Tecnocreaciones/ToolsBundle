@@ -224,6 +224,7 @@ class Configuration implements ConfigurationInterface
                 
                 
                     ->end()
+                
                     ->arrayNode('link_generator')
                         ->addDefaultsIfNotSet()
                         ->children()
@@ -231,6 +232,14 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('color')->defaultValue('#000')->end()
                         ->end()
                     ->end()
+                
+                    ->arrayNode('liform')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('enable')->defaultFalse()->end()
+                        ->end()
+                    ->end()
+                
                     ->arrayNode('database_spool')
                         ->addDefaultsIfNotSet()
                         ->children()

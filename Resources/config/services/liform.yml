@@ -1,0 +1,31 @@
+services:
+    liform.transformer.compound:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\CompoundTransformer
+        arguments: ["@translator","@liform.guesser.validator","@liform.resolver"]
+        tags:
+            - { name: liform.transformer, form_type: compound}
+    liform.transformer.choice:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\ChoiceTransformer
+        autowire: true
+        tags:
+            - { name: liform.transformer, form_type: choice, widget: choice }
+    liform.transformer.boolean:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\BooleanTransformer
+        autowire: true
+        tags:
+            - { name: liform.transformer, form_type: checkbox, widget: checkbox }
+    liform.transformer.string:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\StringTransformer
+        autowire: true
+        tags:
+            - { name: liform.transformer, form_type: text, widget: text }
+            - { name: liform.transformer, form_type: url, widget: url }
+            - { name: liform.transformer, form_type: search, widget: search }
+            - { name: liform.transformer, form_type: money, widget: money }
+            - { name: liform.transformer, form_type: password, widget: password }
+            - { name: liform.transformer, form_type: textarea, widget: textarea }
+            - { name: liform.transformer, form_type: time, widget: time }
+            - { name: liform.transformer, form_type: percent, widget: percent }
+            - { name: liform.transformer, form_type: email, widget: email }
+            - { name: liform.transformer, form_type: date, widget: date }
+            - { name: liform.transformer, form_type: datetime, widget: datetime }
