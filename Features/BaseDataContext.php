@@ -418,7 +418,8 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             $query = $em->createQuery("UPDATE " . \Pandco\Bundle\AppBundle\Entity\App\User\DigitalAccount\DigitalAccountConfig::class . " dac SET dac.timeWithdraw = null");
             $query->execute();
         }
-        $query = $em->createQuery("DELETE FROM " . $className . " " . $andWhere);
+        $queryDelete = "DELETE FROM " . $className . " " . $andWhere;
+        $query = $em->createQuery($queryDelete);
         $query->execute();
         $em->flush();
         $em->clear();
