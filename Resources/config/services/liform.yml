@@ -14,6 +14,11 @@ services:
         autowire: true
         tags:
             - { name: liform.transformer, form_type: checkbox, widget: checkbox }
+    liform.transformer.button.submit:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\ButtonTransformer
+        autowire: true
+        tags:
+            - { name: liform.transformer, form_type: submit, widget: submit }
     liform.transformer.string:
         class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\StringTransformer
         autowire: true

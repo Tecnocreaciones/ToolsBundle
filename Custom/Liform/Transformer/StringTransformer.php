@@ -60,8 +60,6 @@ class StringTransformer extends AbstractStringTransformer
      */
     protected function addData(FormInterface $form, array $schema)
     {
-        var_dump($form);
-        die;
         $schema['data'] = "";
     	if ($data = $form->getConfig()->getOption('data')) {
             $schema['data'] = $data;
