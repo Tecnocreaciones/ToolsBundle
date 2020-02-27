@@ -232,6 +232,21 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
     {
         return isset($this->scenarioParameters[$key]);
     }
+    
+    /**
+     * Elimina un parametro si el parametro existe
+     * @param type $key
+     * @return bool
+     */
+    public function removeScenarioParameter($key)
+    {
+        if(isset($this->scenarioParameters[$key])){
+            unset($this->scenarioParameters[$key]);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * Obtiene el valor de un parametro en el escenario
