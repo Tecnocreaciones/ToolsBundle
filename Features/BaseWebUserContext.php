@@ -255,9 +255,9 @@ abstract class BaseWebUserContext extends MinkContext
        try {
            parent::pressButton($locator);
        } catch (\Exception $ex) {
-           $this->iScrollBottomAndElementAppear();
+           $this->iScrollBottomAndElementAppear($locator);
            //esperamos 2 segundos para intentar de nuevo hacer click
-           $this->getSession()->wait(2 * 1000);
+           //$this->getSession()->wait(2 * 1000);
            parent::pressButton($locator);
        }
     }
