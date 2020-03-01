@@ -332,7 +332,11 @@ abstract class BaseWebUserContext extends MinkContext
     {
         $this->spin(function($context) use ($cssSelector) {
             try {
-                $context->findElement($cssSelector);
+                $element = $context->findElement($cssSelector);
+                //Ya no se encontro
+                if($element === null){
+                    return true;
+                }
                 return false;
             } catch (Exception $ex) {
                 return true;
