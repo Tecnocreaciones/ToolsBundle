@@ -342,6 +342,15 @@ abstract class BaseOAuth2Context implements Context
     }
     
     /**
+     * Limpia el token de acceso actual
+     * @When I clear access token
+     */
+    public function iClearAccessToken()
+    {
+        $this->dataContext->getClient()->setServerParameter("HTTP_AUTHORIZATION",null);
+    }
+    
+    /**
      * Agrega data tipo json al siguiente request
      * @Given I add the request data:
      */
