@@ -26,6 +26,7 @@ class CompoundTransformer extends AbstractCompoundTransformer
             $transformerData = $this->resolver->resolve($field);
             $properties[$name]["required"] = $transformerData['transformer']->isRequired($field);
             $properties[$name]["disabled"] = $this->isDisabled($field);
+            unset($properties[$name]["propertyOrder"]);
         }
 
         $schema["action"] = $form->getConfig()->getOption('action');

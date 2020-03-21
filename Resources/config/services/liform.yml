@@ -1,4 +1,6 @@
 services:
+    _defaults:
+        public: '%services_defaults_public%'
     liform.transformer.compound:
         class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\CompoundTransformer
         arguments: ["@translator","@liform.guesser.validator","@liform.resolver"]
@@ -19,6 +21,14 @@ services:
         autowire: true
         tags:
             - { name: liform.transformer, form_type: submit, widget: submit }
+    liform.transformer.file:
+        class: Limenius\Liform\Transformer\StringTransformer
+        parent: Limenius\Liform\Transformer\AbstractTransformer
+        autowire: false
+        autoconfigure: false
+        public: false
+        tags:
+            - { name: liform.transformer, form_type: file, widget: file_widget }
     liform.transformer.string:
         class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\StringTransformer
         autowire: true
@@ -34,3 +44,8 @@ services:
             - { name: liform.transformer, form_type: email, widget: email }
             - { name: liform.transformer, form_type: date, widget: date }
             - { name: liform.transformer, form_type: datetime, widget: datetime }
+            
+    Tecnocreaciones\Bundle\ToolsBundle\Service\DynamicViewManager\DynamicFormManager:
+        autowire: true
+    Tecnocreaciones\Bundle\ToolsBundle\Service\DynamicViewManager:
+        autowire: true

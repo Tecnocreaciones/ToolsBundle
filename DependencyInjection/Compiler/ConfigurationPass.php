@@ -27,6 +27,9 @@ class ConfigurationPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
+        if(!$container->hasParameter("services_defaults_public")){
+            $container->setParameter("services_defaults_public", false);
+        }
         //Verificar tabs activas
         if ($container->getParameter('tecnocreaciones_tools.service.tabs.enable') === true) {
             $tabs = $container->getParameter("tecnocreaciones_tools.service.tabs");
