@@ -20,6 +20,8 @@ use Limenius\Liform\Transformer\AbstractTransformer;
  */
 class ChoiceTransformer extends AbstractTransformer
 {
+    use \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\CommonFunctionsTrait;
+    
     /**
      * {@inheritdoc}
      */
@@ -55,6 +57,7 @@ class ChoiceTransformer extends AbstractTransformer
         $this->addWidget($form, $schema, false);
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $schema = $this->addHelp($form, $schema);
+        $schema = $this->addConstraints($form, $schema);
 
         return $schema;
     }

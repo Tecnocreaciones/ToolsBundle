@@ -19,6 +19,8 @@ use Limenius\Liform\Transformer\AbstractTransformer;
  */
 class BooleanTransformer extends AbstractTransformer
 {
+    use \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\CommonFunctionsTrait;
+    
     /**
      * {@inheritdoc}
      */
@@ -26,17 +28,11 @@ class BooleanTransformer extends AbstractTransformer
     {
         $schema = ['type' => 'boolean'];
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
-//        var_dump($schema);
         $emptyData = $form->getConfig()->getOption('empty_data');
         if(($emptyData instanceof \Closure) === false){
             $schema["empty_data"] = $emptyData;
         }
-//        var_dump($clo());
-//        var_dump($form->getConfig()->getOption('empty_data'));
-//        var_dump($form->getConfig()->getOption('data'));
-//        var_dump($form->getConfig()->getOption('disabled'));
-//        var_dump($form->getConfig()->getOptions());
-//        die;
+        $schema = $this->addConstraints($form, $schema);
         return $schema;
     }
 }

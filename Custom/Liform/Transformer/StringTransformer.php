@@ -19,7 +19,9 @@ use Limenius\Liform\Transformer\StringTransformer as AbstractStringTransformer;
  */
 class StringTransformer extends AbstractStringTransformer
 {
-	/**
+    use \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\CommonFunctionsTrait;
+    
+    /**
      * {@inheritdoc}
      */
     public function transform(FormInterface $form, array $extensions = [], $widget = null)
@@ -30,6 +32,7 @@ class StringTransformer extends AbstractStringTransformer
         $schema = $this->addMinLength($form, $schema);
         $schema = $this->addHelp($form, $schema);
         $schema = $this->addData($form, $schema);
+        $schema = $this->addConstraints($form, $schema);
 
         return $schema;
     }

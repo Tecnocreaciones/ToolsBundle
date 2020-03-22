@@ -15,6 +15,12 @@ use Limenius\Liform\Transformer\CompoundTransformer as AbstractCompoundTransform
 class CompoundTransformer extends AbstractCompoundTransformer
 {
     /**
+     * Convierten las validaciones en validaciones compatible
+     * @var \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\SymfonyConstraintsParser
+     */
+    private $constraintsParsers;
+
+    /**
      * {@inheritdoc}
      */
     public function transform(FormInterface $form, array $extensions = [], $widget = null)
@@ -27,6 +33,13 @@ class CompoundTransformer extends AbstractCompoundTransformer
             $properties[$name]["required"] = $transformerData['transformer']->isRequired($field);
             $properties[$name]["disabled"] = $this->isDisabled($field);
             unset($properties[$name]["propertyOrder"]);
+            if(isset($properties[$name]["constraints"]) && count($properties[$name]["constraints"]) > 0){
+                $constraints = [];
+                foreach ($properties[$name]["constraints"] as $constraint) {
+                    $constraints[]  = $this->constraintsParsers->parse($constraint);
+                }
+                $properties[$name]["constraints"] = $constraints;
+            }
         }
 
         $schema["action"] = $form->getConfig()->getOption('action');
@@ -45,5 +58,16 @@ class CompoundTransformer extends AbstractCompoundTransformer
     protected function isDisabled(FormInterface $form)
     {
         return $form->getConfig()->getOption('disabled');
+    }
+    
+    /**
+     * @required
+     * @param \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\SymfonyConstraintsParser $constraintsParsers
+     * @return $this
+     */
+    public function setConstraintsParsers(\Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\SymfonyConstraintsParser $constraintsParsers)
+    {
+        $this->constraintsParsers = $constraintsParsers;
+        return $this;
     }
 }

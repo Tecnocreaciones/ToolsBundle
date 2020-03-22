@@ -26,7 +26,7 @@ class DynamicFormManagerTest extends BaseWebTestCase
         $dynamicForm->setForm($form);
         
         $data = $dynamicForm->end();
-//        echo(json_encode($data));
+        echo(json_encode($data,JSON_PRETTY_PRINT));
         $this->assertNotNull($data);
     }
     
@@ -44,25 +44,32 @@ class DynamicFormManagerTest extends BaseWebTestCase
     {
 $result = <<<EOF
 {
-   "title":"Titulo",
+   "title":"Titulo del formulario",
    "form":{
       "title":"dynamic_form",
       "type":"object",
       "properties":{
-         "options":{
-            "choices":[
-               {
-                  "id":"a",
-                  "label":"opcion 1"
-               },
-               {
-                  "id":"b",
-                  "label":"opcion 2"
-               }
-            ],
+         "select_options":{
             "type":"string",
             "title":"Opciones",
             "widget":"choice",
+            "data":"",
+            "constraints":[
+               {
+                  "message":"This value should not be blank.",
+                  "name":"NotBlank",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+               },
+               {
+                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
+                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                  "max":null,
+                  "min":3,
+                  "name":"Length",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+               }
+            ],
             "required":true,
             "disabled":false
          },
@@ -71,6 +78,22 @@ $result = <<<EOF
             "title":"Fecha",
             "widget":"date",
             "data":"",
+            "constraints":[
+               {
+                  "message":"This value should not be blank.",
+                  "name":"NotBlank",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+               },
+               {
+                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
+                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                  "max":null,
+                  "min":3,
+                  "name":"Length",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+               }
+            ],
             "required":true,
             "disabled":false
          },
@@ -78,6 +101,23 @@ $result = <<<EOF
             "type":"string",
             "title":"Archivo de imagen",
             "widget":"file_widget",
+            "data":"",
+            "constraints":[
+               {
+                  "message":"This value should not be blank.",
+                  "name":"NotBlank",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+               },
+               {
+                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
+                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                  "max":null,
+                  "min":3,
+                  "name":"Length",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+               }
+            ],
             "required":true,
             "disabled":false
          },
@@ -85,6 +125,22 @@ $result = <<<EOF
             "type":"boolean",
             "title":"Checkbox",
             "widget":"checkbox",
+            "constraints":[
+               {
+                  "message":"This value should not be blank.",
+                  "name":"NotBlank",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+               },
+               {
+                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
+                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                  "max":null,
+                  "min":3,
+                  "name":"Length",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+               }
+            ],
             "required":true,
             "disabled":false
          },
@@ -93,6 +149,22 @@ $result = <<<EOF
             "title":"Texto corto",
             "widget":"text",
             "data":"",
+            "constraints":[
+               {
+                  "message":"This value should not be blank.",
+                  "name":"NotBlank",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+               },
+               {
+                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
+                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                  "max":null,
+                  "min":3,
+                  "name":"Length",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+               }
+            ],
             "required":true,
             "disabled":false
          },
@@ -101,6 +173,22 @@ $result = <<<EOF
             "title":"Texto largo",
             "widget":"textarea",
             "data":"",
+            "constraints":[
+               {
+                  "message":"This value should not be blank.",
+                  "name":"NotBlank",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+               },
+               {
+                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
+                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                  "max":null,
+                  "min":3,
+                  "name":"Length",
+                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+               }
+            ],
             "required":true,
             "disabled":false
          },
@@ -114,7 +202,7 @@ $result = <<<EOF
          }
       },
       "required":[
-         "options",
+         "select_options",
          "date_at",
          "file_image",
          "check_option",
