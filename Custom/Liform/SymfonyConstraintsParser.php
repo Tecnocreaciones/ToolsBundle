@@ -37,7 +37,7 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
     public function parse($constraint)
     {
         $parsed = null;
-        $info = $this->getMappedClass();
+        $info = $this->getMappedInfo();
         $originClass = get_class($constraint);
         if(array_key_exists($originClass, $info)){
             $mappedInfo = $info[$originClass];
@@ -108,7 +108,7 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
      * Retorna la informacion de las validaciones a mapear
      * @return array
      */
-    private function getMappedClass()
+    private function getMappedInfo()
     {
         return [
             NotBlank::class => [
@@ -117,7 +117,7 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
                 "trans_properties" => ["message"],
             ],
             NotNull::class => [
-                "mapped" => Constraints\NotBlank::class,
+                "mapped" => Constraints\NotNull::class,
                 "properties" => ["message"],
                 "trans_properties" => ["message"],
             ],

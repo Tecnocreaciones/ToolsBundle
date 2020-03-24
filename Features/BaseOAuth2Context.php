@@ -164,7 +164,12 @@ abstract class BaseOAuth2Context implements Context
     public function echoLastResponse()
     {
 //        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", var_export($this->lastRequestBody, true), $this->response->getContent()));
-        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT, 10), $this->response->getContent()));
+        $content = $this->response->getContent();
+        $contentJson = @json_encode(@json_decode($content,true),JSON_PRETTY_PRINT, 10);
+        if($contentJson !== null && $contentJson !== "null" && json_last_error() === JSON_ERROR_NONE){
+            $content = $contentJson;
+        }
+        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT, 10), $content));
     }
 
     /**
@@ -708,7 +713,8 @@ abstract class BaseOAuth2Context implements Context
      */
     protected function printDebug($string)
     {
-        echo sprintf("\n\033[36m| %s\033[0m\n\n", strtr($string, ["\n" => "\n|  "]));
+        //echo sprintf("\n\033[36m| %s\033[0m\n\n", strtr($string, ["\n" => "\n|  "]));
+        echo $string;
     }
     
 }
