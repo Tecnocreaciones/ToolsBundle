@@ -44,174 +44,189 @@ class DynamicFormManagerTest extends BaseWebTestCase
     {
 $result = <<<EOF
 {
-   "title":"Titulo del formulario",
-   "form":{
-      "title":"dynamic_form",
-      "type":"object",
-      "properties":{
-         "select_options":{
-            "type":"string",
-            "title":"Opciones",
-            "widget":"choice",
-            "data":"",
-            "constraints":[
-               {
-                  "message":"This value should not be blank.",
-                  "name":"NotBlank",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
-               },
-               {
-                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
-                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
-                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
-                  "max":null,
-                  "min":3,
-                  "name":"Length",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
-               }
-            ],
-            "required":true,
-            "disabled":false
-         },
-         "date_at":{
-            "type":"string",
-            "title":"Fecha",
-            "widget":"date",
-            "data":"",
-            "constraints":[
-               {
-                  "message":"This value should not be blank.",
-                  "name":"NotBlank",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
-               },
-               {
-                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
-                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
-                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
-                  "max":null,
-                  "min":3,
-                  "name":"Length",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
-               }
-            ],
-            "required":true,
-            "disabled":false
-         },
-         "file_image":{
-            "type":"string",
-            "title":"Archivo de imagen",
-            "widget":"file_widget",
-            "data":"",
-            "constraints":[
-               {
-                  "message":"This value should not be blank.",
-                  "name":"NotBlank",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
-               },
-               {
-                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
-                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
-                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
-                  "max":null,
-                  "min":3,
-                  "name":"Length",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
-               }
-            ],
-            "required":true,
-            "disabled":false
-         },
-         "check_option":{
-            "type":"boolean",
-            "title":"Checkbox",
-            "widget":"checkbox",
-            "constraints":[
-               {
-                  "message":"This value should not be blank.",
-                  "name":"NotBlank",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
-               },
-               {
-                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
-                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
-                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
-                  "max":null,
-                  "min":3,
-                  "name":"Length",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
-               }
-            ],
-            "required":true,
-            "disabled":false
-         },
-         "texto_normal":{
-            "type":"string",
-            "title":"Texto corto",
-            "widget":"text",
-            "data":"",
-            "constraints":[
-               {
-                  "message":"This value should not be blank.",
-                  "name":"NotBlank",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
-               },
-               {
-                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
-                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
-                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
-                  "max":null,
-                  "min":3,
-                  "name":"Length",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
-               }
-            ],
-            "required":true,
-            "disabled":false
-         },
-         "texto_largo":{
-            "type":"string",
-            "title":"Texto largo",
-            "widget":"textarea",
-            "data":"",
-            "constraints":[
-               {
-                  "message":"This value should not be blank.",
-                  "name":"NotBlank",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
-               },
-               {
-                  "maxMessage":"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
-                  "minMessage":"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.",
-                  "exactMessage":"This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
-                  "max":null,
-                  "min":3,
-                  "name":"Length",
-                  "fullyQualifiedName":"Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
-               }
-            ],
-            "required":true,
-            "disabled":false
-         },
-         "submit":{
-            "type":"string",
-            "title":"Boton submit",
-            "widget":"submit",
-            "render_in":"form_bottom",
-            "required":null,
-            "disabled":false
-         }
-      },
-      "required":[
-         "select_options",
-         "date_at",
-         "file_image",
-         "check_option",
-         "texto_normal",
-         "texto_largo"
-      ],
-      "action":"",
-      "method":"POST"
-   }
+    "title": "Titulo",
+    "form": {
+        "title": "dynamic_form",
+        "type": "object",
+        "properties": {
+            "select_options": {
+                "choices": [
+                    {
+                        "id": "a",
+                        "label": "opcion 1"
+                    },
+                    {
+                        "id": "b",
+                        "label": "opcion 2"
+                    }
+                ],
+                "type": "string",
+                "title": "Opciones",
+                "widget": "choice",
+                "full_name": "dynamic_form[select_options]",
+                "constraints": [
+                    {
+                        "message": "Este valor no deber\u00eda estar vac\u00edo.",
+                        "name": "NotBlank",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+                    },
+                    {
+                        "maxMessage": "This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                        "minMessage": "Este valor es demasiado corto. Deber\u00eda tener 3 car\u00e1cter o m\u00e1s.|Este valor es demasiado corto. Deber\u00eda tener 3 caracteres o m\u00e1s.",
+                        "exactMessage": "This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                        "max": null,
+                        "min": 3,
+                        "name": "Length",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+                    }
+                ],
+                "required": true,
+                "disabled": false
+            },
+            "date_at": {
+                "type": "string",
+                "title": "Fecha",
+                "widget": "date",
+                "empty_data": null,
+                "full_name": "dynamic_form[date_at]",
+                "constraints": [
+                    {
+                        "message": "Este valor no deber\u00eda estar vac\u00edo.",
+                        "name": "NotBlank",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+                    },
+                    {
+                        "maxMessage": "This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                        "minMessage": "Este valor es demasiado corto. Deber\u00eda tener 3 car\u00e1cter o m\u00e1s.|Este valor es demasiado corto. Deber\u00eda tener 3 caracteres o m\u00e1s.",
+                        "exactMessage": "This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                        "max": null,
+                        "min": 3,
+                        "name": "Length",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+                    }
+                ],
+                "required": true,
+                "disabled": false
+            },
+            "file_image": {
+                "type": "string",
+                "title": "Archivo de imagen",
+                "widget": "file_widget",
+                "empty_data": null,
+                "full_name": "dynamic_form[file_image]",
+                "constraints": [
+                    {
+                        "message": "Este valor no deber\u00eda estar vac\u00edo.",
+                        "name": "NotBlank",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+                    },
+                    {
+                        "maxMessage": "This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                        "minMessage": "Este valor es demasiado corto. Deber\u00eda tener 3 car\u00e1cter o m\u00e1s.|Este valor es demasiado corto. Deber\u00eda tener 3 caracteres o m\u00e1s.",
+                        "exactMessage": "This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                        "max": null,
+                        "min": 3,
+                        "name": "Length",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+                    }
+                ],
+                "required": true,
+                "disabled": false
+            },
+            "check_option": {
+                "type": "boolean",
+                "title": "Checkbox",
+                "widget": "checkbox",
+                "full_name": "dynamic_form[check_option]",
+                "constraints": [
+                    {
+                        "message": "Este valor no deber\u00eda estar vac\u00edo.",
+                        "name": "NotBlank",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+                    },
+                    {
+                        "maxMessage": "This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                        "minMessage": "Este valor es demasiado corto. Deber\u00eda tener 3 car\u00e1cter o m\u00e1s.|Este valor es demasiado corto. Deber\u00eda tener 3 caracteres o m\u00e1s.",
+                        "exactMessage": "This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                        "max": null,
+                        "min": 3,
+                        "name": "Length",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+                    }
+                ],
+                "required": true,
+                "disabled": false
+            },
+            "texto_normal": {
+                "type": "string",
+                "title": "Texto corto",
+                "widget": "text",
+                "empty_data": "",
+                "full_name": "dynamic_form[texto_normal]",
+                "constraints": [
+                    {
+                        "message": "Este valor no deber\u00eda estar vac\u00edo.",
+                        "name": "NotBlank",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+                    },
+                    {
+                        "maxMessage": "This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                        "minMessage": "Este valor es demasiado corto. Deber\u00eda tener 3 car\u00e1cter o m\u00e1s.|Este valor es demasiado corto. Deber\u00eda tener 3 caracteres o m\u00e1s.",
+                        "exactMessage": "This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                        "max": null,
+                        "min": 3,
+                        "name": "Length",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+                    }
+                ],
+                "required": true,
+                "disabled": false
+            },
+            "texto_largo": {
+                "type": "string",
+                "title": "Texto largo",
+                "widget": "textarea",
+                "empty_data": "Dmoooo data",
+                "full_name": "dynamic_form[texto_largo]",
+                "constraints": [
+                    {
+                        "message": "Este valor no deber\u00eda estar vac\u00edo.",
+                        "name": "NotBlank",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\NotBlank"
+                    },
+                    {
+                        "maxMessage": "This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.",
+                        "minMessage": "Este valor es demasiado corto. Deber\u00eda tener 3 car\u00e1cter o m\u00e1s.|Este valor es demasiado corto. Deber\u00eda tener 3 caracteres o m\u00e1s.",
+                        "exactMessage": "This value should have exactly {{ limit }} character.|This value should have exactly {{ limit }} characters.",
+                        "max": null,
+                        "min": 3,
+                        "name": "Length",
+                        "fullyQualifiedName": "Tecnocreaciones\\Bundle\\ToolsBundle\\Custom\\Liform\\Constraints\\Length"
+                    }
+                ],
+                "required": true,
+                "disabled": false
+            },
+            "submit": {
+                "type": "string",
+                "title": "Boton submit",
+                "widget": "submit",
+                "render_in": "form_bottom",
+                "required": null,
+                "disabled": false
+            }
+        },
+        "required": [
+            "select_options",
+            "date_at",
+            "file_image",
+            "check_option",
+            "texto_normal",
+            "texto_largo"
+        ],
+        "action": "",
+        "method": "POST"
+    }
 }
 EOF;
     }

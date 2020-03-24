@@ -26,13 +26,14 @@ class BooleanTransformer extends AbstractTransformer
      */
     public function transform(FormInterface $form, array $extensions = [], $widget = null)
     {
+        $this->initCommonCustom($form);
         $schema = ['type' => 'boolean'];
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $emptyData = $form->getConfig()->getOption('empty_data');
         if(($emptyData instanceof \Closure) === false){
             $schema["empty_data"] = $emptyData;
         }
-        $schema = $this->addConstraints($form, $schema);
+        $schema = $this->addCommonCustom($form, $schema);
         return $schema;
     }
 }

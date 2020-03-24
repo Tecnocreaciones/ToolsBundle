@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Tecnocreaciones\Bundle\ToolsBundle\Form\Extension\Core\Type\DynamicDateType;
 
 /**
  * Formulario de prueba dinamico
@@ -37,9 +38,12 @@ class DynamicTestType extends AbstractType
                     ],
                     'constraints' => $constraints,
                 ])
-                ->add("date_at",DateType::class,[
+                ->add("date_at",DynamicDateType::class,[
                     "label" => "Fecha",
                     'constraints' => $constraints,
+                    "format" => "yyyy-MM-dd",
+                    "format_from_server" => "yyyy-MM-dd HH:mm:ss",
+                    "format_to_server" => "yyyy-MM-dd HH:mm:ss",
                 ])
                 ->add("file_image",FileType::class,[
                     "label" => "Archivo de imagen",
@@ -60,6 +64,7 @@ class DynamicTestType extends AbstractType
                 ->add("texto_largo",TextareaType::class,[
                     "label" => "Texto largo",
                     'constraints' => $constraints,
+                    "empty_data" => "Dmoooo data"
                 ])
                 ->add("submit",DynamicSubmitType::class,[
                     "label" => "Boton submit",

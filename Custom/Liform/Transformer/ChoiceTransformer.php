@@ -14,6 +14,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Limenius\Liform\Transformer\AbstractTransformer;
+use Symfony\Component\Form\FormView;
 
 /**
  * @author Nacho Martín <nacho@limenius.com>
@@ -27,8 +28,8 @@ class ChoiceTransformer extends AbstractTransformer
      */
     public function transform(FormInterface $form, array $extensions = [], $widget = null)
     {
-        $formView = $form->createView();
-
+        $this->initCommonCustom($form);
+        $formView = $this->formView;
         $choices = [];
         foreach ($formView->vars['choices'] as $choiceView) {
             if ($choiceView instanceof ChoiceGroupView) {
@@ -57,8 +58,9 @@ class ChoiceTransformer extends AbstractTransformer
         $this->addWidget($form, $schema, false);
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $schema = $this->addHelp($form, $schema);
-        $schema = $this->addConstraints($form, $schema);
-
+        $schema = $this->addCommonCustom($form, $schema);
+        $schema = $this->addEmptyData($form,$formView,$schema);
+        
         return $schema;
     }
 
@@ -119,25 +121,26 @@ class ChoiceTransformer extends AbstractTransformer
     }
 
     /**
-     * Añadir data
-     *  
-     * @author Máximo Sojo <maxsojo13@gmail.com>
-     * @param  $attr
+     * @param FormInterface $form
+     * @param array         $schema
+     *
+     * @return array
      */
-    protected function addData($attr)
+    protected function addEmptyData(FormInterface $form,FormView $formView, array $schema)
     {
-        $data = null;
-        if ($attr && isset($attr["data"])) {
-            $data = $attr["data"];
+     	if (($emptyData = $form->getConfig()->getOption('empty_data')) && !empty($formView->vars["value"])) {
+            $schema['empty_data'] = [
+                "id" => $formView->vars["value"],
+                "label" => (string)$emptyData,
+            ];
         }
-        
-        return $data;
+
+        return $schema;
     }
 
     /**
      * isDisabled
      *  
-     * @author Máximo Sojo <maxsojo13@gmail.com>
      * @param  $attr
      * @return boolean
      */
