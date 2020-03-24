@@ -66,7 +66,6 @@ class DynamicForm
         $form  = $this->form;
         $formSerialize = null;
         if($form){
-            $form->createView();
             $formSerialize = $this->liform->transform($form);
         }
         $d = [
