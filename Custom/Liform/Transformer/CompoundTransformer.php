@@ -48,7 +48,9 @@ class CompoundTransformer extends AbstractCompoundTransformer
         $properties = $schema["properties"];
         if ($form->isRoot() === true && !empty($dataClass = $form->getConfig()->getDataClass())) {
             $validationGroups = $form->getConfig()->getOption("validation_groups");
-            $this->extractContraints($dataClass, $validationGroups);
+            if(is_array($validationGroups)){
+                $this->extractContraints($dataClass, $validationGroups);
+            }
         }
 //            var_dump($dataClass);
 //        var_dump($form->getConfig()->getOption("validation_groups"));
