@@ -453,6 +453,10 @@ abstract class BaseOAuth2Context implements Context
         
         $this->dataContext->getClient()->request($method, $url, $parameters, $files,$server);
         $this->response = $this->dataContext->getClient()->getResponse();
+        $_server = $this->response->headers->get("_server");//Headers especiales
+        if($_server !== null){
+            echo sprintf("Response headers: %s",$_server);
+        }
         if($options["clear_request"] === true){
             $this->initRequest();
         }
