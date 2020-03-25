@@ -479,6 +479,30 @@ abstract class BaseOAuth2Context implements Context
     }
     
     /**
+     * Verifica que exista un mensaje de error
+     * @example And the response has a errors property and contains "validators.not_blank.driver.service_status"
+     * @Then the response has a errors property and contains :message
+     */
+    public function theResponseHasAErrorsPropertyAndContains($message) {
+        $message = $this->dataContext->parseParameter($message, [], "validators");
+        $errors = $this->getPropertyValue("errors");
+        $found = false;
+        if (is_array($errors['errors'])) {
+            foreach ($errors['errors'] as $error) {
+                if ($error === $message) {
+                    $found = true;
+                    break;
+                }
+            }
+        } else {
+            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
+        }
+        if ($found === false) {
+            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
+        }
+    }
+    
+    /**
      * Verifica que en la propiedad global contiene un error
      * @example Then the response has a errors in property "nombre"
      * @Then the response has a errors in property :propertyName
@@ -569,31 +593,7 @@ abstract class BaseOAuth2Context implements Context
         }
     }
     
-    /**
-     * Verifica que exista un mensaje de error
-     * @example And the response has a errors property and contains "Por motivos de seguridad, debe validar su cuenta mPandco antes de usar sus tarjetas de crédito."
-     * @Then the response has a errors property and contains :message
-     */
-    public function theResponseHasAErrorsPropertyAndContains($message) {
-        $message = $this->dataContext->parseParameter($message, [], "validators");
-        $errors = $this->getPropertyValue("errors");
-        $found = false;
-        if (is_array($errors['errors'])) {
-            foreach ($errors['errors'] as $error) {
-                if ($error === $message) {
-                    $found = true;
-                    break;
-                }
-            }
-        } else {
-            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
-        }
-        if ($found === false) {
-            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
-        }
-    }
-    
-        /**
+     /**
      * Agrega archivos a partir del json al siguiente request
      * @Given I add the request files:
      */
