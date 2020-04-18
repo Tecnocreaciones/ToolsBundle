@@ -214,7 +214,9 @@ class TecnocreacionesToolsExtension extends Extension
         
         if($config['database_spool']['enable'] === true){
            $loaderYml->load('services/database_spool.yml');
-           
+           $twigSwiftMailerDefinition = $container->getDefinition("Tecnoready\Common\Service\Email\TwigSwiftMailer");
+           $optionsMailer = $config['database_spool']["options_mailer"];
+           $twigSwiftMailerDefinition->replaceArgument(3, $optionsMailer);
            $container->setParameter("tecnoready.swiftmailer_db.spool.entity_class", $config['database_spool']["entity_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
