@@ -1,0 +1,13 @@
+services:
+    tecno.service.time_ago:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService
+        arguments:
+            - '@translator'
+    tecno.service.fixtures_dumper:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Service\FixturesDumperService
+        calls:
+            - [ setContainer, ['@service_container']]
+    Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager:
+        autowire: true
+        arguments:
+            - { "public_dir": "%kernel.root_dir%/../public" }

@@ -14,6 +14,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Twig_Extension;
 use Twig_SimpleFunction;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager;
 
 /**
  * Funciones para construir breadcumb y page title con twig
@@ -24,6 +25,11 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
 {
     private $container;
     private $config;
+    
+    /**
+     * @var ImageManager
+     */
+    private $imageManager;
 
     public function getName() 
     {
@@ -62,6 +68,7 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         $functions[] = new Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
         $functions[] = new Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
         $functions[] = new Twig_SimpleFunction('staticCall', array($this, 'staticCall'));
+        $functions[] = new Twig_SimpleFunction('generate_image_url', array($this, 'generateImageUrl'));
         return $functions;
     }
     
@@ -252,6 +259,18 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         return null;
     }
     
+    /**
+     * Genera la url
+     * @param type $entity
+     * @param type $property
+     * @param array $options
+     * @return type
+     */
+    public function generateImageUrl($entity,$property,array $options = [])
+    {
+        return $this->imageManager->generateUrl($entity, $property,$options);
+    }
+    
     public function breadcrumbRender($idService = "tecno.service.breadcrumb"){
         return $this->container->get($idService)->breadcrumbRender();
     }
@@ -293,4 +312,16 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         $this->config = $config;
         return $this;
     }
+    
+    /**
+     * @required
+     * @param ImageManager $imageManager
+     * @return $this
+     */
+    public function setImageManager(ImageManager $imageManager)
+    {
+        $this->imageManager = $imageManager;
+        return $this;
+    }
+
 }
