@@ -376,6 +376,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 $value = $this->parseParameter($value,[],"flashes",[
                     "return_object" => true,
                 ]);
+                if(is_object($value) && method_exists($value, "getId")){
+                    $value = $this->find(get_class($value), $value->getId());
+                }
                 $this->accessor->setValue($entity, $propertyPath, $value);
             }
             $this->saveEntity($entity, true);
