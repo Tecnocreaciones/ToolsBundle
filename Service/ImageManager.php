@@ -115,7 +115,7 @@ class ImageManager
      * @param \Vich\UploaderBundle\Templating\Helper\UploaderHelper $uploaderHelper
      * @return $this
      */
-    public function setUploaderHelper(\Vich\UploaderBundle\Templating\Helper\UploaderHelper $uploaderHelper)
+    public function setUploaderHelper(\Vich\UploaderBundle\Templating\Helper\UploaderHelper $uploaderHelper = null)
     {
         $this->uploaderHelper = $uploaderHelper;
         return $this;
@@ -126,7 +126,7 @@ class ImageManager
      * @param \Symfony\Component\HttpFoundation\UrlHelper $urlHelper
      * @return $this
      */
-    public function setUrlHelper(\Symfony\Component\HttpFoundation\UrlHelper $urlHelper)
+    public function setUrlHelper(\Symfony\Component\HttpFoundation\UrlHelper $urlHelper = null)
     {
         $this->urlHelper = $urlHelper;
         return $this;
