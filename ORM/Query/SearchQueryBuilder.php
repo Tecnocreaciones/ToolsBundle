@@ -8,6 +8,8 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\ORM\Query;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 /**
  * Query builder para las busquedas
  *
@@ -116,9 +118,20 @@ class SearchQueryBuilder
      * @param array $fields
      * @return \Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder
      */
-    public function addFieldLike(array $fields,$defaultValueField = null)
+    public function addFieldLike(array $fields,$defaultValueField = null,array $options = [])
     {
-        $andX = $this->qb->expr()->andX();//Se coloco andX para buscar siempre por todos los campos en conjutos
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "expr" => "andX",
+        ]);
+        $resolver->setAllowedValues("expr",["andX","orX"]);
+        $options = $resolver->resolve($options);
+        
+        if($options["expr"] == "andX"){
+            $x = $this->qb->expr()->andX();//Se coloco andX para buscar siempre por todos los campos en conjutos
+        } else if($options["expr"] == "orX"){
+            $x = $this->qb->expr()->orX();//Se coloco andX para buscar siempre por todos los campos en conjutos
+        }
         foreach ($fields as $key => $field){
             $fieldValue = $field;
             if(is_string($key)){
@@ -131,11 +144,11 @@ class SearchQueryBuilder
             }
             if($valueField !== null){
                 $valueField = $this->normalizeValue($valueField);
-                $andX->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
+                $x->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
             }
         }
-        if($andX->count() > 0){
-            $this->qb->andWhere($andX);
+        if($x->count() > 0){
+            $this->qb->andWhere($x);
         }
         return $this;
     }
@@ -158,7 +171,9 @@ class SearchQueryBuilder
         $valueField = $this->criteria->remove($queryField);
         if($valueField !== null){
             $valueField = $this->normalizeValue($valueField);
-            $this->addFieldLike($fields,$valueField);
+            $this->addFieldLike($fields,$valueField,[
+                "expr" => "orX",//Como es "query" debe ser un orX para que busque en todos los campos.
+            ]);
         }
         return $this;
     }
@@ -404,7 +419,10 @@ class SearchQueryBuilder
     private function normalizeField($alias,$field) {
         $fieldResponse = "";
         $fieldExplode = explode("__", $field);
-        if(count($fieldExplode) == 2){
+        if(strpos($field,".") !== false){
+            //Si el nombre del campo es absoluto se usa.
+            $fieldResponse = $field;
+        }else if(count($fieldExplode) == 2){
             $fieldResponse = sprintf("%s_%s.%s",$alias,$fieldExplode[0],$fieldExplode[1]);
         }else{
             $fieldResponse = sprintf("%s.".$fieldExplode[0],$alias);
