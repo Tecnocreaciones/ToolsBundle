@@ -143,8 +143,14 @@ class SearchQueryBuilder
                 $valueField = $defaultValueField;
             }
             if($valueField !== null){
-                $valueField = $this->normalizeValue($valueField);
-                $x->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$valueField."%")));
+                $values = $valueField;
+                if(!is_array($valueField)){
+                    $values = [$valueField];
+                }
+                foreach ($values as $value) {
+                    $value = $this->normalizeValue($value);
+                    $x->add($this->qb->expr()->like($normalizeField,$this->qb->expr()->literal("%".$value."%")));
+                }
             }
         }
         if($x->count() > 0){
@@ -171,9 +177,12 @@ class SearchQueryBuilder
         $valueField = $this->criteria->remove($queryField);
         if($valueField !== null){
             $valueField = $this->normalizeValue($valueField);
-            $this->addFieldLike($fields,$valueField,[
-                "expr" => "orX",//Como es "query" debe ser un orX para que busque en todos los campos.
-            ]);
+            $values = explode(" ", $valueField);
+            foreach ($values as $value) {
+                $this->addFieldLike($fields,$value,[
+                    "expr" => "orX",//Como es "query" debe ser un orX para que busque en todos los campos.
+                ]);
+            }
         }
         return $this;
     }
