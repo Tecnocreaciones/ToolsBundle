@@ -19,3 +19,26 @@ title.tooltip.show.element: "Ver"
 messages.tab.notes: 'Notas'
 email.component.empty.select: '< Seleccione >'
 "Loading content": "Por favor espere, cargando contenido..."
+
+#Email
+Component: "Componente de correo"
+Type component: 'Tipo de componente'
+Locale: 'Sitio/Idioma'
+Body: 'Contenido'
+Header: 'Cabecera'
+Footer: 'Pie'
+Subject: 'Asunto'
+email.status.published: 'Publicado'
+email.status.unpublished: 'Sin publicar'
+email.component.type.base: 'Plantilla base'
+email.component.type.header: 'Cabecera'
+email.component.type.body: 'Contenido'
+email.component.type.footer: 'Pie'
+Bases: 'Pantillas bases'
+Headers: 'Cabeceras'
+Bodys: 'Contenidos'
+Footers: 'Pies'
+Type label: 'Tipo'
+EmailTemplate: 'Plantilla de correo'
+Status label: 'Estatus'
+ID: 'Identificador'

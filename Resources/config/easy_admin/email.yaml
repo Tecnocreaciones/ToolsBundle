@@ -1,0 +1,58 @@
+easy_admin:
+    entities:
+        EmailTemplate:
+            class: "%tecnoready.swiftmailer_db.spool.email_template_class%"
+            role_prefix: ROLE_AREA_ADMIN_EMAIL_TEMPLATE
+            list:
+                fields: 
+                    - {'property': 'title', 'sortable':'true' }
+                    - {'property': 'statusLabel','type': 'string', 'trans': true, 'domain': 'messages'}
+                    - {'property': 'locale'}
+            form:  
+                fields:  
+                    - {'property': 'id'}
+                    - {'property': 'title'}
+                    - {'property': 'subject'}
+                    - {'property': 'base','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'base' } } }
+                    - {'property': 'header','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'header' } } }
+                    - {'property': 'body','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'body' } } }
+                    - {'property': 'footer','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'footer' } } }
+                    - {'property': 'locale'}
+                    - {'property': 'status','type': 'choice', 'type_options': { 'choices': 'Tecnoready\Common\Model\Email\ORM\ModelEmailTemplate::getStatusLabels' } }
+            show:  
+                fields:  
+                    - {'property': 'id'}
+                    - {'property': 'title'}
+                    - {'property': 'subject'}
+                    - {'property': 'base'}
+                    - {'property': 'header'}
+                    - {'property': 'body'}
+                    - {'property': 'footer'}
+                    - {'property': 'statusLabel','type': 'string', 'trans': true, 'domain': 'messages'}
+        Component:
+            class: "%tecnoready.swiftmailer_db.email_component_class%"
+            role_prefix: ROLE_AREA_ADMIN_EMAIL_COMPONENT
+            list:
+                fields: 
+                    - {'property': 'typeLabel','type': 'string', 'trans': true, 'domain': 'messages'}
+                    - {'property': 'title', 'sortable':'true' }
+                    - {'property': 'locale'}
+            form:  
+                fields:  
+                    - {'property': 'typeComponent','type': 'choice', 'type_options': { 'choices': 'Tecnoready\Common\Model\Email\ORM\ModelComponent::getTypesLabels' } }
+                    - {'property': 'title','type': 'FOS\CKEditorBundle\Form\Type\CKEditorType'}
+                    - {'property': 'body', 'type': 'fos_ckeditor','type_options': { 'config': { 'toolbar': 'full' } }}
+                    - {'property': 'locale'}
+            show:  
+                fields:  
+#                    - { 'type': 'tab_title', 'title': 'Component', 'icon': 'fa fa-share' }
+#                    - { 'type': 'tab_content', 'title': 'Summary', 'icon': 'fa fa-archive' }
+                    - {'property': 'typeLabel', 'type': 'string', 'trans': true, 'domain': 'messages' }
+                    - {'property': 'title','type':'raw' }
+                    - {'property': 'body','type':'raw' }
+                    - {'property': 'locale'}
+#                    - { 'type': 'tab_content', 'title': 'group.associations', 'icon': 'fa fa-database' }
+                    - {'property': 'bases'}
+                    - {'property': 'headers'}
+                    - {'property': 'bodys'}
+                    - {'property': 'footers'}

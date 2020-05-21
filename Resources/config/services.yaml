@@ -11,3 +11,6 @@ services:
         autowire: true
         arguments:
             - { "public_dir": "%kernel.root_dir%/../public" }
+    Tecnocreaciones\Bundle\ToolsBundle\Controller\Select2EntityController:
+        autowire: true
+        tags: ['controller.service_arguments']
