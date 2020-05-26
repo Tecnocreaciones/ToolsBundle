@@ -22,7 +22,7 @@ class Select2EntityController extends AbstractFOSRestController
      */
     private $parameterBag;
     
-    public function emailComponentAction(Request $request,ParameterBagInterface $parameterBag)
+    public function emailComponentAction(Request $request)
     {
         $view = $this->view();
         $typeComponent = $request->get("type");
@@ -84,11 +84,12 @@ class Select2EntityController extends AbstractFOSRestController
     }
     
     /**
+     * Se pasa null para darle compatibilidad con sf 3.x que no existe el servicio
      * @required
      * @param ParameterBagInterface $parameterBag
      * @return $this
      */
-    public function setParameterBag(ParameterBagInterface $parameterBag) {
+    public function setParameterBag(ParameterBagInterface $parameterBag = null) {
         $this->parameterBag = $parameterBag;
         return $this;
     }
