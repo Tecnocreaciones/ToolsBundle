@@ -29,10 +29,9 @@ class TecnocreacionesToolsExtension extends Extension
         
         $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new Loader\XmlFileLoader($container, $locator);
-        $loader->load('services.xml');
         
         $loaderYml = new Loader\YamlFileLoader($container, $locator);
-        
+        $loaderYml->load("services.yaml");
         if($config['table_prefix']['enable'] === true )
         {
             $tablePrefix = $config['table_prefix']['prefix'].$config['table_prefix']['prefix_separator'];
@@ -187,6 +186,7 @@ class TecnocreacionesToolsExtension extends Extension
                         ->addMethodCall('setContainer',array(new Reference('service_container')))
                         ->addMethodCall('setConfig',array($config))
                         ->addTag('twig.extension')
+                        ->setAutowired(true)
                         ;
         $container->setDefinition('tecnocreaciones_tools.utils_extension', $extensionToolsDefinition);
         
@@ -214,7 +214,9 @@ class TecnocreacionesToolsExtension extends Extension
         
         if($config['database_spool']['enable'] === true){
            $loaderYml->load('services/database_spool.yml');
-           
+           $twigSwiftMailerDefinition = $container->getDefinition("Tecnoready\Common\Service\Email\TwigSwiftMailer");
+           $optionsMailer = $config['database_spool']["options_mailer"];
+           $twigSwiftMailerDefinition->replaceArgument(3, $optionsMailer);
            $container->setParameter("tecnoready.swiftmailer_db.spool.entity_class", $config['database_spool']["entity_class"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
            $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);

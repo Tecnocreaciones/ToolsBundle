@@ -164,7 +164,13 @@ abstract class BaseOAuth2Context implements Context
     public function echoLastResponse()
     {
 //        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", var_export($this->lastRequestBody, true), $this->response->getContent()));
-        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT, 10), $this->response->getContent()));
+        $content = $this->response->getContent();
+        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT, 10), $content));
+        $contentJson = @json_encode(@json_decode($content,true),JSON_PRETTY_PRINT, 10);
+        if($contentJson !== null && $contentJson !== "null" && json_last_error() === JSON_ERROR_NONE){
+//            $content = $contentJson;
+            echo(sprintf("Response pretty json:\n %s", $contentJson));
+        }
     }
 
     /**
@@ -342,6 +348,15 @@ abstract class BaseOAuth2Context implements Context
     }
     
     /**
+     * Limpia el token de acceso actual
+     * @When I clear access token
+     */
+    public function iClearAccessToken()
+    {
+        $this->dataContext->getClient()->setServerParameter("HTTP_AUTHORIZATION",null);
+    }
+    
+    /**
      * Agrega data tipo json al siguiente request
      * @Given I add the request data:
      */
@@ -438,6 +453,10 @@ abstract class BaseOAuth2Context implements Context
         
         $this->dataContext->getClient()->request($method, $url, $parameters, $files,$server);
         $this->response = $this->dataContext->getClient()->getResponse();
+        $_server = $this->response->headers->get("_server");//Headers especiales
+        if($_server !== null){
+            echo sprintf("Response headers: %s",$_server);
+        }
         if($options["clear_request"] === true){
             $this->initRequest();
         }
@@ -461,6 +480,30 @@ abstract class BaseOAuth2Context implements Context
         $this->dataContext->setScenarioParameter("%lastResponse%",$this->data,true);
         $this->dataContext->restartKernel();
         return $this->data;
+    }
+    
+    /**
+     * Verifica que exista un mensaje de error
+     * @example And the response has a errors property and contains "validators.not_blank.driver.service_status"
+     * @Then the response has a errors property and contains :message
+     */
+    public function theResponseHasAErrorsPropertyAndContains($message) {
+        $message = $this->dataContext->parseParameter($message, [], "validators");
+        $errors = $this->getPropertyValue("errors");
+        $found = false;
+        if (is_array($errors['errors'])) {
+            foreach ($errors['errors'] as $error) {
+                if ($error === $message) {
+                    $found = true;
+                    break;
+                }
+            }
+        } else {
+            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
+        }
+        if ($found === false) {
+            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
+        }
     }
     
     /**
@@ -554,31 +597,7 @@ abstract class BaseOAuth2Context implements Context
         }
     }
     
-    /**
-     * Verifica que exista un mensaje de error
-     * @example And the response has a errors property and contains "Por motivos de seguridad, debe validar su cuenta mPandco antes de usar sus tarjetas de crédito."
-     * @Then the response has a errors property and contains :message
-     */
-    public function theResponseHasAErrorsPropertyAndContains($message) {
-        $message = $this->dataContext->parseParameter($message, [], "validators");
-        $errors = $this->getPropertyValue("errors");
-        $found = false;
-        if (is_array($errors['errors'])) {
-            foreach ($errors['errors'] as $error) {
-                if ($error === $message) {
-                    $found = true;
-                    break;
-                }
-            }
-        } else {
-            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
-        }
-        if ($found === false) {
-            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
-        }
-    }
-    
-        /**
+     /**
      * Agrega archivos a partir del json al siguiente request
      * @Given I add the request files:
      */

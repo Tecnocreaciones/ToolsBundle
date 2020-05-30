@@ -1,0 +1,6 @@
+tecno_select_email_component:
+    path: /email/component.json
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:Select2Entity:emailComponent
+        _format: json
+    requirements: { _method: GET }

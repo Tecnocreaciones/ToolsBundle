@@ -255,9 +255,9 @@ abstract class BaseWebUserContext extends MinkContext
        try {
            parent::pressButton($locator);
        } catch (\Exception $ex) {
-           $this->iScrollBottomAndElementAppear();
+           $this->iScrollBottomAndElementAppear($locator);
            //esperamos 2 segundos para intentar de nuevo hacer click
-           $this->getSession()->wait(2 * 1000);
+           //$this->getSession()->wait(2 * 1000);
            parent::pressButton($locator);
        }
     }
@@ -332,7 +332,11 @@ abstract class BaseWebUserContext extends MinkContext
     {
         $this->spin(function($context) use ($cssSelector) {
             try {
-                $context->findElement($cssSelector);
+                $element = $context->findElement($cssSelector);
+                //Ya no se encontro
+                if($element === null){
+                    return true;
+                }
                 return false;
             } catch (Exception $ex) {
                 return true;
@@ -340,36 +344,6 @@ abstract class BaseWebUserContext extends MinkContext
        });
     }
    
-   /**
-    * Espera hasta que devuelva true la funcion pasada
-    * Based on Behat's own example
-    * @see http://docs.behat.org/en/v2.5/cookbook/using_spin_functions.html#adding-a-timeout
-    * @param $lambda
-    * @param int $wait
-    * @throws \Exception
-    */
-   public function spin($lambda, $wait = 15,$errorCallback = null)
-   {
-       $time = time();
-       $stopTime = $time + $wait;
-       while (time() < $stopTime)
-       {
-           try {
-               if ($lambda($this)) {
-                   return;
-               }
-           } catch (\Exception $e) {
-               // do nothing
-           }
-
-           usleep(250000);
-       }
-       if($errorCallback !== null){
-           $errorCallback($this);
-       }
-       throw new \Exception("Spin function timed out after {$wait} seconds");
-   }
-
     /**
      * Example: And I should see "validators::validators.sale.registration.code_quantity_min" with params '{"%n%":2}'
      * Example: Then I should see "labels::label.smart_withdrawal_enabled"
