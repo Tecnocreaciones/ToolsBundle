@@ -6,10 +6,10 @@
     class="tabcontent-border"
 {% endblock ng_parameter %}
 
-{% set files = tab.parameter("objectDataManager").documents.getAll() %}
+{% set files = objectDataManager.documents.getAll() %}
 
-{% macro header_sort(tab,property) %}
-    {% set uri = tab.parameter("parameters_to_route")["_conf"]["returnUrl"] %}
+{% macro header_sort(tab,property,parameters_to_route) %}
+    {% set uri = parameters_to_route["_conf"]["returnUrl"] %}
     <a href="{{ uri }}?{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') }}={{ property }}&{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') }}=ASC">
         <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
     </a>
@@ -68,15 +68,15 @@
                 <h6 class="title-section">Adjuntar un archivo</h6>
             </div>
             <div class="card-body">
-                <form action="{{ path("tabs_object_manager_documents_upload",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
-                    {{ form_widget(tab.parameter("form").documents) }}
+                <form action="{{ path("tabs_object_manager_documents_upload",parameters_to_route) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
+                    {{ form_widget(form.documents) }}
                     &nbsp; 
                     <button type="input" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
                     {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
                     {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
                     (Tamaño máximo: {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
-                    {{ form_widget(tab.parameter("form").comments) }}
-                    {{ form_rest(tab.parameter("form")) }}
+                    {{ form_widget(form.comments) }}
+                    {{ form_rest(form) }}
                 </form>
 
             </div>
@@ -94,15 +94,15 @@
                                 <th>#</th>
                                 <th>
                                     Documentos
-                                    {{ internal.header_sort(tab,"filename")}}
+                                    {{ internal.header_sort(tab,"filename",parameters_to_route)}}
                                 </th>
                                 <th>
                                     Tamaño
-                                    {{ internal.header_sort(tab,"size")}}
+                                    {{ internal.header_sort(tab,"size",parameters_to_route)}}
                                 </th>
                                 <th>
                                     Fecha
-                                    {{ internal.header_sort(tab,"ATime")}}
+                                    {{ internal.header_sort(tab,"ATime",parameters_to_route)}}
                                 </th>
                                 <th>&nbsp;</th>
                             </tr>
@@ -119,11 +119,11 @@
                                     {#                              10 MB   #}
                                     {% set badge = "badge-warning" %}
                                 {% endif %}
-                                {% set metadata = tab.parameter("objectDataManager").documents.getMetadata(file) %}
+                                {% set metadata = objectDataManager.documents.getMetadata(file) %}
                                 <tr>
                                     <th scope="row">{{ loop.index }}</th>
                                     <td>
-                                        {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}&nbsp;
+                                        {% set params = parameters_to_route|merge({filename: file.filename}) %}&nbsp;
                                         {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\ToolsUtils","iconExtension",[file.extension])|raw }}
                                         <a href="{{ path("tabs_object_manager_documents_get",params) }}" class="btn btn-link btn-sm">
                                             {{ file.filename }}

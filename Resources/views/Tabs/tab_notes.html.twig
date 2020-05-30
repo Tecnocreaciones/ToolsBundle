@@ -10,8 +10,8 @@
 {% set classDivButton1 = "d-btn-1"~random() %}
 {% set classDivButton2 = "d-btn-2"~random() %}
 
-{% set publics = tab.parameter("objectDataManager").notes.getPaginator(constant('Tecnoready\\Common\\Model\\ObjectManager\\NoteManager\\NoteInterface::TYPE_PUBLIC')) %}
-{% set privates = tab.parameter("objectDataManager").notes.getPaginator(constant('Tecnoready\\Common\\Model\\ObjectManager\\NoteManager\\NoteInterface::TYPE_PRIVATE')) %}
+{% set publics = objectDataManager.notes.getPaginator(constant('Tecnoready\\Common\\Model\\ObjectManager\\NoteManager\\NoteInterface::TYPE_PUBLIC')) %}
+{% set privates = objectDataManager.notes.getPaginator(constant('Tecnoready\\Common\\Model\\ObjectManager\\NoteManager\\NoteInterface::TYPE_PRIVATE')) %}
 
 {% macro printNotes(notes) %}
     <ul>
@@ -40,7 +40,7 @@
             padding: 10px;
         }
     </style>
-    <form action="{{ path("tabs_object_note_add",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
+    <form action="{{ path("tabs_object_note_add",parameters_to_route) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
         <div class="row p-2">
             <div class="col-lg-12">
                 <table class="border" width="100%">
@@ -56,7 +56,7 @@
                                     {{ macros.printNotes(publics) }}
                                 </div>
                                 <div class="{{ classFormNotes }} hide">
-                                    {{ form_widget(tab.parameter("form_notes").publicNote) }}
+                                    {{ form_widget(form_notes.publicNote) }}
                                 </div>
                             </td>
                         </tr>
@@ -71,7 +71,7 @@
                                     {{ macros.printNotes(privates) }}
                                 </div>
                                 <div class="{{ classFormNotes }} hide">
-                                    {{ form_widget(tab.parameter("form_notes").privateNote) }}
+                                    {{ form_widget(form_notes.privateNote) }}
                                 </div>
                             </td>
                         </tr>
@@ -79,7 +79,7 @@
                 </table>
             </div>
         </div>
-        {{ form_rest(tab.parameter("form_notes")) }}
+        {{ form_rest(form_notes) }}
         <div class="text-right">
             <div class="{{ classDivButton1 }}" >
                 <button type="button" class="btn btn-success {{ classButtonAction }}" data-action="update"><i class="vf vf-pencil vf-1x"></i>&nbsp;Actualizar</button>

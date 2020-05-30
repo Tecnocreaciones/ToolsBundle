@@ -45,3 +45,4 @@ ID: 'Identificador'
 tab.notes: "Notas"
 tab.history: "Historial"
 tab.documents: "Documentos"
+tab.error.loading.content: "Ocurrio un error cargando el contenido, intente mas tarde."
