@@ -42,3 +42,6 @@ Type label: 'Tipo'
 EmailTemplate: 'Plantilla de correo'
 Status label: 'Estatus'
 ID: 'Identificador'
+tab.notes: "Notas"
+tab.history: "Historial"
+tab.documents: "Documentos"

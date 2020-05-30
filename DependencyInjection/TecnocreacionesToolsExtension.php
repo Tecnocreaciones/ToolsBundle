@@ -226,8 +226,10 @@ class TecnocreacionesToolsExtension extends Extension
            $container->setParameter("tecnoready.swiftmailer_db.email_repository_manager", $config['database_spool']["email_repository_manager"]);
         }
         
+        $container->setParameter('tecnocreaciones_tools.service.tabs.enable',$config['tabs']['enable']);
         if($config['tabs']['enable'] === true){
             $loaderYml->load('services/tabs.yml');
+            unset($config['tabs']["enable"]);
             $container->setParameter('tecnocreaciones_tools.service.tabs',$config['tabs']);
         }
         
@@ -235,7 +237,6 @@ class TecnocreacionesToolsExtension extends Extension
             $loaderYml->load('services/liform.yml');
         }
         
-        $container->setParameter('tecnocreaciones_tools.service.tabs.enable',$config['tabs']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.table_prefix.enable', $config['table_prefix']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.sequence_generator.enable', $config['sequence_generator']['enable']);
         $container->setParameter('tecnocreaciones_tools.service.unit_converter.enable', $config['unit_converter']['enable']);

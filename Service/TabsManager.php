@@ -46,7 +46,32 @@ class TabsManager implements ConfigureInterface
     public function __construct(RequestStack $requestStack,array $options)
     {
         $this->requestStack = $requestStack;
-        $this->options = $options;
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "document_manager" => [
+                "template" => null,
+                "title" => "",
+                "icon" => "",
+            ],
+            "history_manager" => [
+                "template" => null,
+                "title" => "",
+                "icon" => "",
+            ],
+            "note_manager" => [
+                "template" => null,
+                "title" => "",
+                "icon" => "",
+            ],
+            "exporter" => [
+                "template" => null,
+                "template_upload" => null,
+            ],
+            "template" => null,
+            "default_icon" => null,
+        ]);
+        $resolver->setDefined(["object_types"]);
+        $this->options = $resolver->resolve($options);
     }
     
     public function configure($objectId, $objectType)
@@ -67,6 +92,7 @@ class TabsManager implements ConfigureInterface
         $request = $this->requestStack->getCurrentRequest();
         $this->parametersToView = [];
         $this->getObjectDataManager()->configure($this->objectId, $this->objectType);
+        $options["object_id"] = $this->objectId;
         $tab = new Tab($options);
         $tab->setRequest($request);
         $this->tab = $tab;
@@ -95,7 +121,20 @@ class TabsManager implements ConfigureInterface
 
     public function addTabContent(TabContent $tabContent)
     {
+        if(empty($tabContent->getId()) && $this->options["default_icon"]){
+            $tabContent->setIcon($this->options["default_icon"]);
+        }
         $this->tab->addTabContent($tabContent);
+    }
+    
+    /**
+     * Genera una instancia de tabcontent
+     * @param array $options
+     * @return TabContent
+     */
+    public function newTabContent(array $options = [])
+    {
+        return new TabContent($options);
     }
     
     /**
@@ -108,8 +147,8 @@ class TabsManager implements ConfigureInterface
         $resolver->setDefaults([
             "add_content_div" => false,
             "template" => $this->options["document_manager"]["template"],
-            "title" => $this->trans("messages.tab.documents", [], "messages"),
-            "icon" => "vf vf-documents",
+            "title" => $this->trans($this->options["document_manager"]["title"], [], "messages"),
+            "icon" => $this->options["document_manager"]["icon"],
         ]);
         $options = $resolver->resolve($options);
         $tabContentDocuments = new TabContent($options);
@@ -130,8 +169,8 @@ class TabsManager implements ConfigureInterface
         $resolver->setDefaults([
             "add_content_div" => false,
             "template" => $this->options["history_manager"]["template"],
-            "title" => $this->trans("messages.tab.history", [], "messages"),
-            "icon" => "vf vf-history-clock",
+            "title" => $this->trans($this->options["history_manager"]["title"], [], "messages"),
+            "icon" => $this->options["history_manager"]["icon"],
         ]);
         $options = $resolver->resolve($options);
         $tabContentHistory = new TabContent($options);
@@ -149,8 +188,8 @@ class TabsManager implements ConfigureInterface
         $resolver->setDefaults([
             "add_content_div" => false,
             "template" => $this->options["note_manager"]["template"],
-            "title" => $this->trans("messages.tab.notes", [], "messages"),
-            "icon" => "vf vf-draft",
+            "title" => $this->trans($this->options["note_manager"]["title"], [], "messages"),
+            "icon" => $this->options["note_manager"]["icon"],
         ]);
         $options = $resolver->resolve($options);
         $tabContentHistory = new TabContent($options);

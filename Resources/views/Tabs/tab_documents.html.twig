@@ -35,7 +35,7 @@
             color: #257dd5;
         }
     </style>
-    <div class="row">
+    <div class="row p-2">
         <div class="col-lg-12">
             <table class="border" width="100%">
                 <tbody>
@@ -59,108 +59,112 @@
 {% endblock %}
 
 {% block tab_footer %}
-    <div class="clearfix">&nbsp;</div>
-    <div class="card">
-        <div class="card-title">
-            <h6 class="title-section">Adjuntar un archivo</h6>
+    <div class="p-2">
+
+
+        <div class="clearfix">&nbsp;</div>
+        <div class="card">
+            <div class="card-title">
+                <h6 class="title-section">Adjuntar un archivo</h6>
+            </div>
+            <div class="card-body">
+                <form action="{{ path("tabs_object_manager_documents_upload",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
+                    {{ form_widget(tab.parameter("form").documents) }}
+                    &nbsp; 
+                    <button type="input" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
+                    {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
+                    {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
+                    (Tamaño máximo: {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
+                    {{ form_widget(tab.parameter("form").comments) }}
+                    {{ form_rest(tab.parameter("form")) }}
+                </form>
+
+            </div>
         </div>
-        <div class="card-body">
-            <form action="{{ path("tabs_object_manager_documents_upload",tab.parameter("parameters_to_route")) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
-                {{ form_widget(tab.parameter("form").documents) }}
-                &nbsp; 
-                <button type="input" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
-                {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
-                {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
-                (Tamaño máximo: {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
-                {{ form_widget(tab.parameter("form").comments) }}
-                {{ form_rest(tab.parameter("form")) }}
-            </form>
-            
-        </div>
-    </div>
-    <div class="clearfix">&nbsp;</div>
-    <div class="card">
-        <div class="card-title">
-            <h6 class="title-section">Archivos y documentos adjuntos</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>
-                                Documentos
-                                {{ internal.header_sort(tab,"filename")}}
-                            </th>
-                            <th>
-                                Tamaño
-                                {{ internal.header_sort(tab,"size")}}
-                            </th>
-                            <th>
-                                Fecha
-                                {{ internal.header_sort(tab,"ATime")}}
-                            </th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for file in files|super_usort(app.request.get(constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY'),"filename"),app.request.get(constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER'),"ASC")) %}
-                            {% set size = file.getSize() %}
-                            
-                            {% set badge = "badge-success" %}
-                            {% if size > 20971520 %}
-{#                              20 MB   #}
-                                {% set badge = "badge-danger" %}
-                            {% elseif size > 10485760  %}
-{#                              10 MB   #}
-                                {% set badge = "badge-warning" %}
-                            {% endif %}
-                            {% set metadata = tab.parameter("objectDataManager").documents.getMetadata(file) %}
+        <div class="clearfix">&nbsp;</div>
+        <div class="card">
+            <div class="card-title">
+                <h6 class="title-section">Archivos y documentos adjuntos</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <th scope="row">{{ loop.index }}</th>
-                                <td>
-                                    {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}&nbsp;
-                                    {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\ToolsUtils","iconExtension",[file.extension])|raw }}
-                                    <a href="{{ path("tabs_object_manager_documents_get",params) }}" class="btn btn-link btn-sm">
-                                        {{ file.filename }}
-                                    </a>
-                                    {% if metadata["comments"] is not null %}
-                                        ({{ metadata["comments"] }})
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge {{ badge }}">
-                                        {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[size]) }}
-                                    </span>
-                                </td>
-                                <td>{{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}</td>
-                                <td class="color-primary">
-                                    <button onclick="{{ deleteFtn }}('{{ file.filename }}','{{ path("tabs_object_manager_documents_delete",params) }}');" class="btn btn-danger"><i class="vf vf-delete"></i></button>
-                                </td>
+                                <th>#</th>
+                                <th>
+                                    Documentos
+                                    {{ internal.header_sort(tab,"filename")}}
+                                </th>
+                                <th>
+                                    Tamaño
+                                    {{ internal.header_sort(tab,"size")}}
+                                </th>
+                                <th>
+                                    Fecha
+                                    {{ internal.header_sort(tab,"ATime")}}
+                                </th>
+                                <th>&nbsp;</th>
                             </tr>
-                        {% else%}
-                            <tr>
-                                <td colspan="6">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                
-                                <td colspan="6" class="text-center">No hay documentos.</td>
-                            </tr>
-                            <tr>
-                                <td colspan="6">&nbsp;</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for file in files|super_usort(app.request.get(constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY'),"filename"),app.request.get(constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER'),"ASC")) %}
+                                {% set size = file.getSize() %}
+
+                                {% set badge = "badge-success" %}
+                                {% if size > 20971520 %}
+                                    {#                              20 MB   #}
+                                    {% set badge = "badge-danger" %}
+                                {% elseif size > 10485760  %}
+                                    {#                              10 MB   #}
+                                    {% set badge = "badge-warning" %}
+                                {% endif %}
+                                {% set metadata = tab.parameter("objectDataManager").documents.getMetadata(file) %}
+                                <tr>
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td>
+                                        {% set params = tab.parameter("parameters_to_route")|merge({filename: file.filename}) %}&nbsp;
+                                        {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\ToolsUtils","iconExtension",[file.extension])|raw }}
+                                        <a href="{{ path("tabs_object_manager_documents_get",params) }}" class="btn btn-link btn-sm">
+                                            {{ file.filename }}
+                                        </a>
+                                        {% if metadata["comments"] is not null %}
+                                            ({{ metadata["comments"] }})
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ badge }}">
+                                            {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[size]) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}</td>
+                                    <td class="color-primary">
+                                        <button onclick="{{ deleteFtn }}('{{ file.filename }}', '{{ path("tabs_object_manager_documents_delete",params) }}');" class="btn btn-danger"><i class="vf vf-delete"></i></button>
+                                    </td>
+                                </tr>
+                            {% else%}
+                                <tr>
+                                    <td colspan="6">&nbsp;</td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="6" class="text-center">No hay documentos.</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">&nbsp;</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
     <script>
-        function {{ deleteFtn }}(name,url){
-            if(confirm("¿Eliminar el archivo "+name+"?")){
-                window.location = url;
+            function {{ deleteFtn }}(name, url) {
+                if (confirm("¿Eliminar el archivo " + name + "?")) {
+                    window.location = url;
+                }
             }
-        }
     </script>
 {% endblock %}
