@@ -15,6 +15,7 @@ use RuntimeException;
 use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Tecnoready\Common\Util\StringUtil;
 
 /**
  * Manejador de tabs
@@ -100,6 +101,7 @@ class TabsManager implements ConfigureInterface
         $options["object_id"] = $this->objectId;
         $tab = new Tab($options);
         $tab->setRequest($request);
+        $tab->setRootUrl($request->getRequestUri());//Por defecto la misma ruta que se llamo originalmente
         $this->tab = $tab;
         $this->parametersToView["objectDataManager"] = $this->getObjectDataManager();
         $this->parametersToView["tabsManager"] = $this;
@@ -114,9 +116,12 @@ class TabsManager implements ConfigureInterface
     private function getParametersToRoute()
     {
         $request = $this->requestStack->getCurrentRequest();
+        $uri = $request->getRequestUri();
+        $toClear = ["isInit","ajax",Tab::SORT_ORDER,Tab::SORT_PROPERTY,Tab::LAST_CURRENT_TABS,Tab::NAME_CURRENT_TAB];
+        $uri = StringUtil::removeQueryStringURL($uri,$toClear);
         return [
             "_conf" => [
-                "returnUrl" => $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
+                "returnUrl" => $uri,
                 "objectId" => $this->objectId,
                 "objectType" => $this->objectType,
             ]

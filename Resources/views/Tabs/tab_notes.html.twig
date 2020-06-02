@@ -47,9 +47,9 @@
                     <tbody>
                         <tr>
                             <td width="30%">
-                                <b>Notas publicas</b>
+                                <b>{{ "Public notes"|trans }}</b>
                                 <br/>
-                                <small>(Estas notas podran ser observadas en documentos, perfiles, resumenes y otros)</small>
+                                <small>{{ "public_notes.help"|trans }}</small>
                             </td>
                             <td class="text-left">
                                 <div class="{{ classListNotes }} notes-list">
@@ -60,11 +60,11 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="hide">
+                        <tr>
                             <td>
-                                <b>Notas privadas</b>
+                                <b>{{ "Private Notes" | trans }}</b>
                                 <br/>
-                                <small>(Estas notas son de uso interno, no podrán ser visualizadas en otra parte.)</small>
+                                <small>{{ "private_notes.help"|trans }}</small>
                             </td>
                             <td class="text-left">
                                 <div class="{{ classListNotes }} notes-list">
@@ -80,16 +80,16 @@
             </div>
         </div>
         {{ form_rest(form_notes) }}
-        <div class="text-right">
+        <div class="text-right p-2">
             <div class="{{ classDivButton1 }}" >
-                <button type="button" class="btn btn-success {{ classButtonAction }}" data-action="update"><i class="vf vf-pencil vf-1x"></i>&nbsp;Actualizar</button>
+                <button type="button" class="btn btn-success {{ classButtonAction }}" data-action="update"><i class="fas fa-edit"></i>&nbsp;{{ "button.notes.update"|trans }}</button>
             </div>
             <div class="hide {{ classDivButton2 }}">
                 <button type="submit" class="btn btn-success" data-action="save">
-                    <i class="vf vf-save"></i>
-                    Guardar
+                    <i class="fas fa-save"></i>
+                    {{ "button.notes.save"|trans }}
                 </button>
-                <button type="button" class="btn btn-link {{ classButtonAction }}" data-action="cancel"><i class="vf vf-stop vf-1x"></i>&nbsp;Cancelar</button>
+                <button type="button" class="btn btn-link {{ classButtonAction }}" data-action="cancel"><i class="fas fa-undo"></i>&nbsp;{{ "button.notes.cancel"|trans }}</button>
             </div>
             <script>
                 $(function () {
