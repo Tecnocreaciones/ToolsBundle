@@ -49,6 +49,13 @@ class TabsManager implements ConfigureInterface
      */
     private $options;
 
+    /**
+     * Modelos a renderizar por chain
+     * $models
+     * @var Array
+     */
+    private $models;
+
     public function __construct(RequestStack $requestStack, array $options)
     {
         $this->requestStack = $requestStack;
@@ -223,6 +230,19 @@ class TabsManager implements ConfigureInterface
     }
 
     /**
+     * Agrega un modelo valido por chain
+     * @param $model
+     * @throws InvalidArgumentException
+     */
+    public function addModel($model)
+    {
+        if(isset($this->models[$model])){
+           throw new InvalidArgumentException(sprintf("The model to '%s' is already added",$model)); 
+        }
+        $this->models[] = $model;
+    }
+
+    /**
      * Renderiza el modulo para generar archivos del moduloe
      * @param $entity
      * @param type $idChain
@@ -233,9 +253,18 @@ class TabsManager implements ConfigureInterface
         $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
         $choices = [];
         $models = $chain->getModels();
-        foreach ($models as $model) {
-            $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
+        if (!is_null($this->models) && is_array($this->models)) {
+            foreach ($models as $model) {
+                if (in_array($model->getId(),$this->models)) {
+                    $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
+                }
+            }
+        } else {
+            foreach ($models as $model) {
+                $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
+            }
         }
+
         $form = $this->createForm(ExporterType::class, $choices);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
         return $this->container->get('templating')->render($this->options["exporter"]["template"],
