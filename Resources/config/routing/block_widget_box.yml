@@ -1,61 +1,61 @@
 block_widget_box_index:
-    pattern: /{eventName}/
+    path: /{eventName}/
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:index
         _format: html
     requirements: { _method: GET }
     
 block_widget_box_create:
-    pattern: /{eventName}/create
+    path: /{eventName}/create
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:create
         _format: html
     requirements: { _method: GET|POST }
     
 block_widget_box_add_all:
-    pattern: /{eventName}/add-all
+    path: /{eventName}/add-all
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:addAll
         _format: html
     requirements: { _method: GET }
     
 block_widget_box_delete_all:
-    pattern: /{eventName}/delete-all
+    path: /{eventName}/delete-all
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:deleteAll
         _format: html
     requirements: { _method: GET }
     
 block_widget_box_delete:
-    pattern: /{id}/delete
+    path: /{id}/delete
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:delete
         _format: html
     requirements: { _method: GET }
     
 block_widget_box_minimize:
-    pattern: /{id}/minimize
+    path: /{id}/minimize
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:minimize
         _format: html
     requirements: { _method: POST }
     
 block_widget_box_maximize:
-    pattern: /{id}/maximize
+    path: /{id}/maximize
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:maximize
         _format: html
     requirements: { _method: GET }
     
 block_widget_box_update:
-    pattern: /update
+    path: /update
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:update
         _format: html
     requirements: { _method: POST }
     
 block_widget_box_refresh:
-    pattern: /{id}/refresh
+    path: /{id}/refresh
     defaults:
         _controller:  TecnocreacionesToolsBundle:BlockWidgetBox:refresh
         _format: html

@@ -11,13 +11,14 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Service;
 
-use Sonata\BlockBundle\Event\BlockEvent;
+use Tecnocreaciones\Bundle\ToolsBundle\Event\BlockEvent;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
 use InvalidArgumentException;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Servicio para construir un grid ordenado (tecnocreaciones_tools.service.grid_widget_box)
@@ -52,6 +53,11 @@ class GridWidgetBoxService implements ContainerAwareInterface
     private $container;
     private $cacheGroup = [];
 
+    /**
+     * Opciones configuradas
+     * @var array
+     */
+    private $options;
 
     public function __construct() 
     {
@@ -60,6 +66,41 @@ class GridWidgetBoxService implements ContainerAwareInterface
         $this->definitionsBlockGridByGroup = array();
     }
     
+    /**
+     * Se establece las opciones
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions(array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'enable' => true,
+            'widget_block_grid_class' => null,
+            'debug' => false,
+            'widget_box_manager' => 'tecnocreaciones_tools.service.orm.widget_box_manager',
+            'base_layout' => '::layout.html.twig',
+            "trans_default_domain" => "widgetBox",
+        ]);
+        $options = $resolver->resolve($options);
+        $this->options = $options;
+        return $this;
+    }
+    
+    /**
+     * Busca una opcion
+     * @param type $name
+     * @return type
+     * @throws InvalidArgumentException
+     */
+    public function getOption($name)
+    {
+        if(!isset($this->options[$name])){
+            throw new InvalidArgumentException(sprintf("La opcion '%s' no existe. Los disponibles son %s",$name, implode(", ",$this->options)));
+        }
+        return $this->options[$name];
+    }
+
     public function addBlock(BlockWidgetBox $block) 
     {
         if($block->getSetting('positionX') === null){

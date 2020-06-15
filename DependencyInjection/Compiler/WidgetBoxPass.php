@@ -15,9 +15,11 @@ use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+use RuntimeException;
 
 /**
- * Description of WidgetBoxPass
+ * Configura los widgets
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
@@ -29,7 +31,8 @@ class WidgetBoxPass implements CompilerPassInterface
             return;
         }
         $definitionGridWidgetBox = $container->getDefinition('tecnocreaciones_tools.service.grid_widget_box');
-        $tags = $container->findTaggedServiceIds('sonata.block');
+        $definitionGridWidgetBox->addMethodCall("setOptions",array($container->getParameter("tecnocreaciones_tools.widget_block_grid.options")));
+        $tags = $container->findTaggedServiceIds('tecno.block');
         $widgetIds = [];
         foreach ($tags as $id => $attributes) {
             
@@ -39,11 +42,14 @@ class WidgetBoxPass implements CompilerPassInterface
                 $class = $container->getParameter($class);
             }
             $reflectionClass = new ReflectionClass($class);
-            if($reflectionClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface')){
-                $definitionGridWidgetBox->addMethodCall('addDefinitionsBlockGrid',array(new Reference($id)));
-                $widgetIds[] = $id;
+            if(!$reflectionClass->isSubclassOf(DefinitionBlockWidgetBoxInterface::class)){
+                throw new RuntimeException(sprintf("The class '%s' must be inherit from '%s'",$class,DefinitionBlockWidgetBoxInterface::class));
             }
+            $definitionGridWidgetBox->addMethodCall('addDefinitionsBlockGrid',array(new Reference($id)));
+            $widgetIds[] = $id;
         }
+        var_dump($widgetIds);
+        die;
         $loaderWidget = $container->findDefinition("sonata.block.loader.service.widgets");
         $loaderWidget->addArgument($widgetIds);
     }

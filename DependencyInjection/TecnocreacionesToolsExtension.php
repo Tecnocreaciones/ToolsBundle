@@ -100,9 +100,8 @@ class TecnocreacionesToolsExtension extends Extension
             }
             
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_block_grid_class', $blockGridClass);
-            $container->setParameter('tecnocreaciones_tools.widget_block_grid.debug', $blockGridConfig['debug']);
-            $container->setParameter('tecnocreaciones_tools.widget_block_grid.enable', $blockGridConfig['enable']);
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager', $widgetBoxManager);
+            $container->setParameter('tecnocreaciones_tools.widget_block_grid.options', $blockGridConfig);
         }
         
 //        if($config['install']['enable'] === true){

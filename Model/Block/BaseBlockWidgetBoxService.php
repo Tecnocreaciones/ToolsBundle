@@ -11,11 +11,11 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Model\Block;
 
-use Sonata\BlockBundle\Block\BlockContextInterface;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\BlockContextInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
-use Sonata\BlockBundle\Block\Service\AbstractBlockService;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\AbstractBlockService;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\Event\MainSummaryBlockEvent;
 use InvalidArgumentException;
 
@@ -60,10 +60,6 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
         return $r;
     }
     
-    public function setDefaultSettings(OptionsResolverInterface $resolver) {
-        $this->configureSettings($resolver);
-    }
-    
     public function getDescription() {
         return $this->getType()."_desc";
     }
@@ -86,7 +82,7 @@ abstract class BaseBlockWidgetBoxService extends AbstractBlockService implements
     }
 
     
-    public function configureSettings(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)
+    public function configureSettings(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'widget_id' => null,
