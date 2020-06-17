@@ -14,9 +14,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\WidgetInterface;
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManagerInterface;
-use Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService;
+use Tecnoready\Common\Model\Block\WidgetInterface;
 use Tecnoready\Common\Service\Block\WidgetManager;
 
 /**
@@ -280,15 +278,6 @@ class WidgetController extends Controller
             ;
     }
 
-    /**
-     * 
-     * @return BlockWidgetBoxManagerInterface
-     */
-    private function getWidgetBoxManager()
-    {
-        return $this->get($this->container->getParameter('tecnocreaciones_tools.widget.widget_adapter'));
-    }
-    
     protected function trans($id, array $parameters = array(), $domain = 'widgetBox') {
         return $this->get('translator')->trans($id, $parameters, $domain);
     }

@@ -52,7 +52,9 @@
 
 2.  Agregar estilos y javascript
 
-        {{ widgets_render_assets() }}
+Con assetic: `{{ widgets_render_assets() }}`
+
+Con webpack: `import '../../vendor/tecnocreaciones/tools-bundle/Resources/assets/widget.js';`
 
 3. Inicializar grid
 
