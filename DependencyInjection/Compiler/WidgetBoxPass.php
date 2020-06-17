@@ -15,7 +15,7 @@ use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+use Tecnoready\Common\Model\Block\WidgetInterface;
 use RuntimeException;
 
 /**
@@ -42,14 +42,14 @@ class WidgetBoxPass implements CompilerPassInterface
                 $class = $container->getParameter($class);
             }
             $reflectionClass = new ReflectionClass($class);
-            if(!$reflectionClass->isSubclassOf(DefinitionBlockWidgetBoxInterface::class)){
-                throw new RuntimeException(sprintf("The class '%s' must be inherit from '%s'",$class,DefinitionBlockWidgetBoxInterface::class));
+            if(!$reflectionClass->isSubclassOf(WidgetInterface::class)){
+                throw new RuntimeException(sprintf("The class '%s' must be inherit from '%s'",$class,WidgetInterface::class));
             }
             $definitionGridWidgetBox->addMethodCall('addDefinitionsBlockGrid',array(new Reference($id)));
             $widgetIds[] = $id;
         }
-        var_dump($widgetIds);
-        die;
+//        var_dump($widgetIds);
+//        die;
         $loaderWidget = $container->findDefinition("sonata.block.loader.service.widgets");
         $loaderWidget->addArgument($widgetIds);
     }

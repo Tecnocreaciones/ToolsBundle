@@ -72,14 +72,14 @@
 
         namespace Pandco\Bundle\AppBundle\Service\Block;
 
-        use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BaseBlockWidgetBoxService;
+        use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BaseWidget;
 
         /**
          * Bloque para mostrar resumenes de sistema (mensajes pendientes por enviar, cola de correo, cola de procesos)
          * sonata.block.widget.system
          * @author Carlos Mendoza <inhack20@gmail.com>
          */
-        class SystemBlockService extends BaseBlockWidgetBoxService
+        class SystemBlockService extends BaseWidget
         {
 
             const NAME_SUMMARY = "app.block.system.summary";

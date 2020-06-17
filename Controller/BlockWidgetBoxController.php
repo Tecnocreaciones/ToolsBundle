@@ -14,9 +14,10 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
+use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\WidgetInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManagerInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService;
+use Tecnoready\Common\Service\Block\WidgetManager;
 
 /**
  * Controlador de los bloques widgets
@@ -215,7 +216,7 @@ class BlockWidgetBoxController extends Controller
         
         $widgetBox = $widgetBoxManager->find($id);
         
-        $blockHelper = $this->getBlockHelper();
+        $blockHelper = $this->getWidgetManager();
         $widgetBox->setSetting('name',$widgetBox->getName());
         $widgetBox->setSetting('isCollapsed',false);
         $widgetBox->setSetting('blockBase','TecnocreacionesToolsBundle:WidgetBox:block_widget_box_empty.html.twig');
@@ -226,7 +227,7 @@ class BlockWidgetBoxController extends Controller
         return new \Symfony\Component\HttpFoundation\Response($blockContent);
     }
     
-    private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  DefinitionBlockWidgetBoxInterface $definitionBlockGrid) 
+    private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  WidgetInterface $definitionBlockGrid) 
     {
         $templatesData = $eventsData = $nameData = null;
         $names = $definitionBlockGrid->getNames();
@@ -282,11 +283,11 @@ class BlockWidgetBoxController extends Controller
 
     /**
      * 
-     * @return \Sonata\BlockBundle\Templating\Helper\BlockHelper
+     * @return \Tecnoready\Common\Service\Block\WidgetManager
      */
-    private function getBlockHelper()
+    private function getWidgetManager()
     {
-        return $this->get('sonata.block.templating.helper');
+        return $this->get(WidgetManager::class);
     }
 
 
@@ -305,7 +306,7 @@ class BlockWidgetBoxController extends Controller
      */
     private function getWidgetBoxManager()
     {
-        return $this->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager'));
+        return $this->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_adapter'));
     }
     
     protected function trans($id, array $parameters = array(), $domain = 'widgetBox') {

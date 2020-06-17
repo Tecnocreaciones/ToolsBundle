@@ -2,25 +2,25 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
-use Tecnocreaciones\Bundle\ToolsBundle\Service\Block\BlockHelper;
+use Tecnoready\Common\Service\Block\WidgetManager;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class BlockExtension extends AbstractExtension
 {
     /**
-     * @var BlockHelper
+     * @var WidgetManager
      */
-    protected $blockHelper;
+    protected $widgetManager;
 
     /**
      * BlockExtension constructor.
      *
-     * @param BlockHelper $blockHelper
+     * @param BlockHelper $widgetManager
      */
-    public function __construct(BlockHelper $blockHelper)
+    public function __construct(WidgetManager $widgetManager)
     {
-        $this->blockHelper = $blockHelper;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -31,26 +31,26 @@ class BlockExtension extends AbstractExtension
         return [
 //            new TwigFunction(
 //                'sonata_block_exists',
-//                [$this->blockHelper, 'exists']
+//                [$this->widgetManager, 'exists']
 //            ),
 //            new TwigFunction(
 //                'sonata_block_render',
-//                [$this->blockHelper, 'render'],
+//                [$this->widgetManager, 'render'],
 //                ['is_safe' => ['html']]
 //            ),
             new TwigFunction(
                 'tecno_block_render_event',
-                [$this->blockHelper, 'renderEvent'],
+                [$this->widgetManager, 'renderEvent'],
                 ['is_safe' => ['html']]
             ),
 //            new TwigFunction(
 //                'sonata_block_include_javascripts',
-//                [$this->blockHelper, 'includeJavascripts'],
+//                [$this->widgetManager, 'includeJavascripts'],
 //                ['is_safe' => ['html']]
 //            ),
 //            new TwigFunction(
 //                'sonata_block_include_stylesheets',
-//                [$this->blockHelper, 'includeStylesheets'],
+//                [$this->widgetManager, 'includeStylesheets'],
 //                ['is_safe' => ['html']]
 //            ),
         ];
@@ -61,6 +61,6 @@ class BlockExtension extends AbstractExtension
      */
     public function getName()
     {
-        return 'sonata_block';
+        return 'tecno_widget';
     }
 }

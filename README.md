@@ -30,7 +30,7 @@ de forma muy facil, un Role Voter para evaluar expresiones regulares en los role
             enable: false
             debug: false
             widget_block_grid_class: null
-            widget_box_manager: tecnocreaciones_tools.service.orm.widget_box_manager
+            widget_adapter: tecno.widget.orm.adapter
         repository_as_service:
             enable: false
             tag_service: app.repository

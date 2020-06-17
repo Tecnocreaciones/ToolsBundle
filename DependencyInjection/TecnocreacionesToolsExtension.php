@@ -75,7 +75,7 @@ class TecnocreacionesToolsExtension extends Extension
             
            $blockGridConfig = $config['widget_block_grid']; 
            $blockGridClass = $blockGridConfig['widget_block_grid_class'];
-           $widgetBoxManager = $blockGridConfig['widget_box_manager'];
+           $widgetBoxManager = $blockGridConfig['widget_adapter'];
            
            if(empty($blockGridClass)){
                 throw new LogicException(
@@ -85,22 +85,22 @@ class TecnocreacionesToolsExtension extends Extension
 
            $reflectionBlockWidgetBox = new ReflectionClass($blockGridClass);
            
-           if($blockGridClass != 'Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox' && $reflectionBlockWidgetBox->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox') === false){
+           if($blockGridClass != 'Tecnoready\Common\Model\Block\BlockWidgetBox' && $reflectionBlockWidgetBox->isSubclassOf('Tecnoready\Common\Model\Block\BlockWidgetBox') === false){
                 throw new LogicException(
-                    'The "'.$reflectionBlockWidgetBox->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Block\\BlockWidgetBox'
+                    'The "'.$reflectionBlockWidgetBox->getName().'" must inherit from Tecnoready\\Common\\Model\\Block\\BlockWidgetBox'
                 );
             }
             $widgetBoxManagerDefinition = $container->getDefinition($widgetBoxManager);
             $reflectionWidgetBoxManager = new ReflectionClass($widgetBoxManagerDefinition->getClass());
             
-            if($reflectionWidgetBoxManager->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManager') === false){
+            if($reflectionWidgetBoxManager->isSubclassOf('Tecnoready\Common\Model\Block\Adapter\WidgetBoxAdapterInterface') === false){
                 throw new LogicException(
-                    'The "'.$reflectionWidgetBoxManager->getName().'" must inherit from Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\Block\\Manager\\BlockWidgetBoxManager'
+                    'The "'.$reflectionWidgetBoxManager->getName().'" must inherit from Tecnoready\Common\Model\Block\Adapter\WidgetBoxAdapterInterface'
                 );
             }
             
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_block_grid_class', $blockGridClass);
-            $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager', $widgetBoxManager);
+            $container->setParameter('tecnocreaciones_tools.widget_block_grid.widget_adapter', $widgetBoxManager);
             $container->setParameter('tecnocreaciones_tools.widget_block_grid.options', $blockGridConfig);
         }
         

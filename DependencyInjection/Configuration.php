@@ -71,7 +71,7 @@ class Configuration implements ConfigurationInterface
                             ->booleanNode('enable')->defaultFalse()->end()
                             ->booleanNode('debug')->defaultFalse()->end()
                             ->scalarNode('widget_block_grid_class')->isRequired()->cannotBeEmpty()->end()
-                            ->scalarNode('widget_box_manager')->defaultValue('tecnocreaciones_tools.service.orm.widget_box_manager')->cannotBeEmpty()->end()
+                            ->scalarNode('widget_adapter')->defaultValue('tecno.widget.orm.adapter')->cannotBeEmpty()->end()
                             ->scalarNode('base_layout')->defaultValue('::layout.html.twig')->cannotBeEmpty()->end()
                         ->end()
                     ->end()
