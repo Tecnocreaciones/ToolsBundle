@@ -5,9 +5,9 @@
 
 ## Habilitar la extension
     tecnocreaciones_tools:
-        widget_block_grid:
+        widget:
                 enable: true
-                widget_block_grid_class: App\Entity\M\Core\BlockWidgetBox
+                widget_class: App\Entity\M\Core\BlockWidgetBox
 
 ### Se debe crear la entidad que sera el widget
 

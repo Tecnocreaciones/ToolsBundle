@@ -26,10 +26,10 @@ de forma muy facil, un Role Voter para evaluar expresiones regulares en los role
             configuration_group_class: Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup
             configuration_manager_class: Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager
             configuration_name_service: tec.configuration
-        widget_block_grid:
+        widget:
             enable: false
             debug: false
-            widget_block_grid_class: null
+            widget_class: null
             widget_adapter: tecno.widget.orm.adapter
         repository_as_service:
             enable: false

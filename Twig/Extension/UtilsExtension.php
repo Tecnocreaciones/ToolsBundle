@@ -13,8 +13,9 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Twig_Extension;
-use Twig_SimpleFunction;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager;
+use Tecnoready\Common\Service\Block\WidgetManager;
+use Twig\TwigFunction;
 
 /**
  * Funciones para construir breadcumb y page title con twig
@@ -23,6 +24,12 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager;
  */
 class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
 {
+    /**
+     * Manejador de widgets
+     * @var WidgetManager 
+     */
+    private $widgetManager;
+    
     private $container;
     private $config;
     
@@ -42,33 +49,38 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         $functions = [];
         
         if($config['intro']['enable']  === true){
-            $functions[] = new Twig_SimpleFunction('print_intro', array($this,'renderIntro'), array('is_safe' => array('html')));
+            $functions[] = new TwigFunction('print_intro', array($this,'renderIntro'), array('is_safe' => array('html')));
         }
         if($config['twig'] != ''){
             if($config['twig']['breadcrumb'] === true){
-                $functions[] = new Twig_SimpleFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html')));
-                $functions[] = new Twig_SimpleFunction('breadcrumb_render', array($this,'breadcrumbRender'), array('is_safe' => array('html')));
+                $functions[] = new TwigFunction('breadcrumb', array($this,'breadcrumb'), array('is_safe' => array('html')));
+                $functions[] = new TwigFunction('breadcrumb_render', array($this,'breadcrumbRender'), array('is_safe' => array('html')));
             }
             if($config['twig']['page_header'] === true){
-                $functions[] = new Twig_SimpleFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
+                $functions[] = new TwigFunction('page_header', array($this,'pageHeader'), array('is_safe' => array('html')));
             }
         }
-        if($config['widget_block_grid']['enable']  === true){
-            $functions[] = new Twig_SimpleFunction('widgets_render_area', array($this,'widgetsRenderArea'), array('is_safe' => array('html')));
-            $functions[] = new Twig_SimpleFunction('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
-            $functions[] = new Twig_SimpleFunction('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
+        if($config['widget']['enable']  === true){
+            $functions[] = new TwigFunction('widgets_render_area', array($this,'widgetsRenderArea'), array('is_safe' => array('html')));
+            $functions[] = new TwigFunction('widgets_render_assets', array($this,'widgetsRenderAssets'), array('is_safe' => array('html')));
+            $functions[] = new TwigFunction('widgets_init_grid', array($this,'widgetsInitGrid'), array('is_safe' => array('html')));
+            $functions[] = new TwigFunction(
+                'tecno_block_render_event',
+                [$this->widgetManager, 'renderEvent'],
+                ['is_safe' => ['html']]
+            );
         }
         
         if($config['tabs']['enable']  === true){
-            $functions[] = new Twig_SimpleFunction('render_tabs', array($this, 'renderTabs'),array('is_safe' => ['html']));
-            $functions[] = new Twig_SimpleFunction('timezone_get', array($this,'timezoneGet'),array('is_safe' => ['html']));
+            $functions[] = new TwigFunction('render_tabs', array($this, 'renderTabs'),array('is_safe' => ['html']));
+            $functions[] = new TwigFunction('timezone_get', array($this,'timezoneGet'),array('is_safe' => ['html']));
         }
         
-        $functions[] = new Twig_SimpleFunction('uniqueId', array($this, 'uniqueId'));
-        $functions[] = new Twig_SimpleFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
-        $functions[] = new Twig_SimpleFunction('strpadleft', array($this, 'strpadleft'));
-        $functions[] = new Twig_SimpleFunction('staticCall', array($this, 'staticCall'));
-        $functions[] = new Twig_SimpleFunction('generate_image_url', array($this, 'generateImageUrl'));
+        $functions[] = new TwigFunction('uniqueId', array($this, 'uniqueId'));
+        $functions[] = new TwigFunction('print_error', array($this,'printError'), array('is_safe' => array('html')));
+        $functions[] = new TwigFunction('strpadleft', array($this, 'strpadleft'));
+        $functions[] = new TwigFunction('staticCall', array($this, 'staticCall'));
+        $functions[] = new TwigFunction('generate_image_url', array($this, 'generateImageUrl'));
         return $functions;
     }
     
@@ -161,7 +173,7 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
             array(
                 'name_area' => $areaName,
                 'render_assets' => $renderAssets,
-                'gridWidgetBoxService' => $this->getGridWidgetBoxService(),
+                'gridWidgetBoxService' => $this->widgetManager,
             )
         );
     }
@@ -295,15 +307,6 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
         return $this->container->get('translator')->trans($id, $parameters, $domain);
     }
     
-    /**
-     * 
-     * @return \Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService
-     */
-    private function getGridWidgetBoxService()
-    {
-        return $this->container->get('tecnocreaciones_tools.service.grid_widget_box');
-    }
-    
     public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container = null) 
     {
         $this->container = $container;
@@ -318,10 +321,22 @@ class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
      * @param ImageManager $imageManager
      * @return $this
      */
-    public function setImageManager(ImageManager $imageManager)
+    public function setImageManager(ImageManager $imageManager = null)
     {
         $this->imageManager = $imageManager;
         return $this;
     }
+    
+    /**
+     * @required
+     * @param WidgetManager $widgetManager
+     * @return $this
+     */
+    public function setWidgetManager(WidgetManager $widgetManager = null)
+    {
+        $this->widgetManager = $widgetManager;
+        return $this;
+    }
+
 
 }
