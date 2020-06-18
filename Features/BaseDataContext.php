@@ -232,6 +232,21 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
     {
         return isset($this->scenarioParameters[$key]);
     }
+    
+    /**
+     * Elimina un parametro si el parametro existe
+     * @param type $key
+     * @return bool
+     */
+    public function removeScenarioParameter($key)
+    {
+        if(isset($this->scenarioParameters[$key])){
+            unset($this->scenarioParameters[$key]);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * Obtiene el valor de un parametro en el escenario
@@ -361,6 +376,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 $value = $this->parseParameter($value,[],"flashes",[
                     "return_object" => true,
                 ]);
+                if(is_object($value) && method_exists($value, "getId")){
+                    $value = $this->find(get_class($value), $value->getId());
+                }
                 $this->accessor->setValue($entity, $propertyPath, $value);
             }
             $this->saveEntity($entity, true);
@@ -418,7 +436,8 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             $query = $em->createQuery("UPDATE " . \Pandco\Bundle\AppBundle\Entity\App\User\DigitalAccount\DigitalAccountConfig::class . " dac SET dac.timeWithdraw = null");
             $query->execute();
         }
-        $query = $em->createQuery("DELETE FROM " . $className . " " . $andWhere);
+        $queryDelete = "DELETE FROM " . $className . " " . $andWhere;
+        $query = $em->createQuery($queryDelete);
         $query->execute();
         $em->flush();
         $em->clear();

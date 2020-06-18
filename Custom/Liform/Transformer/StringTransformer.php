@@ -19,17 +19,21 @@ use Limenius\Liform\Transformer\StringTransformer as AbstractStringTransformer;
  */
 class StringTransformer extends AbstractStringTransformer
 {
-	/**
+    use \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\CommonFunctionsTrait;
+    
+    /**
      * {@inheritdoc}
      */
     public function transform(FormInterface $form, array $extensions = [], $widget = null)
     {
+        $this->initCommonCustom($form);
         $schema = ['type' => 'string'];
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $schema = $this->addMaxLength($form, $schema);
         $schema = $this->addMinLength($form, $schema);
         $schema = $this->addHelp($form, $schema);
-        $schema = $this->addData($form, $schema);
+        $schema = $this->addEmptyData($form, $schema);
+        $schema = $this->addCommonCustom($form, $schema);
 
         return $schema;
     }
@@ -58,13 +62,14 @@ class StringTransformer extends AbstractStringTransformer
      *
      * @return array
      */
-    protected function addData(FormInterface $form, array $schema)
+    protected function addEmptyData(FormInterface $form, array $schema)
     {
-        var_dump($form);
-        die;
-        $schema['data'] = "";
-    	if ($data = $form->getConfig()->getOption('data')) {
-            $schema['data'] = $data;
+        $schema['empty_data'] = null;
+    	if ($emptyData = $form->getConfig()->getOption('empty_data')) {
+            if($emptyData instanceof \Closure){
+                $emptyData = $emptyData($form);
+            }
+            $schema['empty_data'] = $emptyData;
         }
 
         return $schema;

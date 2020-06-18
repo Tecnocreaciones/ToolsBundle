@@ -52,4 +52,34 @@ trait TraitContext {
     {
         return $this->container->get('translator')->trans($id, $parameters, $domain);
     }
+    
+     /**
+    * Espera hasta que devuelva true la funcion pasada
+    * Based on Behat's own example
+    * @see http://docs.behat.org/en/v2.5/cookbook/using_spin_functions.html#adding-a-timeout
+    * @param $lambda
+    * @param int $wait
+    * @throws \Exception
+    */
+   public function spin($lambda, $wait = 15,$errorCallback = null)
+   {
+       $time = time();
+       $stopTime = $time + $wait;
+       while (time() < $stopTime)
+       {
+           try {
+               if ($lambda($this)) {
+                   return;
+               }
+           } catch (\Exception $e) {
+               // do nothing
+           }
+
+           usleep(250000);
+       }
+       if($errorCallback !== null){
+           $errorCallback($this);
+       }
+       throw new \Exception("Spin function timed out after {$wait} seconds");
+   }
 }
