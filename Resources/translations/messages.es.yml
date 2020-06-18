@@ -65,3 +65,28 @@ tab.documents.date: "Fecha"
 tab.documents.empty_documents_uploaded: "No hay documentos cargados."
 tab.documents.question.delete: "¿Desea eliminar el archivo? "
 tab.documents.comments: "Comentarios (opcional)"
+
+widget_box:
+    new: (Nuevo!)
+    clear: Limpiar widget(s)
+    news: (%count%) Nuevos!
+    widgets_label: Widgets
+    templates: Plantillas <b>(%quantity%)</b>
+    events: Vistas <b>(%quantity%)</b>
+    header: Widgets disponibles
+    widgets: (<b>%quantity%</b> Widgets)
+    buttons:
+        add: Añadir
+        add_all: Añadir todos
+    actions:
+        add: Añadir
+    widget: Widget
+    form:
+        name: Nombre
+        template: Plantilla
+        event: Vista
+    flashes:
+        success: El widget se agrego correctamente.
+        success_all: Se agrego %num% widget(s) correctamente.
+        success_all_remove: Se elimino %num% widget(s) correctamente.
+default: Predeterminada

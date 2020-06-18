@@ -5,16 +5,15 @@
 
 ## Habilitar la extension
     tecnocreaciones_tools:
-        widget_block_grid:
+        widget:
                 enable: true
-                widget_block_grid_class: Demo\Bundle\Entity\BlockWidgetBox
+                widget_class: App\Entity\M\Core\BlockWidgetBox
 
 ### Se debe crear la entidad que sera el widget
 
         namespace Demo\Bundle\Entity;
 
         use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BlockWidgetBox as Model;
-
         use Doctrine\ORM\Mapping as ORM;
 
         /**
@@ -26,8 +25,8 @@
             /**
              * Usuario dueño del widget
              *
-             * @var \Application\Sonata\UserBundle\Entity\User
-             * @ORM\ManyToOne(targetEntity="Application\Sonata\UserBundle\Entity\User")
+             * @var \App\Entity\M\User
+             * @ORM\ManyToOne(targetEntity="App\Entity\M\User")
              */
             private $user;
 
@@ -35,7 +34,7 @@
                 return $this->user;
             }
 
-            function setUser(\Application\Sonata\UserBundle\Entity\User $user) {
+            function setUser(\App\Entity\M\User $user) {
                 $this->user = $user;
             }
         }
@@ -53,7 +52,9 @@
 
 2.  Agregar estilos y javascript
 
-        {{ widgets_render_assets() }}
+Con assetic: `{{ widgets_render_assets() }}`
+
+Con webpack: `import '../../vendor/tecnocreaciones/tools-bundle/Resources/assets/widget.js';`
 
 3. Inicializar grid
 
@@ -73,14 +74,14 @@
 
         namespace Pandco\Bundle\AppBundle\Service\Block;
 
-        use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BaseBlockWidgetBoxService;
+        use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\BaseWidget;
 
         /**
          * Bloque para mostrar resumenes de sistema (mensajes pendientes por enviar, cola de correo, cola de procesos)
          * sonata.block.widget.system
          * @author Carlos Mendoza <inhack20@gmail.com>
          */
-        class SystemBlockService extends BaseBlockWidgetBoxService
+        class SystemBlockService extends BaseWidget
         {
 
             const NAME_SUMMARY = "app.block.system.summary";
@@ -150,3 +151,56 @@ Agrega las traducciones en "widgets.es.yml" y cada idioma corespondiente.
     sonata.block.event.widgets.dashboard: 'Ventana principal'
     app.block.system.summary: 'Resumen de colas'
     app.block.system.sms: 'Mensajes en cola'
+
+    Carge los css
+    {% stylesheets
+
+        '@TecnocreacionesToolsBundle/Resources/public/ducksboard-gridster.js/dist/jquery.gridster.css'
+        '@TecnocreacionesToolsBundle/Resources/public/ducksboard-gridster.js/dist/debug.css'
+        '@TecnocreacionesToolsBundle/Resources/public/widget_box/widget_box.css'
+
+        filter='uglifycss' filter='cssrewrite'
+        output='compiled/stylesheets_index_sigtec.min.css'
+    %}
+         <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    Carga los javascripts
+    {% javascripts
+
+        '@TecnocreacionesToolsBundle/Resources/public/ducksboard-gridster.js/dist/jquery.gridster.min.js'
+        '@TecnocreacionesToolsBundle/Resources/public/widget_box/widget_box.js'
+
+        filter='?uglifyjs2'
+        output='compiled/javascript_index_sigtec.min.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+
+    E inicializar el grid
+    $(function(){ //DOM Ready
+
+      var gridster = $(".gridster > ul").gridster({
+          widget_base_dimensions: [80, 60],
+          widget_margins: [5,5],
+          min_cols: 12,
+          draggable: {
+              stop: function(e, ui, $widget) {
+                console.log(gridster.serialize($widget));
+              }
+          }
+        }).data('gridster');
+        $('.widget-box').on('close.ace.widget', function(e) {
+            //this = the widget-box
+            var widgetBox = $(this);
+            gridster.remove_widget( widgetBox.parent(),function(a){
+                console.log('eliminado..');
+                {#console.log(a);
+                console.log(widgetBox);#}
+            });
+       });
+       $('.widget-box').on('reload.ace.widget', function(e) {
+            //this = the widget-box
+       });
+    });

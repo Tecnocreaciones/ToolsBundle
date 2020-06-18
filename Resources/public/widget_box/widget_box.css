@@ -29,27 +29,30 @@ file that was distributed with this source code.
     box-shadow: none;
     margin: 3px 0;
     border: 1px solid #CCC;
+    border-radius: 0.2em;
 }
 @media only screen and (max-width:767px) {
     .widget-box {
-    margin-top: 7px;
-    margin-bottom: 7px;
+        margin-top: 7px;
+        margin-bottom: 7px;
+    }
 }
-}.widget-header {
+.widget-header {
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
     position: relative;
     min-height: 38px;
-    background: #f7f7f7;
+/*    background: #f7f7f7;
     background-image: -webkit-linear-gradient(top, #fff 0, #eee 100%);
     background-image: -o-linear-gradient(top, #fff 0, #eee 100%);
     background-image: linear-gradient(to bottom, #fff 0, #eee 100%);
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',  endColorstr='#ffeeeeee',  GradientType=0);
-    color: #669fc7;
-    border-bottom: 1px solid #DDD;
-    padding-left: 12px;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',  endColorstr='#ffeeeeee',  GradientType=0);*/
+    /*color: #669fc7;*/
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    background-color: transparent;
+    /*padding-left: 12px;*/
     cursor: move;
 }
 .widget-header:before, .widget-header:after {
@@ -83,9 +86,12 @@ file that was distributed with this source code.
 }
 .widget-header>.widget-title {
     line-height: 36px;
-    margin: 0;
     display: inline;
     padding: 0px 10px;
+    float: left;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
 }
 .widget-header>.widget-title>.ace-icon {
     margin-right: 5px;
@@ -117,7 +123,7 @@ file that was distributed with this source code.
 .widget-toolbar.padding-5 {
     padding: 0 5px;
 }
-.widget-toolbar:before {
+/*.widget-toolbar:before {
     display: inline-block;
     content: "";
     position: absolute;
@@ -126,7 +132,7 @@ file that was distributed with this source code.
     left: -1px;
     border: 1px solid #D9D9D9;
     border-width: 0 1px 0 0;
-}
+}*/
 .widget-header-large>.widget-toolbar:before {
     top: 6px;
     bottom: 6px;
@@ -242,9 +248,9 @@ file that was distributed with this source code.
     margin-left: 2px;
     margin-right: 2px;
 }
-.widget-body {
+/*.widget-body {
     background-color: #FFF;
-}
+}*/
 .widget-main {
     padding: 12px;
 }
@@ -433,9 +439,9 @@ file that was distributed with this source code.
     background: 0 0;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     border-width: 0;
-    border-bottom: 0px solid #DCE8F1;
-    color: #4383B4;
-    padding-left: 3px;
+    /*border-bottom: 0px solid #DCE8F1;*/
+    /*color: #4383B4;*/
+    /*padding-left: 3px;*/
     box-shadow: none;
 }
 .widget-box.transparent>.widget-header-large {
@@ -496,11 +502,11 @@ file that was distributed with this source code.
 }
 .widget-box.fullscreen {
     position: fixed;
-/*    margin: 0;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;*/
+    /*    margin: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;*/
     background-color: #FFF;
     border-width: 3px;
     z-index: 1040;
@@ -996,114 +1002,114 @@ file that was distributed with this source code.
     border-radius: 0;
 }
 .hide {
-  display: none !important;
+    display: none !important;
 }
 
 .dropdown {
-  position: relative;
+    position: relative;
 }
 .dropdown-toggle:focus {
-  outline: 0;
+    outline: 0;
 }
 .dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1000;
-  display: none;
-  float: left;
-  min-width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
-  font-size: 14px;
-  text-align: left;
-  list-style: none;
-  background-color: #fff;
-  -webkit-background-clip: padding-box;
-          background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, .15);
-  border-radius: 4px;
-  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
-          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 }
 .dropdown-menu.pull-right {
-  right: 0;
-  left: auto;
+    right: 0;
+    left: auto;
 }
 .dropdown-menu .divider {
-  height: 1px;
-  margin: 9px 0;
-  overflow: hidden;
-  background-color: #e5e5e5;
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
 }
 .dropdown-menu > li > a {
-  display: block;
-  padding: 3px 20px;
-  clear: both;
-  font-weight: normal;
-  line-height: 1.42857143;
-  color: #333;
-  white-space: nowrap;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
 }
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-  color: #262626;
-  text-decoration: none;
-  background-color: #f5f5f5;
+    color: #262626;
+    text-decoration: none;
+    background-color: #f5f5f5;
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  color: #fff;
-  text-decoration: none;
-  background-color: #428bca;
-  outline: 0;
+    color: #fff;
+    text-decoration: none;
+    background-color: #428bca;
+    outline: 0;
 }
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
 .dropdown-menu > .disabled > a:focus {
-  color: #777;
+    color: #777;
 }
 .dropdown-menu > .disabled > a:hover,
 .dropdown-menu > .disabled > a:focus {
-  text-decoration: none;
-  cursor: not-allowed;
-  background-color: transparent;
-  background-image: none;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+    background-image: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .open > .dropdown-menu {
-  display: block;
+    display: block;
 }
 .open > a {
-  outline: 0;
+    outline: 0;
 }
 .dropdown-menu-right {
-  right: 0;
-  left: auto;
+    right: 0;
+    left: auto;
 }
 .dropdown-menu-left {
-  right: auto;
-  left: 0;
+    right: auto;
+    left: 0;
 }
 .dropdown-header {
-  display: block;
-  padding: 3px 20px;
-  font-size: 12px;
-  line-height: 1.42857143;
-  color: #777;
-  white-space: nowrap;
+    display: block;
+    padding: 3px 20px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: #777;
+    white-space: nowrap;
 }
 .dropdown-backdrop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 990;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 990;
 }
 .pull-right > .dropdown-menu {
-  right: 0;
-  left: auto;
+    right: 0;
+    left: auto;
 }

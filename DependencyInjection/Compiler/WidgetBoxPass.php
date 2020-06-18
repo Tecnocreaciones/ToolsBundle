@@ -15,9 +15,12 @@ use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Tecnoready\Common\Model\Block\WidgetInterface;
+use RuntimeException;
+use Tecnoready\Common\Service\Block\WidgetManager;
 
 /**
- * Description of WidgetBoxPass
+ * Configura los widgets
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
@@ -25,11 +28,16 @@ class WidgetBoxPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if($container->getParameter('tecnocreaciones_tools.service.widget_block_grid.enable') === false){
+        if($container->getParameter('tecnocreaciones_tools.service.widget.enable') === false){
             return;
         }
-        $definitionGridWidgetBox = $container->getDefinition('tecnocreaciones_tools.service.grid_widget_box');
-        $tags = $container->findTaggedServiceIds('sonata.block');
+        $options = $container->getParameter("tecnocreaciones_tools.widget.options");
+//        var_dump($options);
+//        die;
+        $widgetManager = $container->getDefinition(WidgetManager::class);
+        $widgetManager->addMethodCall("setOptions",array($options));
+        $widgetManager->addArgument(new Reference($options["widget_adapter"]));
+        $tags = $container->findTaggedServiceIds('tecno.block');
         $widgetIds = [];
         foreach ($tags as $id => $attributes) {
             
@@ -39,12 +47,13 @@ class WidgetBoxPass implements CompilerPassInterface
                 $class = $container->getParameter($class);
             }
             $reflectionClass = new ReflectionClass($class);
-            if($reflectionClass->isSubclassOf('Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface')){
-                $definitionGridWidgetBox->addMethodCall('addDefinitionsBlockGrid',array(new Reference($id)));
-                $widgetIds[] = $id;
+            if(!$reflectionClass->isSubclassOf(WidgetInterface::class)){
+                throw new RuntimeException(sprintf("The class '%s' must be inherit from '%s'",$class,WidgetInterface::class));
             }
+            $widgetManager->addMethodCall('addWidget',array(new Reference($id)));
+            $widgetIds[] = $id;
         }
-        $loaderWidget = $container->findDefinition("sonata.block.loader.service.widgets");
-        $loaderWidget->addArgument($widgetIds);
+//        var_dump($widgetIds);
+//        die;
     }
 }
