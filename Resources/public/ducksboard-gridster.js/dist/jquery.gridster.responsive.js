@@ -1,4 +1,3 @@
-
 function fnCreateGridster(isMobile,page)
 {
     var saveAjax = !isMobile;
@@ -330,3 +329,5 @@ function fnCreateGridster(isMobile,page)
         $('.gridster').fadeIn('fast');
     }, 400);
 }
+
+global.fnCreateGridster = fnCreateGridster;

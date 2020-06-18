@@ -1,8 +1,8 @@
-{% extends "::layout.html.twig" %}
+{% extends gridWidgetBoxService.getOption("base_layout") %}
 
-{% trans_default_domain 'widgetBox' %}
+{% trans_default_domain 'messages' %}
 
-{% block pageBody %}
+{% block body %}
 
     <div class="well bordered-left bordered-themeprimary animated bounceInDown">
         <hgroup id="main-title" class="thin">
@@ -13,6 +13,7 @@
                 <i class="mp mp-widgets-1 mp-4x"></i>&nbsp;{{ "widget_box.clear"|trans }}
             </a>
         </p>
+        <hr/>
         {% set news = gridWidgetBoxService.countNews() %}
         {% if news > 0 %}
             <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> 
@@ -78,7 +79,7 @@
                                     <tr>
                                         <td>
                                             <div>{{ 'widget_box.events'|trans({'%quantity%': (definitionBlockGrid.events|length) })|raw }}:</div>
-                                            {% for key,event in definitionBlockGrid.parseEvents %}
+                                            {% for key,event in definitionBlockGrid.events %}
                                                 {{ event|trans({},definitionBlockGrid.translationDomain) }}{% if loop.last %}.{% else %},{% endif %}
                                             {% endfor %}
                                         </td>
@@ -107,4 +108,4 @@
         </div>
         <div>&nbsp;</div>
     {% endfor %}
-{% endblock pageBody %}
+{% endblock body %}
