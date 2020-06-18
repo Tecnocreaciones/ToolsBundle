@@ -1,6 +1,6 @@
 {% extends gridWidgetBoxService.getOption("base_layout") %}
 
-{% trans_default_domain 'widgetBox' %}
+{% trans_default_domain 'messages' %}
 
 {% block body %}
 
@@ -13,6 +13,7 @@
                 <i class="mp mp-widgets-1 mp-4x"></i>&nbsp;{{ "widget_box.clear"|trans }}
             </a>
         </p>
+        <hr/>
         {% set news = gridWidgetBoxService.countNews() %}
         {% if news > 0 %}
             <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> 
