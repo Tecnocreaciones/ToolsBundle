@@ -4,14 +4,14 @@
 
             <div class="widget-header">
                 {% if settings.renderTitle %}
-                    <h5 class="widget-title">
+                    <h3 class="widget-title">
                     {% if settings.icon != null %}
                         <i class="{{ settings.icon }}"></i>
                     {% endif %}
                     {% block title %}
                         {{ settings.title|trans({},settings.translationDomain)|raw }}
                     {% endblock title %}
-                    </h5>
+                    </h3>
                 {% endif %}
 
                 <div class="widget-toolbar">

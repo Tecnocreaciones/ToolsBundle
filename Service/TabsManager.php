@@ -15,6 +15,7 @@ use RuntimeException;
 use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Tecnoready\Common\Util\StringUtil;
 
 /**
  * Manejador de tabs
@@ -47,6 +48,13 @@ class TabsManager implements ConfigureInterface
      * @var array
      */
     private $options;
+
+    /**
+     * Modelos a renderizar por chain
+     * $models
+     * @var Array
+     */
+    private $models;
 
     public function __construct(RequestStack $requestStack, array $options)
     {
@@ -100,6 +108,7 @@ class TabsManager implements ConfigureInterface
         $options["object_id"] = $this->objectId;
         $tab = new Tab($options);
         $tab->setRequest($request);
+        $tab->setRootUrl($request->getRequestUri());//Por defecto la misma ruta que se llamo originalmente
         $this->tab = $tab;
         $this->parametersToView["objectDataManager"] = $this->getObjectDataManager();
         $this->parametersToView["tabsManager"] = $this;
@@ -114,9 +123,12 @@ class TabsManager implements ConfigureInterface
     private function getParametersToRoute()
     {
         $request = $this->requestStack->getCurrentRequest();
+        $uri = $request->getRequestUri();
+        $toClear = ["isInit","ajax",Tab::SORT_ORDER,Tab::SORT_PROPERTY,Tab::LAST_CURRENT_TABS,Tab::NAME_CURRENT_TAB];
+        $uri = StringUtil::removeQueryStringURL($uri,$toClear);
         return [
             "_conf" => [
-                "returnUrl" => $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
+                "returnUrl" => $uri,
                 "objectId" => $this->objectId,
                 "objectType" => $this->objectType,
             ]
@@ -218,6 +230,19 @@ class TabsManager implements ConfigureInterface
     }
 
     /**
+     * Agrega un modelo valido por chain
+     * @param $model
+     * @throws InvalidArgumentException
+     */
+    public function addModel($model)
+    {
+        if(isset($this->models[$model])){
+           throw new InvalidArgumentException(sprintf("The model to '%s' is already added",$model)); 
+        }
+        $this->models[] = $model;
+    }
+
+    /**
      * Renderiza el modulo para generar archivos del moduloe
      * @param $entity
      * @param type $idChain
@@ -228,9 +253,18 @@ class TabsManager implements ConfigureInterface
         $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
         $choices = [];
         $models = $chain->getModels();
-        foreach ($models as $model) {
-            $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
+        if (!is_null($this->models) && is_array($this->models)) {
+            foreach ($models as $model) {
+                if (in_array($model->getId(),$this->models)) {
+                    $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
+                }
+            }
+        } else {
+            foreach ($models as $model) {
+                $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
+            }
         }
+
         $form = $this->createForm(ExporterType::class, $choices);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
         return $this->container->get('templating')->render($this->options["exporter"]["template"],

@@ -14,26 +14,34 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\DefinitionBlockWidgetBoxInterface;
-use Tecnocreaciones\Bundle\ToolsBundle\Model\Block\Manager\BlockWidgetBoxManagerInterface;
-use Tecnocreaciones\Bundle\ToolsBundle\Service\GridWidgetBoxService;
+use Tecnoready\Common\Model\Block\WidgetInterface;
+use Tecnoready\Common\Service\Block\WidgetManager;
 
 /**
  * Controlador de los bloques widgets
  *
  * @author Carlos Mendoza <inhack20@tecnocreaciones.com>
  */
-class BlockWidgetBoxController extends Controller 
+class WidgetController extends Controller 
 {
+    /**
+     * @var WidgetManager 
+     */
+    private $widgetManager;
+    
+    public function __construct(WidgetManager $widgetManager)
+    {
+        $this->widgetManager = $widgetManager;
+    }
+    
     public function indexAction(Request $request) 
     {
-        $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $definitions = $gridWidgetBoxService->getDefinitionsBlockGridByGroup();
+        $definitions = $this->widgetManager->getWidgetsByGroup();;
 //        $this->denyAccessUnlessGranted("ROLE_APP_WIDGET_*");
         
         return $this->render(
             'TecnocreacionesToolsBundle:BlockWidgetBox:index.html.twig',array(
-                'gridWidgetBoxService' => $gridWidgetBoxService,
+                'gridWidgetBoxService' => $this->widgetManager,
                 'definitions' => $definitions
             )
         );
@@ -46,9 +54,7 @@ class BlockWidgetBoxController extends Controller
             $data = $request->get('form');
             $type = $data['type'];
         }
-        $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        
-        $definitionBlockGrid = $gridWidgetBoxService->getDefinitionBlockGrid($type);
+        $definitionBlockGrid = $this->widgetManager->getWidget($type);
         if($definitionBlockGrid->hasPermission() == false){
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
@@ -64,11 +70,10 @@ class BlockWidgetBoxController extends Controller
         if($request->isMethod('POST')){
             $form->submit($request);
             if($form->isValid()){
-                $widgetBoxManager = $this->getWidgetBoxManager();
-                $blockWidgetBox = $widgetBoxManager->buildBlockWidget();
+                $blockWidgetBox = $this->widgetManager->getAdapter()->buildBlockWidget();
                 
                 $data = $form->getData();
-                $events = $definitionBlockGrid->getParseEvents();
+                $events = $definitionBlockGrid->getEvents();
                 $name = $data['name'];
                 if($definitionBlockGrid->hasPermission($name) === false){
                     throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
@@ -80,7 +85,7 @@ class BlockWidgetBoxController extends Controller
                 $blockWidgetBox->setEvent($events[$data['event']]);
                 $blockWidgetBox->setCreatedAt(new \DateTime());
                 $blockWidgetBox->setEnabled(true);
-                $widgetBoxManager->save($blockWidgetBox);
+                $this->widgetManager->getAdapter()->save($blockWidgetBox);
                 
                 $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success'));
                 
@@ -102,8 +107,7 @@ class BlockWidgetBoxController extends Controller
     {
         $type = $request->get('type');
         $name = $request->get('name');
-        $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $i = $gridWidgetBoxService->addAll($type,$name);
+        $i = $this->widgetManager->addAll($type,$name);
         if($i > 0){
         }
         $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all',array(
@@ -117,8 +121,8 @@ class BlockWidgetBoxController extends Controller
     
     public function deleteAllAction(Request $request) {
         $eventName = $request->get('eventName');
-        $gridWidgetBoxService = $this->getGridWidgetBoxService();
-        $i = $gridWidgetBoxService->clearAllByEvent($eventName);
+
+        $i = $this->widgetManager->clearAllByEvent($eventName);
         $this->getFlashBag()->add('success',  $this->trans('widget_box.flashes.success_all_remove',array(
             '%num%' => $i,
         )));
@@ -130,13 +134,12 @@ class BlockWidgetBoxController extends Controller
     
     public function deleteAction(Request $request)
     {
-        $widgetBoxManager = $this->getWidgetBoxManager();
-        $blockWidgetBox = $widgetBoxManager->find($request->get('id'));
+        $blockWidgetBox = $this->widgetManager->getAdapter()->find($request->get('id'));
         if(!$blockWidgetBox){
             throw $this->createNotFoundException();
         }
         
-        $success = $widgetBoxManager->remove($blockWidgetBox);
+        $success = $this->widgetManager->getAdapter()->remove($blockWidgetBox);
         $data = array(
             'success' => $success
         );
@@ -146,7 +149,6 @@ class BlockWidgetBoxController extends Controller
     
     public function updateAction(Request $request) 
     {
-        $widgetBoxManager = $this->getWidgetBoxManager();
         $data = $request->get('data');
         
         $ids = array();
@@ -156,7 +158,7 @@ class BlockWidgetBoxController extends Controller
             $dataById[$value['id']] = $value;
         }
         
-        $widgetsBox = $widgetBoxManager->findByIds($ids);
+        $widgetsBox = $this->widgetManager->getAdapter()->findByIds($ids);
         foreach ($widgetsBox as $widgetBox) 
         {
             $dataWidget = $dataById[$widgetBox->getId()];
@@ -166,9 +168,9 @@ class BlockWidgetBoxController extends Controller
             $widgetBox->setSetting('sizeY',$dataWidget['size_y']);
             $widgetBox->setSetting('widgetColor',$dataWidget['widget_color']);
             
-            $widgetBoxManager->save($widgetBox,false);
+            $this->widgetManager->getAdapter()->save($widgetBox,false);
         }
-        $widgetBoxManager->save($widgetBox,true);
+        $this->widgetManager->getAdapter()->save($widgetBox,true);
         
         return new \Symfony\Component\HttpFoundation\JsonResponse(array(
             'success' => true
@@ -180,13 +182,11 @@ class BlockWidgetBoxController extends Controller
         $id = $request->get('id');
         $data = $request->get('data');
         
-        $widgetBoxManager = $this->getWidgetBoxManager();
-        
-        $widgetBox = $widgetBoxManager->find($id);
+        $widgetBox = $this->widgetManager->getAdapter()->find($id);
         $widgetBox->setSetting('isCollapsed',true);
         $widgetBox->setSetting('oldSizeY',$data[0]['size_y']);
         
-        $widgetBoxManager->save($widgetBox,true);
+        $this->widgetManager->getAdapter()->save($widgetBox,true);
         
         return new \Symfony\Component\HttpFoundation\JsonResponse(array(
             'success' => true
@@ -196,12 +196,11 @@ class BlockWidgetBoxController extends Controller
     public function maximizeAction(Request $request) 
     {
         $id = $request->get('id');
-        $widgetBoxManager = $this->getWidgetBoxManager();
         
-        $widgetBox = $widgetBoxManager->find($id);
+        $widgetBox = $this->widgetManager->getAdapter()->find($id);
         $widgetBox->setSetting('isCollapsed',false);
         
-        $widgetBoxManager->save($widgetBox,true);
+        $this->widgetManager->getAdapter()->save($widgetBox,true);
         
         return new \Symfony\Component\HttpFoundation\JsonResponse(array(
             'success' => true
@@ -211,11 +210,10 @@ class BlockWidgetBoxController extends Controller
     public function refreshAction(Request $request) 
     {
         $id = $request->get('id');
-        $widgetBoxManager = $this->getWidgetBoxManager();
         
-        $widgetBox = $widgetBoxManager->find($id);
+        $widgetBox = $this->widgetManager->getAdapter()->find($id);
         
-        $blockHelper = $this->getBlockHelper();
+        $blockHelper = $this->widgetManager;
         $widgetBox->setSetting('name',$widgetBox->getName());
         $widgetBox->setSetting('isCollapsed',false);
         $widgetBox->setSetting('blockBase','TecnocreacionesToolsBundle:WidgetBox:block_widget_box_empty.html.twig');
@@ -226,11 +224,11 @@ class BlockWidgetBoxController extends Controller
         return new \Symfony\Component\HttpFoundation\Response($blockContent);
     }
     
-    private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  DefinitionBlockWidgetBoxInterface $definitionBlockGrid) 
+    private function buildFormWidget(FormBuilderInterface &$formBuilderWidget,  WidgetInterface $definitionBlockGrid) 
     {
         $templatesData = $eventsData = $nameData = null;
         $names = $definitionBlockGrid->getNames();
-        $events = $definitionBlockGrid->getParseEvents();
+        $events = $definitionBlockGrid->getEvents();
         $templates = $definitionBlockGrid->getTemplates();
         
         if(count($names) == 1){
@@ -280,34 +278,6 @@ class BlockWidgetBoxController extends Controller
             ;
     }
 
-    /**
-     * 
-     * @return \Sonata\BlockBundle\Templating\Helper\BlockHelper
-     */
-    private function getBlockHelper()
-    {
-        return $this->get('sonata.block.templating.helper');
-    }
-
-
-    /**
-     * 
-     * @return GridWidgetBoxService
-     */
-    private function getGridWidgetBoxService()
-    {
-        return $this->get('tecnocreaciones_tools.service.grid_widget_box');
-    }
-    
-    /**
-     * 
-     * @return BlockWidgetBoxManagerInterface
-     */
-    private function getWidgetBoxManager()
-    {
-        return $this->get($this->container->getParameter('tecnocreaciones_tools.widget_block_grid.widget_box_manager'));
-    }
-    
     protected function trans($id, array $parameters = array(), $domain = 'widgetBox') {
         return $this->get('translator')->trans($id, $parameters, $domain);
     }

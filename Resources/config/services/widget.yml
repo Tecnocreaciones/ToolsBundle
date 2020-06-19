@@ -1,0 +1,24 @@
+parameters:
+    tecnocreaciones_tools.widget.widget_class: "Definir en configuracion"
+    
+services:
+    Tecnocreaciones\Bundle\ToolsBundle\Controller\WidgetController:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Controller\WidgetController
+        public: false
+        autowire: true
+        tags:
+            - { name: controller.service_arguments }
+            
+    Tecnoready\Common\Service\Block\WidgetManager:
+        class: Tecnoready\Common\Service\Block\WidgetManager
+        public: false
+        autowire: true
+#        arguments:
+#            - "@tecno.widget.orm.adapter"
+        
+    tecno.widget.orm.adapter:
+        class: Tecnoready\Common\Model\Block\Adapter\WidgetORMAdapter
+        arguments:
+            - "%tecnocreaciones_tools.widget.widget_class%"
+        calls:
+            - [ setContainer, ['@service_container']]

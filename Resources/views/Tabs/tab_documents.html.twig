@@ -11,10 +11,10 @@
 {% macro header_sort(tab,property,parameters_to_route) %}
     {% set uri = parameters_to_route["_conf"]["returnUrl"] %}
     <a href="{{ uri }}?{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') }}={{ property }}&{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') }}=ASC">
-        <i class="vf vf-keyboard-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
+        <i class="fas fa-arrow-down" alt="A-Z" data-original-title="A-Z"></i>
     </a>
     <a href="{{ uri }}?{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_PROPERTY') }}={{ property }}&{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::SORT_ORDER') }}=DESC">
-        <i class="vf vf-keyboard-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
+        <i class="fas fa-arrow-up" alt="Z-A" data-original-title="Z-A"></i>
     </a>
 {% endmacro %}
 
@@ -40,7 +40,7 @@
             <table class="border" width="100%">
                 <tbody>
                     <tr>
-                        <td width="30%">Nª de archivos adjuntos</td>
+                        <td width="30%">{{ "tab.documents.attachments"|trans }}</td>
                         <td class="text-left">{{ files|length }}</td>
                     </tr>
                     <tr>
@@ -48,7 +48,7 @@
                         {% for file in files %}
                             {% set totalBytes = totalBytes + file.getSize() %}
                         {% endfor %}
-                        <td>Tamaño total de los archivos/documentos adjuntos</td>
+                        <td>{{ "tab.documents.attachments.size"|trans }}</td>
                         <td class="text-left">{{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[totalBytes]) }}</td>
                     </tr>
                 </tbody>
@@ -60,31 +60,35 @@
 
 {% block tab_footer %}
     <div class="p-2">
-
-
         <div class="clearfix">&nbsp;</div>
-        <div class="card">
+        <div class="card p-2">
             <div class="card-title">
-                <h6 class="title-section">Adjuntar un archivo</h6>
+                <h6 class="title-section">{{ "tab.documents.attach_file"|trans }}</h6>
             </div>
             <div class="card-body">
                 <form action="{{ path("tabs_object_manager_documents_upload",parameters_to_route) }}" enctype="multipart/form-data" method="POST" autocomplete="off">
-                    {{ form_widget(form.documents) }}
-                    &nbsp; 
-                    <button type="input" class="btn btn-info btn-outline btn-addon btn-sm m-b-10 m-l-5"><i class="vf vf-document"></i>Adjuntar</button>
-                    {#                            <input type="submit" class="btn btn-info btn-outline btn-sm m-b-10 m-l-5" name="sendit" value="Registrar">#}
-                    {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
-                    (Tamaño máximo: {{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
-                    {{ form_widget(form.comments) }}
+                    <div class="row">
+                        <div class="col-lg-8">
+                            {{ form_widget(form.documents) }}
+                            <div>&nbsp;</div>
+                            {{ form_widget(form.comments) }}
+                        </div>
+                        <div class="col-lg-4">
+                            <button type="input" class="btn btn-info btn-outline btn-addon"><i class="fas fa-file-upload"></i>&nbsp;{{ "tab.documents.attach"|trans }}</button>
+                            {% set maxUpload = staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","getMaximumFileUploadSize",[]) %}
+                            ({{ "tab.documents.attach.maximum_size"|trans }}&nbsp;{{ staticCall("Tecnocreaciones\\Bundle\\ToolsBundle\\Service\\Tools\\StringUtil","formatBytes",[maxUpload]) }})
+                        </div>
+                    </div>
+                    {#&nbsp;#}
                     {{ form_rest(form) }}
                 </form>
 
             </div>
         </div>
         <div class="clearfix">&nbsp;</div>
-        <div class="card">
+        <div class="card p-2">
             <div class="card-title">
-                <h6 class="title-section">Archivos y documentos adjuntos</h6>
+                <h6 class="title-section">{{ "tab.documents.files_attachments"|trans }}</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -93,15 +97,15 @@
                             <tr>
                                 <th>#</th>
                                 <th>
-                                    Documentos
+                                    {{ "tab.documents.documents"|trans }}
                                     {{ internal.header_sort(tab,"filename",parameters_to_route)}}
                                 </th>
                                 <th>
-                                    Tamaño
+                                    {{ "tab.documents.size"|trans }}
                                     {{ internal.header_sort(tab,"size",parameters_to_route)}}
                                 </th>
                                 <th>
-                                    Fecha
+                                    {{ "tab.documents.date"|trans }}
                                     {{ internal.header_sort(tab,"ATime",parameters_to_route)}}
                                 </th>
                                 <th>&nbsp;</th>
@@ -139,7 +143,7 @@
                                     </td>
                                     <td>{{ file.getATime()|date('d/m/Y h:i:s a',timezone_get())  }}</td>
                                     <td class="color-primary">
-                                        <button onclick="{{ deleteFtn }}('{{ file.filename }}', '{{ path("tabs_object_manager_documents_delete",params) }}');" class="btn btn-danger"><i class="vf vf-delete"></i></button>
+                                        <button onclick="{{ deleteFtn }}('{{ file.filename }}', '{{ path("tabs_object_manager_documents_delete",params) }}');" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
                                     </td>
                                 </tr>
                             {% else%}
@@ -148,7 +152,7 @@
                                 </tr>
                                 <tr>
 
-                                    <td colspan="6" class="text-center">No hay documentos.</td>
+                                    <td colspan="6" class="text-center">{{ "tab.documents.empty_documents_uploaded"|trans }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="6">&nbsp;</td>
@@ -162,7 +166,7 @@
     </div>
     <script>
             function {{ deleteFtn }}(name, url) {
-                if (confirm("¿Eliminar el archivo " + name + "?")) {
+                if (confirm("{{ "tab.documents.question.delete"|trans }} " + name)) {
                     window.location = url;
                 }
             }

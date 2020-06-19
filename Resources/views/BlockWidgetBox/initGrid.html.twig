@@ -1,4 +1,6 @@
 <script type="text/javascript">
-    var localdata_position = JSON.parse(localStorage.getItem('dashboard.grid'));
-    fnCreateGridster(false, 'dashboard.grid');
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var localdata_position = JSON.parse(localStorage.getItem('dashboard.grid'));
+        fnCreateGridster(false, 'dashboard.grid');
+    });
 </script>
