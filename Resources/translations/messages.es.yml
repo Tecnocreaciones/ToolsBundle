@@ -89,4 +89,9 @@ widget_box:
         success: El widget se agrego correctamente.
         success_all: Se agrego %num% widget(s) correctamente.
         success_all_remove: Se elimino %num% widget(s) correctamente.
+title.widget.default.info: "Widgets"
+widget_box.news.alert: "Hay %news% widget(s) nuevos!"
+widget_box.note.cache: "Nota: Algunos widgets mantienen la información por un periodo de tiempo no maximo de 24 horas."
+widget_box.note.add: "Puede añadir widgets para personalizar esta vista y poder visualizar solo la información de su interes."
+widget_box.button.add: "Añadir Widget"
 default: Predeterminada
