@@ -1,0 +1,13 @@
+<div {% block ng_parameter '' %}>
+	{% block tab_header %}{% endblock %}
+	<div class="p-20">
+		{% block tab_body %}{% endblock %}
+	</div>
+
+	{% block buttons %}
+		<div class="p-20 text-right">
+			{% block tab_buttons '' %}
+		</div>
+	{% endblock %}
+</div>
+{% block tab_footer %}{% endblock %}
