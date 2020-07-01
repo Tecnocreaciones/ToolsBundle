@@ -47,9 +47,9 @@ class StringTransformer extends AbstractStringTransformer
     protected function addHelp(FormInterface $form, array $schema)
     {
         $translationDomain = $form->getConfig()->getOption('translation_domain');
-        if ($attr = $form->getConfig()->getOption('attr')) {
-            if (isset($attr['help'])) {
-                $schema['attr']['help'] = $this->translator->trans($attr['help'], [], $translationDomain);
+        if ($help = $form->getConfig()->getOption('help')) {
+            if (!empty($help)) {
+                $schema['help'] = $this->translator->trans($help, $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
             }
         }
 
