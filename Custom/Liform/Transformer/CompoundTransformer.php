@@ -61,7 +61,7 @@ class CompoundTransformer extends AbstractCompoundTransformer
             $transformerData = $this->resolver->resolve($field);
             $properties[$name]["required"] = $transformerData['transformer']->isRequired($field);
             $properties[$name]["disabled"] = $this->isDisabled($field);
-            
+            $properties[$name]["property_order"] = $properties[$name]["propertyOrder"];//Orden de campo a renderizar
             unset($properties[$name]["propertyOrder"]);//Elimina campo sin uso
             
             //Si tiene modelo asociado, se busca la metadata y se le agrega las validaciones que esten alli
@@ -81,11 +81,11 @@ class CompoundTransformer extends AbstractCompoundTransformer
                 $properties[$name]["constraints"] = $constraints;
             }
         }
-
+        
+        unset($schema["required"]);//Esto va en cada campo
         $schema["action"] = $form->getConfig()->getOption('action');
         $schema["method"] = $form->getConfig()->getOption('method');
         $schema["properties"] = $properties;
-
 
         return $schema;
     }
