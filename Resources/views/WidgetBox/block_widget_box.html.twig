@@ -1,5 +1,5 @@
-<li id="cms-block-{{ block.id }}" id-block="{{ block.id }}" class="widget-container-col animated fadeInUp" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX is not null ? settings.sizeX : settings.defaultSizeX }}" data-sizey="{{ settings.sizeY is not null ? settings.sizeY : settings.defaultSizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
-    <div id="widget-box-{{ block.id }}" class="widget-box {% if settings.isTransparent %}transparent{% endif %} {% if settings.isCollapsible and settings.isCollapsed %}collapsed{% endif %} {% if settings.widgetColor != '' %}{{ settings.widgetColor }}{% endif %}" data-load="{% if settings.isLoadedData %}true{% else %}false{% endif %}" >
+<li id="cms-block-{{ widget.id }}" id-block="{{ widget.id }}" class="widget-container-col animated fadeInUp" data-row="{{ settings.positionX }}" data-col="{{ settings.positionY }}" data-sizex="{{ settings.sizeX is not null ? settings.sizeX : settings.defaultSizeX }}" data-sizey="{{ settings.sizeY is not null ? settings.sizeY : settings.defaultSizeY }}" data-sizey-old="{{ settings.oldSizeY }}" widget-color="{{ settings.widgetColor }}" data-state="{% if settings.isCollapsed %}min{% else %}max{% endif %}" >
+    <div id="widget-box-{{ widget.id }}" class="widget-box {% if settings.isTransparent %}transparent{% endif %} {% if settings.isCollapsible and settings.isCollapsed %}collapsed{% endif %} {% if settings.widgetColor != '' %}{{ settings.widgetColor }}{% endif %}" data-load="{% if settings.isLoadedData %}true{% else %}false{% endif %}" >
         {% block block %}
 
             <div class="widget-header">
@@ -40,17 +40,17 @@
                         </select>
                     {% endif %}
                     {% if settings.isReloadble %}
-                        <a href="#" data-action="reload" class="box-reload" path="{{ path('block_widget_box_refresh',{id:block.id}) }}">
+                        <a href="#" data-action="reload" class="box-reload" path="{{ path('block_widget_box_refresh',{id:widget.id}) }}">
                             <i class="ace-icon fa fa-refresh"></i>
                         </a>
                     {% endif %}
                     {% if settings.isCollapsible %}
                         <a href="#" data-action="collapse">
-                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %} box-collapse" minimize="{{ path('block_widget_box_minimize',{id:block.id}) }}" maximize="{{ path('block_widget_box_maximize',{id:block.id}) }}" ></i>
+                            <i class="ace-icon fa {% if settings.isCollapsed %}fa-chevron-down{% else %}fa-chevron-up{% endif %} box-collapse" minimize="{{ path('block_widget_box_minimize',{id:widget.id}) }}" maximize="{{ path('block_widget_box_maximize',{id:widget.id}) }}" ></i>
                         </a>
                     {% endif %}
                     {% if settings.isClosable %}
-                        <a href="#" data-action="close" class="box-close" path="{{ path('block_widget_box_delete',{id:block.id}) }}">
+                        <a href="#" data-action="close" class="box-close" path="{{ path('block_widget_box_delete',{id:widget.id}) }}">
                             <i class="ace-icon fa fa-times"></i>
                         </a>
                     {% endif %}

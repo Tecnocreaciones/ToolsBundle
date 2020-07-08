@@ -426,7 +426,12 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @Given a clear entity :className table
      * @Given a clear entity :className table and where :where
      */
-    public function aClearEntityTable($className, $andWhere = null) {
+    public function aClearEntityTable($className, $andWhere = null,array $options = []) {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "and_clear" => true,
+        ]);
+        $options = $resolver->resolve($options);
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getManager();
         if ($em->getFilters()->isEnabled('softdeleteable')) {
@@ -440,7 +445,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
         $query = $em->createQuery($queryDelete);
         $query->execute();
         $em->flush();
-        $em->clear();
+        if($options["and_clear"] === true){
+            $em->clear();
+        }
     }
 
     public function flush() {

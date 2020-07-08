@@ -1,12 +1,13 @@
 {% trans_default_domain 'messages' %}
 
 <div class="well bordered-left bordered-themeprimary animated bounceInDown">
-    {% set info = "Nota: Algunos widgets mantienen la información por un periodo de tiempo no maximo de 24 horas." %}
-    {% set info2 = "Puede añadir widgets para personalizar esta vista y poder visualizar solo la información de su interes." %}
+    {% set info = "widget_box.note.cache"|trans %}
+    {% set info2 = "widget_box.note.add"|trans %}
+    
     <p>
         <i class="fas fa-info-circle" data-html="false" data-toggle="tooltip" title="{{ info2 }}" data-placement="top"></i>
         <a href="{{ path("block_widget_box_index",{eventName: name_area}) }}" class="btn-link bold animated fadeInLeft" data-toggle="tooltip" title="{{ info }}" data-placement="top">
-            <i class="fas fa-plus-circle"></i>&nbsp;Añadir Widget
+            <i class="fas fa-plus-circle"></i>&nbsp;{{ "widget_box.button.add"|trans }}
             {% set news = gridWidgetBoxService.countNews() %}
             {% if news > 0 %}
                 {{ "widget_box.news"|trans({"%count%": news}) }}
@@ -16,8 +17,8 @@
     
     {% set news = gridWidgetBoxService.countNews() %}
     {% if news > 0 %}
-        <p><i class="fa fa-star yellow margin-right-5"></i><strong>Nota:</strong> 
-            Hay {{ news }} widget(s) nuevos!
+        <p><i class="fa fa-star yellow margin-right-5"></i><strong>{{ "widget_box.note"|trans }}</strong> 
+            {{ "widget_box.news.alert"|trans({"%news%": news}) }}
         </p>
     {% endif %}
 </div>

@@ -29,6 +29,23 @@ abstract class SequenceGeneratorBase implements SequenceGeneratorBaseInterface
     protected $sequenceGenerator;
     
     /**
+     *
+     * @var array 
+     */
+    protected $optionsRef;
+    
+    public function __construct()
+    {
+        $this->optionsRef = [
+            'method' => 'buildRef',
+            'field' => 'ref',
+            'use_cache' => false,
+//            'options' => array()
+        ];
+    }
+
+
+    /**
      * Construye la referencia por defecto
      * @param ItemReferenceInterface $item
      * @param array $config
@@ -61,12 +78,7 @@ abstract class SequenceGeneratorBase implements SequenceGeneratorBaseInterface
         $resolver->setDefined([
             "method","field","options","mask"
         ]);
-        $resolver->setDefaults([
-            'method' => 'buildRef',
-            'field' => 'ref',
-            'use_cache' => false,
-//            'options' => array()
-        ]);
+        $resolver->setDefaults($this->optionsRef);
         
         $config = $resolver->resolve($classMap[$className]);
         $config['className'] = $className;

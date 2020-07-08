@@ -22,3 +22,13 @@ services:
             - "%tecnocreaciones_tools.widget.widget_class%"
         calls:
             - [ setContainer, ['@service_container']]
+            
+    tecno.block.widget.default:
+        class: Tecnoready\Common\Model\Block\Demo\DemoDefault
+        arguments:
+            - "tecno.block.widget.default"
+            - '@templating'
+        tags:
+            - { name: tecno.block }
+        calls:
+            - [ setContainer, ["@service_container"]  ]
