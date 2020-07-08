@@ -72,7 +72,7 @@ class ConfigurationPass implements CompilerPassInterface
         if ($container->getParameter('tecnocreaciones_tools.service.statistic.enable') === true) {
             $statistic = $container->getParameter("tecnocreaciones_tools.service.statistic");
             $idHistoryManagerAdapter = $statistic["adapter"];
-            if ($container->hasDefinition($idHistoryManagerAdapter)) {
+            if ($idHistoryManagerAdapter && $container->hasDefinition($idHistoryManagerAdapter)) {
                 $adapterDefinition = $container->findDefinition($idHistoryManagerAdapter);
                 $historyManagerDefinition = $container->findDefinition("tecnocreaciones_tools.service.statistics_manager");
                 $historyManagerDefinition->addArgument($adapterDefinition);                

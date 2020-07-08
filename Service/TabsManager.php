@@ -87,11 +87,17 @@ class TabsManager implements ConfigureInterface
         $this->options = $resolver->resolve($options);
     }
 
-    public function configure($objectId, $objectType)
+    /**
+     * Configura el tabs manager
+     * @param type $objectId
+     * @param type $objectType
+     * @param array $options
+     */
+    public function configure($objectId, $objectType,array $options = [])
     {
         $this->objectId = $objectId;
         $this->objectType = $objectType;
-        $this->getObjectDataManager()->configure($this->objectId, $this->objectType);
+        $this->getObjectDataManager()->configure($this->objectId, $this->objectType,$options);
     }
 
     /**
