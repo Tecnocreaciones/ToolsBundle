@@ -425,15 +425,19 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @example Given a clear entity "Pandco\Bundle\AppBundle\Entity\EPR\Sales\SalesInvoice" table
      * @Given a clear entity :className table
      * @Given a clear entity :className table and where :where
+     * @Given a clear entity :className table with options :options
      */
-    public function aClearEntityTable($className, $andWhere = null,array $options = []) {
+    public function aClearEntityTable($className, $andWhere = null,$options = []) {
+        $options = $this->parseParameter($options);
+        
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             "and_clear" => true,
+            "em" => null,
         ]);
         $options = $resolver->resolve($options);
         $doctrine = $this->getDoctrine();
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager($options["em"]);
         if ($em->getFilters()->isEnabled('softdeleteable')) {
             $em->getFilters()->disable('softdeleteable');
         }
@@ -650,6 +654,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 $this->replaceParameters($jsonObject);
                 return $jsonObject;
             }
+        }else if(is_array($value)){
+            //No se procesa un array nativo, solo array en string.
+            return $value;
         }
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
