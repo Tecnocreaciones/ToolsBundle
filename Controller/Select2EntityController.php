@@ -34,7 +34,7 @@ class Select2EntityController extends AbstractFOSRestController
         $classComponent = $this->parameterBag->get("tecnoready.swiftmailer_db.email_component_class");
         
         $alias = "e";
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManagerForClass($classComponent);
         $repository = $em->getRepository($classComponent);
         $qb = $repository->createQueryBuilder($alias);
         $qb->andWhere("e.typeComponent = :typeComponent")
