@@ -39,6 +39,12 @@ services:
             - { name: liform.transformer, form_type: datetime, widget: datetime }
             - { name: liform.transformer, form_type: file, widget: file_widget }
             
+#    liform.transformer.tetranz_select2entity:
+#        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\Select2EntityTransformer
+#        autowire: true
+#        tags:
+#            - { name: liform.transformer, form_type: tetranz_select2entity, widget: choice }
+
     Tecnocreaciones\Bundle\ToolsBundle\Service\DynamicViewManager\DynamicFormManager:
         autowire: true
     Tecnocreaciones\Bundle\ToolsBundle\Service\DynamicViewManager:
