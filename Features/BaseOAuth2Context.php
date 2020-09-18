@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\ToolsUtils;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Base para peticiones oauth2
@@ -56,10 +57,16 @@ abstract class BaseOAuth2Context implements Context
      * @var FileLocator
      */
     protected $fileLocator;
+    
+    /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     */
+    protected $accessor;
 
     public function __construct(FileLocator $fileLocator)
     {
         $this->fileLocator = $fileLocator;
+        $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
     public function setDataContext(BaseDataContext $dataContext)
