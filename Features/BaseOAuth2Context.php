@@ -498,18 +498,19 @@ abstract class BaseOAuth2Context implements Context
         $message = $this->dataContext->parseParameter($message, [], "validators");
         $errors = $this->getPropertyValue("errors");
         $found = false;
-        if (is_array($errors['errors'])) {
-            foreach ($errors['errors'] as $error) {
+        $internalErrors = isset($errors['errors']) ? $errors['errors'] : [];
+        if (is_array($internalErrors)) {
+            foreach ($internalErrors as $error) {
                 if ($error === $message) {
                     $found = true;
                     break;
                 }
             }
         } else {
-            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
+            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($internalErrors, true), $this->echoLastResponse()));
         }
         if ($found === false) {
-            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
+            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $internalErrors)));
         }
     }
     
