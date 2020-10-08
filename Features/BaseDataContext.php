@@ -435,18 +435,32 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             "and_clear" => true,
             "em" => null,
         ]);
+        
+        if ($className === \Pandco\Bundle\AppBundle\Entity\User\DigitalAccount\TimeWithdraw::class) {
+            $this->executeDQL("UPDATE " . \Pandco\Bundle\AppBundle\Entity\App\User\DigitalAccount\DigitalAccountConfig::class . " dac SET dac.timeWithdraw = null",$options);
+        }
+        $queryDelete = "DELETE FROM " . $className . " " . $andWhere;
+        $this->executeDQL($queryDelete,$options);
+    }
+    /**
+     * Ejecuta un DQL directamente
+     * @param type $dql
+     * @param array $options
+     */
+    public function executeDQL($dql,array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "and_clear" => true,
+            "em" => null,
+        ]);
         $options = $resolver->resolve($options);
         $doctrine = $this->getDoctrine();
         $em = $doctrine->getManager($options["em"]);
         if ($em->getFilters()->isEnabled('softdeleteable')) {
             $em->getFilters()->disable('softdeleteable');
         }
-        if ($className === \Pandco\Bundle\AppBundle\Entity\User\DigitalAccount\TimeWithdraw::class) {
-            $query = $em->createQuery("UPDATE " . \Pandco\Bundle\AppBundle\Entity\App\User\DigitalAccount\DigitalAccountConfig::class . " dac SET dac.timeWithdraw = null");
-            $query->execute();
-        }
-        $queryDelete = "DELETE FROM " . $className . " " . $andWhere;
-        $query = $em->createQuery($queryDelete);
+        $query = $em->createQuery($dql);
         $query->execute();
         $em->flush();
         if($options["and_clear"] === true){
@@ -656,6 +670,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             }
         }else if(is_array($value)){
             //No se procesa un array nativo, solo array en string.
+            return $value;
+        }else if(is_bool($value)){
+            //No se procesa un booleano nativo
             return $value;
         }
         $resolver = new OptionsResolver();
