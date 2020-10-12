@@ -592,7 +592,12 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @param type $class
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findQueryBuilderForClass($class, array $method = [], $queryResult = null) {
+    public function findQueryBuilderForClass($class, array $method = [], $queryResult = null,array $options = []) {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "max_results" => 0,
+        ]);
+        $options = $resolver->resolve($options);
         $em = $this->getDoctrine()->getManager();
         $alias = "c";
         $qb = $em->createQueryBuilder()
@@ -603,6 +608,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                     ->andWhere(sprintf("%s.%s = :%s", $alias, $key, $key))
                     ->setParameter($key, $value)
             ;
+        }
+        if($options["max_results"] > 0){
+            $qb->setMaxResults($options["max_results"]);
         }
         if ($queryResult == "OneOrNull") {
             return $qb->getQuery()->getOneOrNullResult();
