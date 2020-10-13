@@ -534,8 +534,8 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @param type $class
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findQueryBuilder($class, $alias = "o") {
-        $em = $this->getDoctrine()->getManager();
+    public function findQueryBuilder($class, $alias = "o",$manager = null) {
+        $em = $this->getDoctrine()->getManager($manager);
         $qb = $em->createQueryBuilder()
                 ->select($alias)
                 ->from($class, $alias);
