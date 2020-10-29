@@ -32,7 +32,8 @@ class ExporterController extends ManagerController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $options = [
-                "fileName" => $request->get("fileName")
+                "fileName" => $request->get("fileName"),
+                "request" => $request
             ];
             $name = $form->get("name")->getData();
             $objectDataManager->exporter()->generateWithSource($name,$options);
