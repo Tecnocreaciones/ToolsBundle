@@ -92,4 +92,17 @@ class ExporterController extends ManagerController
         
         return $this->toReturnUrl();
     }
+
+    public function allAction(Request $request)
+    {
+        $arrayFile = [];
+        $objectDataManager = $this->getObjectDataManager($request);
+        $documentsManager = $objectDataManager->documents();
+        $files = $documentsManager->getAll();
+        foreach ($files as $file) {
+            $arrayFile[] = $documentsManager->toArray($file);
+        }
+
+        return new \Symfony\Component\HttpFoundation\JsonResponse(["files" => $arrayFile]);
+    }
 }
