@@ -74,7 +74,7 @@ class Select2EntityTransformer extends AbstractTransformer
 //        if ($attr = $form->getConfig()->getOption('attr')) {
 //        }
         if (isset($formView->vars['attr']['data-req_params'])) {
-            $schema["req_params"] = $formView->vars['attr']['data-req_params'];
+            $schema["req_params"] = @json_decode($formView->vars['attr']['data-req_params'],true);
         }
 //        var_dump($attr);
 //        die;
