@@ -3,7 +3,6 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer;
 
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\ChoiceList\View\ChoiceGroupView;
 use Limenius\Liform\Transformer\AbstractTransformer;
 use Symfony\Component\Form\FormView;
 
@@ -75,11 +74,12 @@ class Select2EntityTransformer extends AbstractTransformer
 //        if ($attr = $form->getConfig()->getOption('attr')) {
 //        }
         if (isset($formView->vars['attr']['data-req_params'])) {
-            $schema["attr"]["req_params"] = $formView->vars['attr']['data-req_params'];
+            $schema["req_params"] = $formView->vars['attr']['data-req_params'];
         }
 //        var_dump($attr);
 //        die;
         $schema["remote_path"] = $formView->vars["remote_path"];
+        $schema["minimum_input_length"] = $form->getConfig()->getOption('minimum_input_length');
 
         return $schema;
     }
