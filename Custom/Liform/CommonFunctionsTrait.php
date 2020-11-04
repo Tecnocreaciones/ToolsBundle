@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormInterface;
  */
 trait CommonFunctionsTrait
 {
-    private $formView;
+    protected $formView;
     
     protected function initCommonCustom(FormInterface $form){
         $this->formView = $form->createView();
