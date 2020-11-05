@@ -11,7 +11,7 @@ use Symfony\Component\Form\AbstractType;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class DynamicCopyCheckboxType extends CheckboxType
+class DynamicCopyCheckboxType extends AbstractType
 {
     public function buildView(\Symfony\Component\Form\FormView $view, \Symfony\Component\Form\FormInterface $form, array $options)
     {
@@ -30,13 +30,8 @@ class DynamicCopyCheckboxType extends CheckboxType
          */
     }
     
-    public function getBlockPrefix()
+    public function getParent()
     {
-        return "copy_checkbox";
+        return CheckboxType::class;
     }
-    
-//    public function getParent()
-//    {
-//        return CheckboxType::class;
-//    }
 }
