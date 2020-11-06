@@ -260,6 +260,19 @@ abstract class BaseOAuth2Context implements Context
         }
         throw new \Exception(sprintf("Property %s is exists in response!\n\n %s", $propertyName, $this->echoLastResponse()));
     }
+    
+    /**
+     * Verifica que no exista propiedades
+     * Ejemplo: And the response does not have "data.properties.ship_vessel,data.properties.vehicle_type" properties
+     * @When the response does not have :properties properties
+     */
+    public function theResponseDoesNotHaveProperties($properties)
+    {
+        $propertiesName = explode(",", $properties);
+        foreach ($propertiesName as $propertyName) {
+            $this->theResponseDoesNotHaveProperty($propertyName);
+        }
+    }
 
     /**
      * @Given the response has a :propertyName property and it is equals :propertyValue
