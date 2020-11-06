@@ -16,7 +16,7 @@ class CopyCheckboxTransformer extends BooleanTransformer
     {
         $schema = parent::transform($form, $extensions, $widget);
         $formView = $this->formView;
-        
+
         $schema = $this->addControlOptions($form,$formView,$schema);
         $schema["widget"] = "checkbox";
         return $schema;

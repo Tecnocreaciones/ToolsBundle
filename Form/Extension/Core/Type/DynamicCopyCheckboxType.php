@@ -30,6 +30,11 @@ class DynamicCopyCheckboxType extends AbstractType
          */
     }
     
+    public function getBlockPrefix()
+    {
+        return "copy_checkbox";
+    }
+    
     public function getParent()
     {
         return CheckboxType::class;
