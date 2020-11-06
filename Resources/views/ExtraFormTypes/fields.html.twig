@@ -127,35 +127,22 @@
     <option value="{{ valueString }}" {{ block('attributes') }}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.value : choice.value|trans({}, choice_translation_domain) }}</option>
 {%- endblock tecno_choice_widget_tree_options -%}
 
-{% block dynamic_copy_checkbox_widget %}
+{% block copy_checkbox_widget %}
     {{ block('checkbox_widget') }}
-    {#    {{ dump(_context|keys) }}#}
     <script>
         var init = function () {
             var copy_from_fields = {{ copy_from|json_encode()|raw }};
-                    //console.log(copy_from_fields);
             $("#{{ id }}").change(function () {
                 var checkbox = $(this);
                 $.each(copy_from_fields, function (copy_from, copy_to) {
-                    //console.log(copy_from);
-                    //console.log(copy_to);
                     //var x = document.getElementsByName(copy_to);
                     var item_from = jQuery('[name="' + copy_from + '"]');
                     var item_to = jQuery('[name="' + copy_to + '"]');
-                    //console.log(x);
-                    //console.log(item_to[0].type);
-                    //console.log(x[0].type);
-        {#$.each(data, function (index, data) {
-            console.log('index', data);
-        });#}
                         for (var i = 0; i < item_from.length; i++) {
-                            //console.log(item_from[i].type);
                             if(item_from[i].type != item_to[i].type){
-                                //console.log("Tipos diferentes");
                                 continue;
                             }
                             for (var j = 0; j < item_to.length; j++) {
-                               // console.log(item_to[i]);
                                 if (checkbox.prop("checked")) {
                                     if (item_to[i].type == "checkbox") {
                                         $(item_to[i]).prop("checked",$(item_from[i]).prop("checked"));
