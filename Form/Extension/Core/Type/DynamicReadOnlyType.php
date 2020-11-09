@@ -16,9 +16,14 @@ class DynamicReadOnlyType extends HiddenType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-//        $resolver->setDefault("type_content","text");
-        $resolver->setDefined(["type_content"]);
-        $resolver->setAllowedValues("type_content", ["image","text","html"]);
+        $resolver->setDefaults([
+            "req_params" => [],
+            "remote_path" => null,
+            "data" => null,
+        ]);
+        $resolver->setDefined(["type_content","req_params"]);
+        $resolver->setAllowedValues("type_content", ["image","text","html","card"]);
+        $resolver->setAllowedTypes("req_params", "array");
         $resolver->setRequired(["data","type_content"]);
     }
     

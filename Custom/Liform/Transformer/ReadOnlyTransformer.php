@@ -43,6 +43,11 @@ class ReadOnlyTransformer extends AbstractTransformer
     {
         $schema["type_content"] = $form->getConfig()->getOption('type_content');
         $schema["data"] = $form->getConfig()->getOption('data');
+        $reqParams = $form->getConfig()->getOption('req_params');
+        if(is_array($reqParams) && count($reqParams) > 0){
+            $schema["req_params"] = $reqParams;
+        }
+        $schema["remote_path"] = $form->getConfig()->getOption('remote_path');
 
         return $schema;
     }
