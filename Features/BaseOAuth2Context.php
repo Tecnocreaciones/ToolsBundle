@@ -535,6 +535,19 @@ abstract class BaseOAuth2Context implements Context
     public function theResponseHasAErrorsInProperty($propertyName) {
         $this->theResponseHasAErrorsInPropertyAndContains($propertyName);
     }
+    
+    /**
+     * Verifica que existan errores en el response separados por coma
+     * Ejemplo: Then the response has a errors in properties "bodywork_serial,engine_serial,vehicle_color,seats"
+     * @Then the response has a errors in properties :properties
+     */
+    public function theResponseHasAErrorsInProperties($properties)
+    {
+        $properties = explode(",", $properties);
+        foreach ($properties as $propertyName) {
+            $this->theResponseHasAErrorsInProperty($propertyName);
+        }
+    }
 
     /**
      * @Then the response has a errors in property :propertyName and not contains :message
