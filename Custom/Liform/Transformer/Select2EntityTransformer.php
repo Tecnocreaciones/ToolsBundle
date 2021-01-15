@@ -93,10 +93,7 @@ class Select2EntityTransformer extends AbstractTransformer
     protected function addEmptyData(FormInterface $form,FormView $formView, array $schema)
     {
      	if (($emptyData = $form->getConfig()->getOption('empty_data')) && !empty($formView->vars["value"])) {
-            $schema['empty_data'] = [
-                "id" => $formView->vars["value"],
-                "label" => (string)$emptyData,
-            ];
+            $schema['empty_data'] = $formView->vars["value"];
         }
 
         return $schema;
