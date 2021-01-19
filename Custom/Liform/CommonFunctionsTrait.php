@@ -66,4 +66,19 @@ trait CommonFunctionsTrait
 
         return $schema;
     }
+
+    /**
+     * Añade el atributo data
+     * @author  Máximo Sojo <maxsojo13@gmail.com>
+     * @param FormInterface $form
+     * @param array $schema
+     */
+    protected function addData(FormInterface $form, array $schema)
+    {
+        if ($data = $form->getConfig()->getOption('data')) {
+            $schema['data'] = $data;
+        }
+
+        return $schema;
+    }
 }

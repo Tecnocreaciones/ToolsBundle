@@ -33,7 +33,10 @@ class BooleanTransformer extends AbstractTransformer
         if(($emptyData instanceof \Closure) === false){
             $schema["empty_data"] = $emptyData;
         }
+
+        $schema = $this->addData($form, $schema);
         $schema = $this->addCommonCustom($form, $schema);
+        
         return $schema;
     }
 }
