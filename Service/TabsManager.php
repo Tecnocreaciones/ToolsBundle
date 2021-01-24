@@ -16,6 +16,10 @@ use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Tecnoready\Common\Util\StringUtil;
+use Knp\Component\Pager\PaginatorInterface;
+//use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
+use Pagerfanta\Pagerfanta as Paginator;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 /**
  * Manejador de tabs
@@ -55,6 +59,12 @@ class TabsManager implements ConfigureInterface
      * @var Array
      */
     private $models;
+    
+    /**
+     * Paginador de kpn
+     * @var PaginatorInterface
+     */
+    private $paginator;
 
     public function __construct(RequestStack $requestStack, array $options)
     {
@@ -195,7 +205,25 @@ class TabsManager implements ConfigureInterface
             "icon" => $this->options["history_manager"]["icon"],
         ]);
         $options = $resolver->resolve($options);
+        if(!$this->paginator){
+            throw new RuntimeException(sprintf("El servicio de paginador %s debe ser seteado.", PaginatorInterface::class));
+        }
+        $request = $this->requestStack->getCurrentRequest();
+        $sort = $request->get("sort");
+        $direction = $request->get("direction");
+        
+        $page = $request->get("page", 1);
+        $limit = $request->get("limit", 20);
+        $paginator = $this->getObjectDataManager()->histories()->getPaginator([
+            "sort" => $sort,
+            "direction" => $direction,
+        ]);
+        $histories = $this->paginator->paginate($paginator, $page, $limit, $options);
+        
         $tabContentHistory = new TabContent($options);
+        $tabContentHistory->setViewParameters([
+            "histories" => $histories,
+        ]);
         $this->tab->addTabContent($tabContentHistory);
         return $tabContentHistory;
     }
@@ -418,6 +446,17 @@ class TabsManager implements ConfigureInterface
     protected function generateUrl($route, $parameters = array(), $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
+    }
+
+    /**
+     * @required
+     * @param PaginatorInterface $paginatorInterface
+     * @return $this
+     */
+    public function setPaginatorInterface(PaginatorInterface $paginatorInterface)
+    {
+        $this->paginator = $paginatorInterface;
+        return $this;
     }
 
 }

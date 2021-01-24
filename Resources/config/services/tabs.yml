@@ -1,5 +1,6 @@
 services:
     Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager:
+        autowire: true
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager
         arguments: ["@request_stack","%tecnocreaciones_tools.service.tabs%"]
         calls:
