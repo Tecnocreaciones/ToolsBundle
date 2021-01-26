@@ -39,6 +39,13 @@ abstract class ModelVariable
      */
     protected $typeVariable;
     
+    /**
+     * Nombre de la plantilla
+     * @var string
+     * @ORM\Column(name="name",type="string",length=30)
+     */
+    protected $name;
+    
     public function getDescription()
     {
         return $this->description;
@@ -65,8 +72,29 @@ abstract class ModelVariable
         $type = $this->getTypeVariable();
         return $type === null ? : array_search($type,self::getLabelsTypeVariable());
     }
-        
     
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+        
     public static function getLabelsTypeVariable() 
     {
         return array(

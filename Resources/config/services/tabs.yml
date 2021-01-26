@@ -45,7 +45,7 @@ services:
     Tecnoready\Common\Service\Template\TemplateService:
         arguments: [ {"debug":"%kernel.debug%", "env": "%kernel.environment%"} ]
         calls:
-            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTNativeEngine"]  ]
             - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTEchoEngine"]  ]
             - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TCPDFEngine"]  ]
             - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\WkhtmlToPDFEngine"]  ]
