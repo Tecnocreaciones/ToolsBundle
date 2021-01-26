@@ -35,7 +35,9 @@ services:
     Tecnoready\Common\Service\Template\Engine\TCPDFEngine:
         arguments: ["@twig"]
         public: false
-    Tecnoready\Common\Service\Template\Engine\TXTEngine:
+    Tecnoready\Common\Service\Template\Engine\TXTNativeEngine:
+        public: false
+    Tecnoready\Common\Service\Template\Engine\TXTEchoEngine:
         public: false
     Tecnoready\Common\Service\Template\Engine\WkhtmlToPDFEngine:
         arguments: ["@twig"]
@@ -43,8 +45,9 @@ services:
     Tecnoready\Common\Service\Template\TemplateService:
         arguments: [ {"debug":"%kernel.debug%", "env": "%kernel.environment%"} ]
         calls:
-            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\PhpSpreadsheetXLSXEngine"]  ]
-            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TCPDFEngine"]  ]
             - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTEchoEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TCPDFEngine"]  ]
             - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\WkhtmlToPDFEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\PhpSpreadsheetXLSXEngine"]  ]
 #            - [ setAdapter, ["@app.service.exporter.adapter"]  ]
