@@ -25,14 +25,14 @@ abstract class ModelTemplateEngine implements TemplateInterface
      * @var string
      * @ORM\Column(type="string",length=30,nullable=false)
      */
-    private $typeTemplate;
+    protected $typeTemplate;
     
     /**
      * Contenido del template
      * @var string 
      * @ORM\Column(type="text",nullable=false)
      */
-    private $content;
+    protected $content;
     
     /**
      * Nombre de la plantilla
