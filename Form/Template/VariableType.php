@@ -29,7 +29,6 @@ class VariableType extends AbstractType
                 ->add('typeVariable', ChoiceType::class, [
                     "placeholder" => "label.choice.empty",
                     "choices" => ModelParameter::getLabelsTypeVariable(),
-                    'translation_domain' => 'labels'
                 ])
         ;
     }

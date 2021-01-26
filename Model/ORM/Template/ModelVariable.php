@@ -40,7 +40,7 @@ abstract class ModelVariable
     protected $typeVariable;
     
     /**
-     * Nombre de la plantilla
+     * Nombre de la variable
      * @var string
      * @ORM\Column(name="name",type="string",length=30)
      */
@@ -103,5 +103,14 @@ abstract class ModelVariable
             "label.parameter.type.object" => self::TYPE_OBJECT,
             "label.parameter.type.string" => self::TYPE_STRING,
         );
+    }
+    
+    public function __toString()
+    {
+        $r = "-";
+        if($this->name){
+            $r = sprintf("(%s) %s", $this->name, $this->description);
+        }
+        return $r;
     }
 }

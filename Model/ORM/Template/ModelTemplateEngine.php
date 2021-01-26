@@ -84,6 +84,15 @@ abstract class ModelTemplateEngine implements TemplateInterface
         $this->name = $name;
         return $this;
     }
+    
+    public function __toString()
+    {
+        $r = "-";
+        if($this->id){
+            $r = sprintf("(%s) %s", $this->id, $this->name);
+        }
+        return $r;
+    }
 
 
 }
