@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Tecnoready\Common\Service\Template\TemplateService;
 
 /**
  * Agrega todos los wrapper al servicio de configuracion
@@ -50,7 +51,7 @@ class ConfigurationPass implements CompilerPassInterface
                 $noteManagerDefinition = $container->findDefinition("tecnoready.note_manager");
                 $noteManagerDefinition->addArgument($adapterDefinition);
             }
-
+            
             //Exportador
             $exporter = $container->getDefinition("app.service.exporter");
             $chaines = $container->findTaggedServiceIds("exporter.chain");
@@ -65,6 +66,13 @@ class ConfigurationPass implements CompilerPassInterface
             }
             foreach ($chaines as $id => $chain) {
                 $exporter->addMethodCall("addChainModel", [$container->getDefinition($id)]);
+            }
+            
+            //Compilador de plantillas
+            $templateManagerAdapter = $tabs["exporter"]["template_manager_adapter"];
+            if($templateManagerAdapter){
+                $templateService = $container->getDefinition(TemplateService::class);
+                $templateService->addMethodCall("setAdapter", [$container->getDefinition($templateManagerAdapter)]);
             }
         }
 

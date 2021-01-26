@@ -27,3 +27,24 @@ services:
         arguments: [ "@tecnoready.document_manager",{ "debug": '%kernel.debug%' } ]
         calls:
             - [ setAdapter, ["@app.service.exporter.adapter"]  ]
+
+#    Manejador de plantillas     
+    Tecnoready\Common\Service\Template\Engine\PhpSpreadsheetXLSXEngine:
+        arguments: []
+        public: false
+    Tecnoready\Common\Service\Template\Engine\TCPDFEngine:
+        arguments: ["@twig"]
+        public: false
+    Tecnoready\Common\Service\Template\Engine\TXTEngine:
+        public: false
+    Tecnoready\Common\Service\Template\Engine\WkhtmlToPDFEngine:
+        arguments: ["@twig"]
+        public: false
+    Tecnoready\Common\Service\Template\TemplateService:
+        arguments: [ {"debug":"%kernel.debug%", "env": "%kernel.environment%"} ]
+        calls:
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\PhpSpreadsheetXLSXEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TCPDFEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\WkhtmlToPDFEngine"]  ]
+#            - [ setAdapter, ["@app.service.exporter.adapter"]  ]
