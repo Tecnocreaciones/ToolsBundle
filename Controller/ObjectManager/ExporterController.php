@@ -32,7 +32,8 @@ class ExporterController extends ManagerController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $options = [
-                "fileName" => $request->get("fileName")
+                "fileName" => $request->get("fileName"),
+                "request" => $request
             ];
             $name = $form->get("name")->getData();
             $objectDataManager->exporter()->generateWithSource($name,$options);
@@ -91,5 +92,18 @@ class ExporterController extends ManagerController
         }
         
         return $this->toReturnUrl();
+    }
+
+    public function allAction(Request $request)
+    {
+        $arrayFile = [];
+        $objectDataManager = $this->getObjectDataManager($request);
+        $documentsManager = $objectDataManager->documents();
+        $files = $documentsManager->getAll();
+        foreach ($files as $file) {
+            $arrayFile[] = $documentsManager->toArray($file);
+        }
+
+        return new \Symfony\Component\HttpFoundation\JsonResponse(["files" => $arrayFile]);
     }
 }

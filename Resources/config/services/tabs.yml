@@ -1,5 +1,6 @@
 services:
     Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager:
+        autowire: true
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager
         arguments: ["@request_stack","%tecnocreaciones_tools.service.tabs%"]
         calls:
@@ -17,7 +18,7 @@ services:
     Tecnoready\Common\Service\ObjectManager\ObjectDataManager:
         public: true
         class: Tecnoready\Common\Service\ObjectManager\ObjectDataManager
-        arguments: ["@tecnoready.document_manager","@tecnoready.history_manager","@tecnoready.note_manager","@app.service.exporter"]
+        arguments: ["@tecnoready.document_manager","@tecnoready.history_manager","@tecnoready.note_manager","@app.service.exporter","@tecnocreaciones_tools.service.statistics_manager"]
     app.service.exporter.adapter:
         class: Tecnoready\Common\Service\ObjectManager\DocumentManager\ExporterManager\Adapter\DoctrineORMAdapter
         arguments: ["@doctrine.orm.default_entity_manager"]

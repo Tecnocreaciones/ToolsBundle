@@ -12,15 +12,15 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Extension de link generador
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class LinkGeneratorExtension extends Twig_Extension
+class LinkGeneratorExtension extends AbstractExtension
 {
     /**
      *
@@ -30,8 +30,8 @@ class LinkGeneratorExtension extends Twig_Extension
     
     public function getFunctions() {
         return [
-            new Twig_SimpleFunction('path_object', array($this, 'pathObject'), array('is_safe' => array('html'))),
-            new Twig_SimpleFunction('path_object_url', array($this, 'pathObjectUrl'), array('is_safe' => array('html'))),
+            new TwigFunction('path_object', array($this, 'pathObject'), array('is_safe' => array('html'))),
+            new TwigFunction('path_object_url', array($this, 'pathObjectUrl'), array('is_safe' => array('html'))),
         ];
     }
     

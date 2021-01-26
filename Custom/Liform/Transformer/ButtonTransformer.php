@@ -20,6 +20,8 @@ class ButtonTransformer extends AbstractStringTransformer
         $schema = ['type' => 'string'];
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $schema["render_in"] = $form->getConfig()->getOption('render_in');
+        $schema["text_color"] = $form->getConfig()->getOption('text_color');
+        $schema["background_color"] = $form->getConfig()->getOption('background_color');
         return $schema;
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\ToolsUtils;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Base para peticiones oauth2
@@ -56,10 +57,16 @@ abstract class BaseOAuth2Context implements Context
      * @var FileLocator
      */
     protected $fileLocator;
+    
+    /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     */
+    protected $accessor;
 
     public function __construct(FileLocator $fileLocator)
     {
         $this->fileLocator = $fileLocator;
+        $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
     public function setDataContext(BaseDataContext $dataContext)
@@ -252,6 +259,19 @@ abstract class BaseOAuth2Context implements Context
             return;
         }
         throw new \Exception(sprintf("Property %s is exists in response!\n\n %s", $propertyName, $this->echoLastResponse()));
+    }
+    
+    /**
+     * Verifica que no exista propiedades
+     * Ejemplo: And the response does not have "data.properties.ship_vessel,data.properties.vehicle_type" properties
+     * @When the response does not have :properties properties
+     */
+    public function theResponseDoesNotHaveProperties($properties)
+    {
+        $propertiesName = explode(",", $properties);
+        foreach ($propertiesName as $propertyName) {
+            $this->theResponseDoesNotHaveProperty($propertyName);
+        }
     }
 
     /**
@@ -491,18 +511,19 @@ abstract class BaseOAuth2Context implements Context
         $message = $this->dataContext->parseParameter($message, [], "validators");
         $errors = $this->getPropertyValue("errors");
         $found = false;
-        if (is_array($errors['errors'])) {
-            foreach ($errors['errors'] as $error) {
+        $internalErrors = isset($errors['errors']) ? $errors['errors'] : [];
+        if (is_array($internalErrors)) {
+            foreach ($internalErrors as $error) {
                 if ($error === $message) {
                     $found = true;
                     break;
                 }
             }
         } else {
-            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($errors['errors'], true), $this->echoLastResponse()));
+            throw new Exception(sprintf("The error property no contains error message. '%s' \n \n %s", $message, var_export($internalErrors, true), $this->echoLastResponse()));
         }
         if ($found === false) {
-            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $errors['errors'])));
+            throw new Exception(sprintf("The error response no contains error message '%s', response with '%s'", $message, implode(",", $internalErrors)));
         }
     }
     
@@ -513,6 +534,19 @@ abstract class BaseOAuth2Context implements Context
      */
     public function theResponseHasAErrorsInProperty($propertyName) {
         $this->theResponseHasAErrorsInPropertyAndContains($propertyName);
+    }
+    
+    /**
+     * Verifica que existan errores en el response separados por coma
+     * Ejemplo: Then the response has a errors in properties "bodywork_serial,engine_serial,vehicle_color,seats"
+     * @Then the response has a errors in properties :properties
+     */
+    public function theResponseHasAErrorsInProperties($properties)
+    {
+        $properties = explode(",", $properties);
+        foreach ($properties as $propertyName) {
+            $this->theResponseHasAErrorsInProperty($propertyName);
+        }
     }
 
     /**

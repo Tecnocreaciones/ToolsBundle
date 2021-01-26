@@ -3,88 +3,88 @@
 {% endblock tecno_ajax_autocomplete_widget %}
 
 {% block tools_choice_widget %}
-    
+
     {% spaceless %}
         {% if compound %}
             <ul {{ block('widget_container_attributes_choice_widget') }}>
-            {% for child in form %}
-                <li>
-                    {% set form_widget_content %}
-                        {{ form_widget(child, {'horizontal': false, 'horizontal_input_wrapper_class': ''}) }} {# {'horizontal': false, 'horizontal_input_wrapper_class': ''} needed to avoid MopaBootstrapBundle messing with the DOM #}
-                    {% endset %}
-                    {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget_content } ) }}
-                </li>
-            {% endfor %}
+                {% for child in form %}
+                    <li>
+                        {% set form_widget_content %}
+                            {{ form_widget(child, {'horizontal': false, 'horizontal_input_wrapper_class': ''}) }} {# {'horizontal': false, 'horizontal_input_wrapper_class': ''} needed to avoid MopaBootstrapBundle messing with the DOM #}
+                        {% endset %}
+                        {{ form_label(child, child.vars.label|default(null), { 'in_list_checkbox' : true, 'widget' : form_widget_content } ) }}
+                    </li>
+                {% endfor %}
             </ul>
         {% else %}
-        {% if sonata_admin.admin and not sonata_admin.admin.getConfigurationPool().getOption('use_select2') %}
-            {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
-        {% endif %}
-        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-            {% if empty_value is not none %}
-                <option value="">
-                    {% if not sonata_admin.admin %}
-                        {{- empty_value|trans({}, translation_domain) -}}
-                    {% else %}
-                        {{- empty_value|trans({}, sonata_admin.field_description.translationDomain) -}}
-                    {% endif%}
-                </option>
+            {% if sonata_admin.admin and not sonata_admin.admin.getConfigurationPool().getOption('use_select2') %}
+                {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
             {% endif %}
-            {% if preferred_choices|length > 0 %}
-                {% set options = preferred_choices %}
-                
-                {% for group_label, choice in options %}
-                    {%- if choice is iterable -%}
-                        <optgroup label="{{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}">
-                            {% set options = choice %}
-                            {{ block('tecno_choice_widget_options') }}
-                        </optgroup>
-                    {%- else -%}
-                        {% set attr = choice.attr %}
-                        <option value="{{ choice.value }}" {{ block('attributes') }}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.label : choice.label|trans({}, choice_translation_domain) }}</option>
-                    {%- endif -%}
-                {% endfor %}
-                
-                {% if choices|length > 0 %}
-                    <option disabled="disabled">{{ separator }}</option>
+            <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+                {% if empty_value is not none %}
+                    <option value="">
+                        {% if not sonata_admin.admin %}
+                            {{- empty_value|trans({}, translation_domain) -}}
+                        {% else %}
+                            {{- empty_value|trans({}, sonata_admin.field_description.translationDomain) -}}
+                        {% endif%}
+                    </option>
                 {% endif %}
-            {% endif %}
-            {% set options = choices %}
-            {{ block('tecno_choice_widget_options') }}
-        </select>
+                {% if preferred_choices|length > 0 %}
+                    {% set options = preferred_choices %}
+
+                    {% for group_label, choice in options %}
+                        {%- if choice is iterable -%}
+                            <optgroup label="{{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}">
+                                {% set options = choice %}
+                                {{ block('tecno_choice_widget_options') }}
+                            </optgroup>
+                        {%- else -%}
+                            {% set attr = choice.attr %}
+                            <option value="{{ choice.value }}" {{ block('attributes') }}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.label : choice.label|trans({}, choice_translation_domain) }}</option>
+                        {%- endif -%}
+                    {% endfor %}
+
+                    {% if choices|length > 0 %}
+                        <option disabled="disabled">{{ separator }}</option>
+                    {% endif %}
+                {% endif %}
+                {% set options = choices %}
+                {{ block('tecno_choice_widget_options') }}
+            </select>
         {% endif %}
     {% endspaceless %}
 {% endblock tools_choice_widget %}
 
 {% block tecno_security_roles_widget %}
-{% spaceless %}
-    <script src="{{ asset("bundles/tecnocreacionestools/libs/tree-multiselect/jquery.tree-multiselect.min.js") }}"></script>
-    <link rel="stylesheet" href="{{ asset("bundles/tecnocreacionestools/libs/tree-multiselect/jquery.tree-multiselect.min.css") }}">
-    <div class="editable">
-        <h4>{{ 'field.label_roles_editable'|trans({}, "SonataUserBundle") }}</h4>
-        {{ block('tools_choice_widget') }}
-    </div>
-    {% if read_only_choices|length > 0 %}
-    <div class="readonly">
-        <h4>{{ 'field.label_roles_readonly'|trans({}, "SonataUserBundle") }}</h4>
-        <ul>
-        {% for choice in read_only_choices %}
-            <li>{{ choice }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-    <script>
-        jQuery(document).ready(function(){
-            var id = "{{ id }}";
-            var options = { 
-                sortable: true,
-                startCollapsed: true,
-            };
-            jQuery("select#"+id).treeMultiselect(options);
-        });
-    </script>
-{% endspaceless %}
+    {% spaceless %}
+        <script src="{{ asset("bundles/tecnocreacionestools/libs/tree-multiselect/jquery.tree-multiselect.min.js") }}"></script>
+        <link rel="stylesheet" href="{{ asset("bundles/tecnocreacionestools/libs/tree-multiselect/jquery.tree-multiselect.min.css") }}">
+        <div class="editable">
+            <h4>{{ 'field.label_roles_editable'|trans({}, "SonataUserBundle") }}</h4>
+            {{ block('tools_choice_widget') }}
+        </div>
+        {% if read_only_choices|length > 0 %}
+            <div class="readonly">
+                <h4>{{ 'field.label_roles_readonly'|trans({}, "SonataUserBundle") }}</h4>
+                <ul>
+                    {% for choice in read_only_choices %}
+                        <li>{{ choice }}</li>
+                        {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <script>
+            jQuery(document).ready(function () {
+                var id = "{{ id }}";
+                var options = {
+                    sortable: true,
+                    startCollapsed: true,
+                };
+                jQuery("select#" + id).treeMultiselect(options);
+            });
+        </script>
+    {% endspaceless %}
 {% endblock tecno_security_roles_widget %}
 
 {%- block tecno_choice_widget_options -%}
@@ -114,7 +114,7 @@
                 {% set sectionDelimiter = '/' %}
                 {% set valueOptionSplits = valueOption|split(sectionDelimiter) %}
                 {% set valueOptionSplitsTrans = [] %}
-                
+
                 {% for valueOptionSplit in valueOptionSplits %}
                     {% set valueOptionSplitsTrans = valueOptionSplitsTrans|merge([valueOptionSplit|trans({}, choice_translation_domain)]) %}
                 {% endfor %}
@@ -126,3 +126,51 @@
     {{ valueString }}
     <option value="{{ valueString }}" {{ block('attributes') }}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.value : choice.value|trans({}, choice_translation_domain) }}</option>
 {%- endblock tecno_choice_widget_tree_options -%}
+
+{% block copy_checkbox_widget %}
+    {{ block('checkbox_widget') }}
+    <script>
+        var init = function () {
+            var copy_from_fields = {{ copy_from|json_encode()|raw }};
+            $("#{{ id }}").change(function () {
+                var checkbox = $(this);
+                $.each(copy_from_fields, function (copy_from, copy_to) {
+                    //var x = document.getElementsByName(copy_to);
+                    var item_from = jQuery('[name="' + copy_from + '"]');
+                    var item_to = jQuery('[name="' + copy_to + '"]');
+                        for (var i = 0; i < item_from.length; i++) {
+                            if(item_from[i].type != item_to[i].type){
+                                continue;
+                            }
+                            for (var j = 0; j < item_to.length; j++) {
+                                if (checkbox.prop("checked")) {
+                                    if (item_to[i].type == "checkbox") {
+                                        $(item_to[i]).prop("checked",$(item_from[i]).prop("checked"));
+                                    }else if (item_to[i].type == "text" || item_to[i].type == "select-one") {
+                                        var val = $(item_from[i]).val();
+                                        $(item_to[i]).val(val);
+                                    }
+                                } else {
+                                    if ($(item_to[i]).type == "checkbox") {
+                                        $(item_to[i]).prop("checked",false);
+                                    }else if (item_to[i].type == "text" || item_to[i].type == "select-one") {
+                                        $(item_to[i]).val(null);
+                                    }
+                                }
+                                
+                            }
+
+                        }
+
+
+                    });
+                });
+            };
+            document.addEventListener("DOMContentLoaded", function (event) {
+                init();
+            });
+            if (document.readyState == "complete" || document.readyState == "interactive") {
+                init();
+            }
+    </script>
+{% endblock %}

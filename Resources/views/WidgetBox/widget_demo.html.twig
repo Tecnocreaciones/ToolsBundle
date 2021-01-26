@@ -1,0 +1,12 @@
+{% extends settings.blockBase %}
+
+{% block content %}
+    <div class="p-2">
+        {% set info = "widget_box.note.cache"|trans %}
+        {{ "widget_box.note.add"|trans }}
+        <br/>
+        <a href="{{ path("block_widget_box_index",{eventName: widget.event}) }}" class="btn btn-primary bold animated fadeInLeft" data-toggle="tooltip" title="{{ info }}" data-placement="top">
+            <i class="fas fa-plus-circle"></i>&nbsp;{{ "widget_box.button.add"|trans }}
+        </a>
+    </div>
+{% endblock content %}

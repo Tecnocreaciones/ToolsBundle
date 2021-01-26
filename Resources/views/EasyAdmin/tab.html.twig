@@ -13,12 +13,22 @@
 </div>
 <script>
     $(function(){
+{#       Twitter boostrap 3 #}
         $("div.navigation > ul > li > a").click(function(e){
             e.preventDefault();
             var href = $(this).attr("href");
             tabsService.loadContent(href);
             return false;
         });
+        
+{#       Twitter boostrap 4 #}
+        $("div.navigation > nav > ul > li > a").click(function(e){
+            e.preventDefault();
+            var href = $(this).attr("href");
+            tabsService.loadContent(href);
+            return false;
+        });
+        {#       Twitter boostrap 3 #}
         $("table.table-paginate > thead > tr:nth-child(1) > th > a").click(function(e){
             e.preventDefault();
             var href = $(this).attr("href");

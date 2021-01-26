@@ -18,6 +18,10 @@ class DynamicSubmitType extends SubmitType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            "text_color" => null,//Color hexadecimal de la letra
+            "background_color" => null,//Color hexadecimal del fondo
+        ]);
         $resolver->setDefault("render_in","form_top");
         $resolver->setAllowedValues("render_in", ["form_top","form_bottom"]);
     }

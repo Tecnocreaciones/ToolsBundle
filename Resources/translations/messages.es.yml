@@ -42,3 +42,56 @@ Type label: 'Tipo'
 EmailTemplate: 'Plantilla de correo'
 Status label: 'Estatus'
 ID: 'Identificador'
+tab.notes: "Notas"
+tab.history: "Historial"
+tab.documents: "Documentos"
+tab.error.loading.content: "Ocurrio un error cargando el contenido, intente mas tarde."
+Public notes: Notas publicas
+public_notes.help: (Estas notas podran ser observadas en documentos, perfiles, resumenes y otros)
+Private Notes: Notas privadas
+private_notes.help: (Estas notas son de uso interno, no podrán ser visualizadas en otra parte.)
+button.notes.update: "Actualizar"
+button.notes.cancel: "Cancelar"
+button.notes.save: "Guardar"
+tab.documents.attachments: "Nª de archivos adjuntos"
+tab.documents.attachments.size: "Tamaño total de los archivos/documentos adjuntos"
+tab.documents.attach_file: "Adjuntar un archivo"
+tab.documents.attach: "Adjuntar"
+tab.documents.attach.maximum_size: "Tamaño máximo:"
+tab.documents.files_attachments: "Archivos y documentos adjuntos"
+tab.documents.documents: "Documentos"
+tab.documents.size: "Tamaño"
+tab.documents.date: "Fecha"
+tab.documents.empty_documents_uploaded: "No hay documentos cargados."
+tab.documents.question.delete: "¿Desea eliminar el archivo? "
+tab.documents.comments: "Comentarios (opcional)"
+
+widget_box:
+    new: (Nuevo!)
+    clear: Limpiar widget(s)
+    news: (%count%) Nuevos!
+    widgets_label: Widgets
+    templates: Plantillas <b>(%quantity%)</b>
+    events: Vistas <b>(%quantity%)</b>
+    header: Widgets disponibles
+    widgets: (<b>%quantity%</b> Widgets)
+    buttons:
+        add: Añadir
+        add_all: Añadir todos
+    actions:
+        add: Añadir
+    widget: Widget
+    form:
+        name: Nombre
+        template: Plantilla
+        event: Vista
+    flashes:
+        success: El widget se agrego correctamente.
+        success_all: Se agrego %num% widget(s) correctamente.
+        success_all_remove: Se elimino %num% widget(s) correctamente.
+title.widget.default.info: "Widgets"
+widget_box.news.alert: "Hay %news% widget(s) nuevos!"
+widget_box.note.cache: "Nota: Algunos widgets mantienen la información por un periodo de tiempo no maximo de 24 horas."
+widget_box.note.add: "Puede añadir widgets para personalizar esta vista y poder visualizar solo la información de su interes."
+widget_box.button.add: "Añadir Widget"
+default: Predeterminada

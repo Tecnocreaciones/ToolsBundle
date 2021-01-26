@@ -52,6 +52,8 @@ tabs_object_exporter_delete:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:delete
         _format: html
     requirements: { _method: GET }
+    options:
+        expose: true
 
 tabs_object_exporter_download:
     path: /tabs/object-manager/exporter/download/{filename}
@@ -59,6 +61,8 @@ tabs_object_exporter_download:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:download
         _format: html
     requirements: { _method: GET }
+    options:
+        expose: true
 
 tabs_object_exporter_upload:
     path: /tabs/object-manager/exporter/upload
@@ -66,6 +70,15 @@ tabs_object_exporter_upload:
         _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:upload
         _format: html
     requirements: { _method: POST }
+    options:
+        expose: true
+
+tabs_object_exporter_all:
+    path: /tabs/object-manager/exporter/all
+    defaults:
+        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:all
+        _format: html
+    requirements: { _method: GET }
     options:
         expose: true
     

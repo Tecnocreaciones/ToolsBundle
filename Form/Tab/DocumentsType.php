@@ -23,16 +23,16 @@ class DocumentsType extends AbstractType
     {
         $builder                
                 ->add('documents',FileType::class, [
-                'label' => ' ',
+                'label' => false,
                 'multiple' => true,
             ])
                 ->add('comments',TextType::class, [
                 'label' => ' ',
                 'required' => false,
                 'attr' => [
-                    "class" => "form-control input-flat",
-                    "style" => "width: 20%;height: 30px;display: inline;",
-                    "placeholder" => "Comentarios (opcional)",
+                    "class" => "form-control ",
+//                    "style" => "width: 20%;height: 30px;display: inline;",
+                    "placeholder" => "tab.documents.comments",
                 ],
             ])
                 ;

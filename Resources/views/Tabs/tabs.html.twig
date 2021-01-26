@@ -18,38 +18,39 @@
 {% endblock %}
 
 {% block tabs_base %}
-    <div class="nav-tabs-custom">
-        <ul id="tabs" class="nav nav-tabs">
-            <li class="tab-title">
-                {% if tab.icon %}
-                    <i class="{{ tab.icon }}"></i>
-                {% else %}
-                    <i class="fa fa-check"></i>
-                {% endif %}
-                &nbsp;
-                {{ tab.name|trans({},"titles") }}
-            </li>
-            <li>
-                <ul id="{{ tab.id }}" class="nav nav-tabs" role="tablist">
-                    {% for tabContent in tab.tabsContent %}
-                        <li {% if tabContent.active %}class="active"{% endif %} role="tab">
-                            {% set tabTitle = tabContent.title|trans %}
-                            <a class="nav-link{% if tabContent.active %} active{% endif %}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.url }}" data-toggle="tab">
-                                {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
-                                <span class="hidden-xs-down">{{ tabTitle }}</span>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        </ul>
-        
-        <div class="tab-content">
-            {% for tabContent in tab.tabsContent %}
-                 <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif %} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}"
-                      >
-                </div>
-            {% endfor %}
+    <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+            <ul id="tabs" class="nav nav-tabs">
+                <li class="tab-title">
+                    {% if tab.icon %}
+                        <i class="{{ tab.icon }}"></i>
+                        &nbsp;
+                    {% endif %}
+                    {{ tab.name|trans }}
+                </li>
+                <li>
+                    <ul id="{{ tab.id }}" class="nav nav-tabs" role="tablist">
+                        {% for tabContent in tab.tabsContent %}
+                            <li {% if tabContent.active %}class="active"{% endif %} role="tab">
+                                {% set tabTitle = tabContent.title|trans %}
+                                <a class="nav-link{% if tabContent.active %} active{% endif %}" href="#{{ tabContent.id }}" data-content-id="#{{ tabContent.id }}" title="{{ tabTitle }}" tab-ajax="true" data-url="{{ tabContent.getOption("url") }}" data-toggle="tab">
+                                    {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}
+                                    <span class="hidden-xs-down">{{ tabTitle }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body p-0 border-bottom-0">
+            <div class="tab-content">
+                {% for tabContent in tab.tabsContent %}
+                     <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif %} {% if tabContent.option("add_content_div") %}tabcontent-border{% endif %}" id="{{ tabContent.id }}"
+                          >
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -138,15 +139,18 @@
                             self.html("<b>{{ "tab.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
                         }else if(status == "success"){
                             self.data("loaded",true);
-                            if(onLoadTabSuccess !== undefined && onLoadTabSuccess !== null){
+                            if(typeof onLoadTabSuccess !== 'undefined' && onLoadTabSuccess !== undefined && onLoadTabSuccess !== null){
                                 onLoadTabSuccess();
                             }
                         }
-                        if(angular !== undefined){
+{#                        Fix para angular#}
+                        if (typeof angular !== 'undefined'){
                             setTimeout(function() {
                                 compileAngularElement(idContent);
                             }, 0);
                         }
+                        {#if(angular !== undefined){
+                        }#}
                     });
                 },
                 activeParent: function(tabItem){
@@ -155,8 +159,13 @@
                 }
             };
         }
-        $(function() {
-            tabsService.setId("{{ tab.id }}");
+        var tabsInit = false;
+        var initTabs = function(){
+        if(tabsInit){
+            return;
+        }
+        tabsInit = true;
+        tabsService.setId("{{ tab.id }}");
             $('[tab-ajax="true"]').dblclick(function(e) {
                 e.preventDefault();
                 tabsService.forceLoad = true;
@@ -204,6 +213,12 @@
             });
             tabsService.forceLoad = true;
             tabsService.reload();
+        };
+        document.addEventListener("DOMContentLoaded", function (event) {
+            initTabs();
         });
+        if(document.readyState == "complete"){
+            $(initTabs);
+        }
     </script>
 {% endblock %}

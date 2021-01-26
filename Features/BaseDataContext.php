@@ -425,22 +425,47 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @example Given a clear entity "Pandco\Bundle\AppBundle\Entity\EPR\Sales\SalesInvoice" table
      * @Given a clear entity :className table
      * @Given a clear entity :className table and where :where
+     * @Given a clear entity :className table with options :options
      */
-    public function aClearEntityTable($className, $andWhere = null) {
+    public function aClearEntityTable($className, $andWhere = null,$options = []) {
+        $options = $this->parseParameter($options);
+        
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "and_clear" => true,
+            "em" => null,
+        ]);
+        
+        if ($className === \Pandco\Bundle\AppBundle\Entity\User\DigitalAccount\TimeWithdraw::class) {
+            $this->executeDQL("UPDATE " . \Pandco\Bundle\AppBundle\Entity\App\User\DigitalAccount\DigitalAccountConfig::class . " dac SET dac.timeWithdraw = null",$options);
+        }
+        $queryDelete = "DELETE FROM " . $className . " " . $andWhere;
+        $this->executeDQL($queryDelete,$options);
+    }
+    /**
+     * Ejecuta un DQL directamente
+     * @param type $dql
+     * @param array $options
+     */
+    public function executeDQL($dql,array $options = [])
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "and_clear" => true,
+            "em" => null,
+        ]);
+        $options = $resolver->resolve($options);
         $doctrine = $this->getDoctrine();
-        $em = $doctrine->getManager();
+        $em = $doctrine->getManager($options["em"]);
         if ($em->getFilters()->isEnabled('softdeleteable')) {
             $em->getFilters()->disable('softdeleteable');
         }
-        if ($className === \Pandco\Bundle\AppBundle\Entity\User\DigitalAccount\TimeWithdraw::class) {
-            $query = $em->createQuery("UPDATE " . \Pandco\Bundle\AppBundle\Entity\App\User\DigitalAccount\DigitalAccountConfig::class . " dac SET dac.timeWithdraw = null");
-            $query->execute();
-        }
-        $queryDelete = "DELETE FROM " . $className . " " . $andWhere;
-        $query = $em->createQuery($queryDelete);
+        $query = $em->createQuery($dql);
         $query->execute();
         $em->flush();
-        $em->clear();
+        if($options["and_clear"] === true){
+            $em->clear();
+        }
     }
 
     public function flush() {
@@ -509,8 +534,8 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @param type $class
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findQueryBuilder($class, $alias = "o") {
-        $em = $this->getDoctrine()->getManager();
+    public function findQueryBuilder($class, $alias = "o",$manager = null) {
+        $em = $this->getDoctrine()->getManager($manager);
         $qb = $em->createQueryBuilder()
                 ->select($alias)
                 ->from($class, $alias);
@@ -567,7 +592,12 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @param type $class
      * @return \Doctrine\ORM\QueryBuilder
      */
-    public function findQueryBuilderForClass($class, array $method = [], $queryResult = null) {
+    public function findQueryBuilderForClass($class, array $method = [], $queryResult = null,array $options = []) {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "max_results" => 0,
+        ]);
+        $options = $resolver->resolve($options);
         $em = $this->getDoctrine()->getManager();
         $alias = "c";
         $qb = $em->createQueryBuilder()
@@ -578,6 +608,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                     ->andWhere(sprintf("%s.%s = :%s", $alias, $key, $key))
                     ->setParameter($key, $value)
             ;
+        }
+        if($options["max_results"] > 0){
+            $qb->setMaxResults($options["max_results"]);
         }
         if ($queryResult == "OneOrNull") {
             return $qb->getQuery()->getOneOrNullResult();
@@ -643,6 +676,12 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
                 $this->replaceParameters($jsonObject);
                 return $jsonObject;
             }
+        }else if(is_array($value)){
+            //No se procesa un array nativo, solo array en string.
+            return $value;
+        }else if(is_bool($value)){
+            //No se procesa un booleano nativo
+            return $value;
         }
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
