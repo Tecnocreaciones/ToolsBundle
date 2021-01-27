@@ -104,6 +104,8 @@ abstract class ModelVariable
             "label.parameter.type.float" => self::TYPE_FLOAT,
             "label.parameter.type.object" => self::TYPE_OBJECT,
             "label.parameter.type.string" => self::TYPE_STRING,
+            "label.parameter.type.array" => self::TYPE_ARRAY,
+            "label.parameter.type.callable" => self::TYPE_CALLABLE,
         );
     }
     
