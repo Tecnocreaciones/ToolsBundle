@@ -15,6 +15,8 @@ abstract class ModelVariable
     const TYPE_FLOAT = "FLOAT";
     const TYPE_OBJECT = "OBJECT";
     const TYPE_STRING = "STRING";
+    const TYPE_ARRAY = "ARRAY";
+    const TYPE_CALLABLE = "CALLABLE";
     
     /**
      * @var integer
