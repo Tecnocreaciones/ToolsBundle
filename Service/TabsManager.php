@@ -382,7 +382,11 @@ class TabsManager implements ConfigureInterface
             return $parameters;
         };
         $parameters = $extractParameters($this->tab->getViewParameters(), []);
-        $parameters = array_merge($parameters, $extractParameters($resolveCurrentTab->getViewParameters(), $parameters));
+        $request = $this->requestStack->getCurrentRequest();
+        //Renderizar parametros de la tab solo si se esta renderizando la tab y no el padre.
+        if(!empty($request->get(Tab::NAME_CURRENT_TAB))){
+            $parameters = array_merge($parameters, $extractParameters($resolveCurrentTab->getViewParameters(), $parameters));
+        }
         $parameters = array_merge($parameters, $this->parametersToView);
         $parameters["tab"] = $tab;
         $parameters["objectDataManager"] = $this->getObjectDataManager();
