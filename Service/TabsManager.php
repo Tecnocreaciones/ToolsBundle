@@ -215,6 +215,10 @@ class TabsManager implements ConfigureInterface
             $sort = $request->get("sort");
             $direction = $request->get("direction");
 
+            if(!in_array($sort,["e.user","e.description","e.createdAt"])){
+                $sort = null;
+            }
+            
             $page = $request->get("page", 1);
             $limit = $request->get("limit", 20);
             $paginator = $this->getObjectDataManager()->histories()->getPaginator([

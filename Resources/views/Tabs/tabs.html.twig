@@ -214,7 +214,10 @@
                 tabsService.activeParent($this);
                 var loadurl = $(this).attr('data-url');
                 var current = $this.parent().parent().attr("id")+tabContent;
-                tabsService.loadContent(loadurl,tabContent,{'{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}':current,isInit: tabsService.isInit == true ? 1 : 0});
+                var parameters = {{ app.request.query.all|serialize|raw}};//Parametros get
+                parameters['{{ constant('Tecnoready\\Common\\Model\\Tab\\Tab::NAME_CURRENT_TAB') }}'] = current;
+                parameters["isInit"] = tabsService.isInit == true ? 1 : 0;
+                tabsService.loadContent(loadurl,tabContent,parameters);
                 tabsService.isInit = true;
             });
             tabsService.forceLoad = true;
