@@ -133,11 +133,9 @@
                     var qs = jQuery.param( parameters );
                     url += ((url.indexOf('?') == -1) ? '?' : '&') + qs;
                     $(this.lastTabContentId).html($("#lo-"+tabsService.id).html());
-                    var dataPost = {};
-                    {% if app.request.method == "POST" %}
-                        dataPost = {{ app.request.request.all|serialize|raw}};
-                    {% endif %}
-                    $(this.lastTabContentId).load(url,dataPost, function(response, status, xhr){
+                    
+                    
+                    var onLoad = function(response, status, xhr){
                         //$('#'+tabsService.id).tab(); //reinitialize tabs
                         if(status == "error"){
                             self.html("<b>{{ "tab.error.loading.content"|trans }}</b> <br/><br/>"+ xhr.status + " " + xhr.statusText);
@@ -153,9 +151,13 @@
                                 compileAngularElement(idContent);
                             }, 0);
                         }
-                        {#if(angular !== undefined){
-                        }#}
-                    });
+                    };
+                    {% if app.request.method == "POST" %}
+                        var dataPost = {{ app.request.request.all|serialize|raw}};
+                        $(this.lastTabContentId).load(url,dataPost,onLoad);
+                    {% else %}
+                        $(this.lastTabContentId).load(url,onLoad);
+                    {% endif %}
                 },
                 activeParent: function(tabItem){
                     $("li.active").removeClass("active");
