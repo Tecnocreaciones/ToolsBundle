@@ -59,7 +59,7 @@ class TabsManager implements ConfigureInterface
      * @var Array
      */
     private $models;
-    
+
     /**
      * Paginador de kpn
      * @var PaginatorInterface
@@ -103,11 +103,11 @@ class TabsManager implements ConfigureInterface
      * @param type $objectType
      * @param array $options
      */
-    public function configure($objectId, $objectType,array $options = [])
+    public function configure($objectId, $objectType, array $options = [])
     {
         $this->objectId = $objectId;
         $this->objectType = $objectType;
-        $this->getObjectDataManager()->configure($this->objectId, $this->objectType,$options);
+        $this->getObjectDataManager()->configure($this->objectId, $this->objectType, $options);
     }
 
     /**
@@ -124,7 +124,7 @@ class TabsManager implements ConfigureInterface
         $options["object_id"] = $this->objectId;
         $tab = new Tab($options);
         $tab->setRequest($request);
-        $tab->setRootUrl($request->getRequestUri());//Por defecto la misma ruta que se llamo originalmente
+        $tab->setRootUrl($request->getRequestUri()); //Por defecto la misma ruta que se llamo originalmente
         $this->tab = $tab;
         $this->parametersToView["objectDataManager"] = $this->getObjectDataManager();
         $this->parametersToView["tabsManager"] = $this;
@@ -140,8 +140,8 @@ class TabsManager implements ConfigureInterface
     {
         $request = $this->requestStack->getCurrentRequest();
         $uri = $request->getRequestUri();
-        $toClear = ["isInit","ajax",Tab::SORT_ORDER,Tab::SORT_PROPERTY,Tab::LAST_CURRENT_TABS,Tab::NAME_CURRENT_TAB];
-        $uri = StringUtil::removeQueryStringURL($uri,$toClear);
+        $toClear = ["isInit", "ajax", Tab::SORT_ORDER, Tab::SORT_PROPERTY, Tab::LAST_CURRENT_TABS, Tab::NAME_CURRENT_TAB];
+        $uri = StringUtil::removeQueryStringURL($uri, $toClear);
         return [
             "_conf" => [
                 "returnUrl" => $uri,
@@ -205,25 +205,28 @@ class TabsManager implements ConfigureInterface
             "icon" => $this->options["history_manager"]["icon"],
         ]);
         $options = $resolver->resolve($options);
-        if(!$this->paginator){
+        if (!$this->paginator) {
             throw new RuntimeException(sprintf("El servicio de paginador %s debe ser seteado.", PaginatorInterface::class));
         }
         $request = $this->requestStack->getCurrentRequest();
-        $sort = $request->get("sort");
-        $direction = $request->get("direction");
-        
-        $page = $request->get("page", 1);
-        $limit = $request->get("limit", 20);
-        $paginator = $this->getObjectDataManager()->histories()->getPaginator([
-            "sort" => $sort,
-            "direction" => $direction,
-        ]);
-        $histories = $this->paginator->paginate($paginator, $page, $limit, $options);
-        
+
         $tabContentHistory = new TabContent($options);
-        $tabContentHistory->setViewParameters([
-            "histories" => $histories,
-        ]);
+        $tabContentHistory->setViewParameters(function()use($request,$options) {
+            $sort = $request->get("sort");
+            $direction = $request->get("direction");
+
+            $page = $request->get("page", 1);
+            $limit = $request->get("limit", 20);
+            $paginator = $this->getObjectDataManager()->histories()->getPaginator([
+                "sort" => $sort,
+                "direction" => $direction,
+            ]);
+            $histories = $this->paginator->paginate($paginator, $page, $limit, $options);
+            $parameters = [];
+            $parameters["histories"] = $histories;
+            
+            return $parameters;
+        });
         $this->tab->addTabContent($tabContentHistory);
         return $tabContentHistory;
     }
@@ -270,8 +273,8 @@ class TabsManager implements ConfigureInterface
      */
     public function addModel($model)
     {
-        if(isset($this->models[$model])){
-           throw new InvalidArgumentException(sprintf("The model to '%s' is already added",$model)); 
+        if (isset($this->models[$model])) {
+            throw new InvalidArgumentException(sprintf("The model to '%s' is already added", $model));
         }
         $this->models[] = $model;
     }
@@ -289,7 +292,7 @@ class TabsManager implements ConfigureInterface
         $models = $chain->getModels();
         if (!is_null($this->models) && is_array($this->models)) {
             foreach ($models as $model) {
-                if (in_array($model->getId(),$this->models)) {
+                if (in_array($model->getId(), $this->models)) {
                     $choices[$this->trans($model->getName()) . " [" . strtoupper($model->getFormat()) . "]"] = $model->getName();
                 }
             }
@@ -384,7 +387,7 @@ class TabsManager implements ConfigureInterface
         $parameters = $extractParameters($this->tab->getViewParameters(), []);
         $request = $this->requestStack->getCurrentRequest();
         //Renderizar parametros de la tab solo si se esta renderizando la tab y no el padre.
-        if(!empty($request->get(Tab::NAME_CURRENT_TAB))){
+        if (!empty($request->get(Tab::NAME_CURRENT_TAB))) {
             $parameters = array_merge($parameters, $extractParameters($resolveCurrentTab->getViewParameters(), $parameters));
         }
         $parameters = array_merge($parameters, $this->parametersToView);
