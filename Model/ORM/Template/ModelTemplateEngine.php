@@ -37,7 +37,7 @@ abstract class ModelTemplateEngine implements TemplateInterface
     /**
      * Nombre de la plantilla
      * @var string
-     * @ORM\Column(name="name",type="string",length=30)
+     * @ORM\Column(name="name",type="string",length=50)
      */
     protected $name;
     
