@@ -308,6 +308,7 @@ class Configuration implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('template')->defaultValue("@TecnocreacionesToolsBundle/Resources/views/Exporter/documents.html.twig")->end()
                                     ->scalarNode('template_upload')->defaultValue("@TecnocreacionesToolsBundle/Resources/views/Exporter/documents_upload.html.twig")->end()
+                                    ->scalarNode('template_manager_adapter')->defaultNull()->end()
                                 ->end()
                             ->end()
                         ->end()

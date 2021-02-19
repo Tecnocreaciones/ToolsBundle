@@ -1,8 +1,11 @@
 services:
-    tecnocreaciones_tools.service.link_generator:
+    Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService
         calls:
             - [ setContainer, ['@service_container']]
+    tecnocreaciones_tools.service.link_generator:
+        alias: Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService
+        public: true
     link_generator.twig.extension:
         class: Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\LinkGeneratorExtension
         tags:
