@@ -24,7 +24,34 @@ trait CommonFunctionsTrait
         $schema = $this->addConstraints($form, $schema);
         $schema = $this->addDateParams($form, $schema);
         $schema = $this->addCommonConfigOptions($form, $schema);
+        $schema = $this->addFromAttr($form, $schema);
         
+        return $schema;
+    }
+    
+    /**
+     * Añade opciones de configuracion extra en el parametro "attr" que es dinamico
+     * @param FormInterface $form
+     * @param array $schema
+     * @return type
+     */
+    protected function addFromAttr(FormInterface $form, array $schema)
+    {
+        if ($attr = $form->getConfig()->getOption('attr')) {
+            $options = [
+                "help_auto_hide","icon"
+            ];
+            foreach ($options as $option) {
+                if (isset($attr[$option])) {
+                    $schema[$option] = $schema['attr'][$option];
+                    unset($schema['attr'][$option]);
+                }
+            }
+            if(count($schema['attr']) == 0){
+                unset($schema['attr']);
+            }
+        }
+
         return $schema;
     }
     
