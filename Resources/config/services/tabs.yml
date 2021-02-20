@@ -1,5 +1,6 @@
 services:
     Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager:
+        autowire: true
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\TabsManager
         arguments: ["@request_stack","%tecnocreaciones_tools.service.tabs%"]
         calls:
@@ -26,3 +27,27 @@ services:
         arguments: [ "@tecnoready.document_manager",{ "debug": '%kernel.debug%' } ]
         calls:
             - [ setAdapter, ["@app.service.exporter.adapter"]  ]
+
+#    Manejador de plantillas     
+    Tecnoready\Common\Service\Template\Engine\PhpSpreadsheetXLSXEngine:
+        arguments: []
+        public: false
+    Tecnoready\Common\Service\Template\Engine\TCPDFEngine:
+        arguments: ["@twig"]
+        public: false
+    Tecnoready\Common\Service\Template\Engine\TXTNativeEngine:
+        public: false
+    Tecnoready\Common\Service\Template\Engine\TXTEchoEngine:
+        public: false
+    Tecnoready\Common\Service\Template\Engine\WkhtmlToPDFEngine:
+        arguments: ["@twig"]
+        public: false
+    Tecnoready\Common\Service\Template\TemplateService:
+        arguments: [ {"debug":"%kernel.debug%", "env": "%kernel.environment%"} ]
+        calls:
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTNativeEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TXTEchoEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\TCPDFEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\WkhtmlToPDFEngine"]  ]
+            - [ addEngine, ["@Tecnoready\\Common\\Service\\Template\\Engine\\PhpSpreadsheetXLSXEngine"]  ]
+#            - [ setAdapter, ["@app.service.exporter.adapter"]  ]

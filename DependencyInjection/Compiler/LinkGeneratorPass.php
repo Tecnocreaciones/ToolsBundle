@@ -13,6 +13,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Tecnocreaciones\Bundle\ToolsBundle\Service\LinkGeneratorService;
 
 /**
  * Carga los items agregados como servicios
@@ -25,7 +26,7 @@ class LinkGeneratorPass implements CompilerPassInterface
         if($container->getParameter('tecnocreaciones_tools.service.link_generator.enable') === false){
             return;
         }
-        $definition = $container->getDefinition('tecnocreaciones_tools.service.link_generator');
+        $definition = $container->getDefinition(LinkGeneratorService::class);
         $tags = $container->findTaggedServiceIds('link_generator.item');
         
         foreach ($tags as $id => $attributes) {
