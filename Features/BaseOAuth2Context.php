@@ -392,10 +392,15 @@ abstract class BaseOAuth2Context implements Context
             $this->dataContext->setRequestBody($key, $row);
         }
         if($andSave === true){
-            $this->lastRequestBodySave = $parameters;
+            $this->lastRequestBodySave = $this->dataContext->getRequestBody();//$parameters;
         }else{
             $this->lastRequestBodySave = null;
         }
+    }
+
+    public function saveLastRequestBody()
+    {
+        $this->lastRequestBodySave = $this->dataContext->getRequestBody();
     }
     
      /**
@@ -445,7 +450,10 @@ abstract class BaseOAuth2Context implements Context
      * Realiza una peticion a la API Rest
      * @When I request :fullUrl
      */
-    public function iRequest($fullUrl, array $parameters = null, array $files = null,array $options = []) {
+    public function iRequest($fullUrl, array $parameters = null, array $files = null,array $options = [])
+    {
+        $this->dataContext->setScenarioParameter("%lastUrlRequest%",$fullUrl);
+
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             "clear_request" => true,
