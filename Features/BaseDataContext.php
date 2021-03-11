@@ -710,7 +710,7 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
             $value = call_user_func_array($this->parseParameterCallBack, [$value, $parameters,$domain,$this]);
         }
         $valueExplode = explode("__", $value);
-        if (is_array($valueExplode) && count($valueExplode) == 2) {
+        if (is_array($valueExplode) && count($valueExplode) == 2 && !empty($valueExplode[0])) {
 //            var_dump($valueExplode[0]);
             $valueExplode[0] = str_replace("\\\\","\\", $valueExplode[0]);//Fix de clases con doble \\
             $reflection = new \ReflectionClass($valueExplode[0]);
