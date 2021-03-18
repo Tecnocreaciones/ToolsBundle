@@ -25,7 +25,7 @@ class Select2EntityTransformer extends AbstractTransformer
         $formView = $this->formView;
         $choices = [];
         
-        $schema = [];
+        $schema = ['type' => 'string'];
 //        if ($formView->vars['multiple']) {
 //            $schema = $this->transformMultiple($form, $choices);
 //        } else {
