@@ -558,10 +558,29 @@ abstract class BaseOAuth2Context implements Context
     }
 
     /**
+     * Verifca que una propiedad no contenga un error con un mensaje especifico
      * @Then the response has a errors in property :propertyName and not contains :message
      */
     public function theResponseHasAErrorsInPropertyAndNotContains($propertyName, $message = null) {
         $this->theResponseHasAErrorsInPropertyAndContains($propertyName,$message,true);
+    }
+    
+    /**
+     * Verifica que una propiedad este en la respuesta pero no tenga ningun error
+     * Ejemplo: And the response has property "billingAddresses.0.address2" and not contains any errors
+     * @Then the response has property :arg1 and not contains any errors
+     */
+    public function theResponseHasPropertyAndNotContainsAnyErrors($propertyName)
+    {
+        try {
+            $this->theResponseHasAErrorsInPropertyAndContains($propertyName);
+        } catch (Exception $ex) {
+            if($ex->getCode() === 1000){
+                //fino, no tiene errores
+            }else{
+                throw $ex;
+            }
+        }
     }
     
     /**
@@ -580,7 +599,10 @@ abstract class BaseOAuth2Context implements Context
                 if (isset($data[$property]) && isset($data[$property]["children"])) {
                     $data = $data[$property]["children"];
                 }
-                if (isset($data[$property]) && isset($data[$property]["errors"])) {
+                if (isset($data[$property])) {
+                    if(!isset($data[$property]["errors"])){
+                        $data[$property]["errors"] = [];
+                    }
                     $children = $data;
                     $propertyName = $property;
                     break;
@@ -588,13 +610,14 @@ abstract class BaseOAuth2Context implements Context
             }
         }
         if (!isset($children[$propertyName])) {
+            $this->echoLastResponse();
             throw new Exception(sprintf("The response no contains error property '%s' \n Available are %s", $propertyName, implode(", ", array_keys($children))));
         }
         $message = $this->dataContext->parseParameter($message, [], 'validators');
-        if (isset($children[$propertyName]["errors"])) {
+        if (isset($children[$propertyName]["errors"]) && count($children[$propertyName]["errors"]) > 0) {
             if ($message === null) {
                 if (count($children[$propertyName]["errors"]) == 0) {
-                    throw new Exception(sprintf("The error property no contains errors in '%s', response with '%s'", $propertyName, var_export($errors, true)));
+                    throw new Exception(sprintf("The error property no contains errors in '%s', response with '%s'", $propertyName, json_encode($errors, JSON_PRETTY_PRINT)));
                 }
             } else {
                 $found = false;
@@ -611,7 +634,7 @@ abstract class BaseOAuth2Context implements Context
                 }
             }
         } else {
-            throw new Exception(sprintf("The error property no contains errors '%s', response with '%s'", $propertyName, var_export($errors, true)));
+            throw new Exception(sprintf("The error property no contains errors in '%s', response with '%s'", $propertyName, json_encode($errors, JSON_PRETTY_PRINT)),1000);
         }
     }
 
