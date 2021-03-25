@@ -5,6 +5,8 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 use Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Constraints as Constraints;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -48,7 +50,8 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
         }
         
         if($parsed === null){
-            throw new RuntimeException(sprintf("No se pudo parsear la validacion '%s'", get_class($constraint)));
+            @trigger_error(sprintf("No se pudo parsear la validacion '%s'", get_class($constraint)), \E_USER_DEPRECATED);
+//            throw new RuntimeException(sprintf("No se pudo parsear la validacion '%s'", get_class($constraint)));
         }
         return $parsed;
     }
@@ -119,6 +122,16 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
             NotNull::class => [
                 "mapped" => Constraints\NotNull::class,
                 "properties" => ["message"],
+                "trans_properties" => ["message"],
+            ],
+            Email::class => [
+                "mapped" => Constraints\Email::class,
+                "properties" => ["message"],
+                "trans_properties" => ["message"],
+            ],
+            Regex::class => [
+                "mapped" => Constraints\Regex::class,
+                "properties" => ["message","pattern"],
                 "trans_properties" => ["message"],
             ],
             Length::class => [

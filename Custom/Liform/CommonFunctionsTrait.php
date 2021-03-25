@@ -3,6 +3,10 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform;
 
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\GroupSequence;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Funciones comunes
@@ -11,24 +15,34 @@ use Symfony\Component\Form\FormInterface;
  */
 trait CommonFunctionsTrait
 {
+
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
     protected $formView;
-    
-    protected function initCommonCustom(FormInterface $form){
+
+    protected function initCommonCustom(FormInterface $form)
+    {
         $this->formView = $form->createView();
     }
+
     protected function addCommonCustom(FormInterface $form, array $schema)
     {
         $formView = $this->formView;
+//        var_dump($formView->vars);
+        $formRoot = $form->getRoot();
+
         $schema["full_name"] = $formView->vars["full_name"];
 //        $schema["full_name"] = $formView->vars["name"];
-        $schema = $this->addConstraints($form, $schema);
+        $schema = $this->addConstraints($form, $schema, $formRoot);
         $schema = $this->addDateParams($form, $schema);
         $schema = $this->addCommonConfigOptions($form, $schema);
         $schema = $this->addFromAttr($form, $schema);
-        
+
         return $schema;
     }
-    
+
     /**
      * Añade opciones de configuracion extra en el parametro "attr" que es dinamico
      * @param FormInterface $form
@@ -39,7 +53,7 @@ trait CommonFunctionsTrait
     {
         if ($attr = $form->getConfig()->getOption('attr')) {
             $options = [
-                "help_auto_hide","icon"
+                "help_auto_hide", "icon"
             ];
             foreach ($options as $option) {
                 if (isset($attr[$option])) {
@@ -47,49 +61,97 @@ trait CommonFunctionsTrait
                     unset($schema['attr'][$option]);
                 }
             }
-            if(count($schema['attr']) == 0){
+            if (count($schema['attr']) == 0) {
                 unset($schema['attr']);
             }
         }
 
         return $schema;
     }
-    
-    protected function addDateParams(FormInterface $form, array $schema){
-        if($form->getConfig()->hasOption("format_from_server")){
+
+    protected function addDateParams(FormInterface $form, array $schema)
+    {
+        if ($form->getConfig()->hasOption("format_from_server")) {
             $schema["format_from_server"] = $form->getConfig()->getOption("format_from_server");
             $schema["format_to_server"] = $form->getConfig()->getOption("format_to_server");
         }
         return $schema;
     }
+
     /**
      * Opciones comunes a configurar en los tipos para no agregar uno por uno
      * @param FormInterface $form
      * @param array $schema
      * @return type
      */
-    protected function addCommonConfigOptions(FormInterface $form, array $schema){
+    protected function addCommonConfigOptions(FormInterface $form, array $schema)
+    {
         $options = ["mode"];
         foreach ($options as $option) {
-            if($form->getConfig()->hasOption($option)){
+            if ($form->getConfig()->hasOption($option)) {
                 $schema[$option] = $form->getConfig()->getOption($option);
             }
         }
         return $schema;
     }
-    
+
     /**
      * Añade las validaciones
      * @param FormInterface $form
      * @param array $schema
      * @return type
      */
-    protected function addConstraints(FormInterface $form, array $schema)
+    protected function addConstraints(FormInterface $form, array $schema, FormInterface $formRoot)
     {
-        $schema['constraints'] = [];
-    	if ($constraints = $form->getConfig()->getOption('constraints')) {
-            $schema['constraints'] = $constraints;
+        $propertyName = $form->getName();
+        $data = $form->getConfig()->getDataClass();
+        $ignoreClass = [File::class];
+        if (empty($data) || in_array($data,$ignoreClass)) {
+            $formIterate = $form;
+             while($formIterate->getParent() !== null){
+                $formIterate = $formIterate->getParent();
+                if($formIterate){
+                    $dataClass = $formIterate->getConfig()->getDataClass();
+                    if(!empty($dataClass) && !in_array($dataClass,$ignoreClass)){
+                        $data = $formIterate->getConfig()->getDataClass();
+                        break;
+                    }
+                }
+            }
+            
         }
+//        if ($propertyName == "vehiclePhotoFile") {
+//            var_dump($form->getConfig()->getDataClass());
+//            var_dump($form->getConfig());
+//            var_dump($data);
+//            die;
+//        }
+        $schema['constraints'] = [];
+        if ($constraints = $form->getConfig()->getOption('constraints')) {
+            
+        } else {
+            $groups = $this->getValidationGroups($form);
+
+            if (!$groups || !$this->validator->hasMetadataFor($data)) {
+                return $schema;
+            }
+
+            $metadata = $this->validator->getMetadataFor($data);
+
+            if (isset($metadata->properties[$propertyName]) && ($property = $metadata->properties[$propertyName]) !== null && count($property->constraintsByGroup) > 0 && count($groups) > 0) {
+                foreach ($groups as $group) {
+                    if (isset($property->constraintsByGroup[$group])) {
+                        foreach ($property->constraintsByGroup[$group] as $constraint) {
+                            //Evitar duplicidad
+                            if (!in_array($constraint, $constraints)) {
+                                $constraints[] = $constraint;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $schema['constraints'] = $constraints;
 
         return $schema;
     }
@@ -108,4 +170,75 @@ trait CommonFunctionsTrait
 
         return $schema;
     }
+
+    /**
+     * Returns the validation groups of the given form.
+     *
+     * @return string|GroupSequence|(string|GroupSequence)[] The validation groups
+     */
+    private function getValidationGroups(FormInterface $form)
+    {
+        // Determine the clicked button of the complete form tree
+        $clickedButton = null;
+
+        if (method_exists($form, 'getClickedButton')) {
+            $clickedButton = $form->getClickedButton();
+        }
+
+        if (null !== $clickedButton) {
+            $groups = $clickedButton->getConfig()->getOption('validation_groups');
+
+            if (null !== $groups) {
+                return self::resolveValidationGroups($groups, $form);
+            }
+        }
+
+        do {
+            $groups = $form->getConfig()->getOption('validation_groups');
+
+            if (null !== $groups) {
+                return self::resolveValidationGroups($groups, $form);
+            }
+
+            if (isset($this->resolvedGroups[$form])) {
+                return $this->resolvedGroups[$form];
+            }
+
+            $form = $form->getParent();
+        } while (null !== $form);
+
+        return [Constraint::DEFAULT_GROUP];
+    }
+
+    /**
+     * Post-processes the validation groups option for a given form.
+     *
+     * @param string|GroupSequence|(string|GroupSequence)[]|callable $groups The validation groups
+     *
+     * @return GroupSequence|(string|GroupSequence)[] The validation groups
+     */
+    private static function resolveValidationGroups($groups, FormInterface $form)
+    {
+        if (!\is_string($groups) && \is_callable($groups)) {
+            $groups = $groups($form);
+        }
+
+        if ($groups instanceof GroupSequence) {
+            return $groups->groups;
+        }
+
+        return (array) $groups;
+    }
+
+    /**
+     * @required
+     * @param ValidatorInterface $validator
+     * @return $this
+     */
+    public function setValidator(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+        return $this;
+    }
+
 }
