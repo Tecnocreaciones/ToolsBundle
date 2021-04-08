@@ -628,7 +628,7 @@ abstract class BaseOAuth2Context implements Context
                     }
                 }
                 if ($negate === false && $found === false) {
-                    throw new Exception(sprintf("The error property no contains error message '%s', response with '%s'", $propertyName, implode(", ", $children[$propertyName]["errors"])));
+                    throw new Exception(sprintf("The error property no contains error '%s' message in '%s', response with '%s'",$message,$propertyName, implode(", ", $children[$propertyName]["errors"])));
                 }else if ($negate === true && $found === true) {
                     throw new Exception(sprintf("The error property contains error message '%s', response with '%s'", $propertyName, implode(", ", $children[$propertyName]["errors"])));
                 }
