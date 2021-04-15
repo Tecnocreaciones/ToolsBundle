@@ -172,12 +172,17 @@ abstract class BaseOAuth2Context implements Context
     {
 //        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", var_export($this->lastRequestBody, true), $this->response->getContent()));
         $content = $this->response->getContent();
-        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT, 10), $content));
-        $contentJson = @json_encode(@json_decode($content,true),JSON_PRETTY_PRINT, 10);
-        if($contentJson !== null && $contentJson !== "null" && json_last_error() === JSON_ERROR_NONE){
-//            $content = $contentJson;
-            echo(sprintf("Response pretty json:\n %s", $contentJson));
+        
+        $limitDepth = 50;
+        if($_ENV["SHELL_VERBOSITY"] > 0){
+            $limitDepth = 512;
         }
+        $decoded = @json_decode($content,true);
+        $contentJson = @json_encode($decoded,JSON_PRETTY_PRINT,$limitDepth);
+        if($contentJson !== null && $contentJson !== "null" && json_last_error() === JSON_ERROR_NONE){
+            $content = $contentJson;
+        }
+        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT), $content));
     }
 
     /**
