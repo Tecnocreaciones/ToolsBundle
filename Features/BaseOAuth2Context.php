@@ -173,7 +173,7 @@ abstract class BaseOAuth2Context implements Context
 //        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", var_export($this->lastRequestBody, true), $this->response->getContent()));
         $content = $this->response->getContent();
         
-        $limitDepth = 50;
+        $limitDepth = 10;
         if($_ENV["SHELL_VERBOSITY"] > 0){
             $limitDepth = 512;
         }
@@ -182,7 +182,14 @@ abstract class BaseOAuth2Context implements Context
         if($contentJson !== null && $contentJson !== "null" && json_last_error() === JSON_ERROR_NONE){
             $content = $contentJson;
         }
-        $this->printDebug(sprintf("Request:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT), $content));
+        $r = sprintf("\nRequest:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT), $content);
+//        echo sprintf("\nRequest:\n %s \n\n Response:\n %s", json_encode($this->lastRequestBody, JSON_PRETTY_PRINT), $content);
+        //$this->printDebug();
+        ;
+//        var_dump("testt");
+        $output = new \Symfony\Component\Console\Output\StreamOutput(fopen('php://stdout', 'w'));
+//        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $output->writeln($r);
     }
 
     /**
@@ -745,7 +752,7 @@ abstract class BaseOAuth2Context implements Context
                     break;
                 }
             default:
-                throw new \Exception(sprintf("Property %s is not of the correct type: %s!\n\n %s", $propertyName, $typeString, $this->echoLastResponse()));
+                throw new \Exception(sprintf("Property %s is not of the correct type: %s!\n\n %s", $value, $typeString, $this->echoLastResponse()));
         }
         
         if ($expresion !== null) {
