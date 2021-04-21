@@ -248,14 +248,15 @@
                     display: inline;
                 }
             </style>#}
+            {% set modelNameBk = modelName %}
             <div class="filters fromTo">
                 {% set label = "labels.filter.from" %}
-                {% set modelName = "from_"~modelName %}
+                {% set modelName = "from_"~modelNameBk %}
                 {% set parameters = {commonClass: idFrom} %}
                 {{ block('date') }}
 
                 {% set label = "labels.filter.to" %}
-                {% set modelName = "to_" ~ modelName %}
+                {% set modelName = "to_" ~ modelNameBk %}
                 {% set parameters = {commonClass: idTo} %}
                 {{ block('date') }}
             </div>
