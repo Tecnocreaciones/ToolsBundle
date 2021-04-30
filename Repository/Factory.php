@@ -17,6 +17,7 @@ use Doctrine\ORM\Repository\RepositoryFactory;
 use ReflectionClass;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Contructor de repositorios, permite usar servicios como repositorios de las entidades
@@ -85,7 +86,7 @@ class Factory implements RepositoryFactory
         }else{
             throw new RuntimeException(sprintf("No se pudo generar el repositorio para la entidad '%s'",$repositoryClassName));
         }
-        if($repository instanceof \Symfony\Component\DependencyInjection\ContainerAwareInterface){
+        if($repository instanceof ContainerAwareInterface || $reflection->hasMethod("setContainer")){
             $repository->setContainer($this->container);
         }
         return $repository;
