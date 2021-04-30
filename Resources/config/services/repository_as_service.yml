@@ -5,5 +5,6 @@ services:
             - []
             - '@service_container'
             - '@tecnocreaciones.doctrine.repository.factory.default'
+            - '@doctrine'
     tecnocreaciones.doctrine.repository.factory.default:
         class: Doctrine\ORM\Repository\DefaultRepositoryFactory
