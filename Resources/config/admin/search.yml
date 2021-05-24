@@ -1,44 +1,44 @@
 services:
     sonata.admin.search.filter_group:
-        class: %tecnocreaciones_tools.search.config.class.filter_group_admin%
+        class: "%tecnocreaciones_tools.search.config.class.filter_group_admin%"
         tags:
             - { name: sonata.admin, manager_type: orm, group: "admin.group.search",label_catalogue: "admin", label: "admin.search.filter_group",trash: true }
         arguments:
             - ~
-            - %tecnocreaciones_tools.search.config.class.filter_group%
+            - "%tecnocreaciones_tools.search.config.class.filter_group%"
             - TecnocreacionesToolsBundle:ExtraAdmin
         calls:
             - [ setTranslationDomain, [admin]]
             
     sonata.admin.search.filter:
-        class: %tecnocreaciones_tools.search.config.class.filter_admin%
+        class: "%tecnocreaciones_tools.search.config.class.filter_admin%"
         tags:
             - { name: sonata.admin, manager_type: orm, group: "admin.group.search",label_catalogue: "admin", label: "admin.search.filter",trash: true }
         arguments:
             - ~
-            - %tecnocreaciones_tools.search.config.class.filter%
+            - "%tecnocreaciones_tools.search.config.class.filter%"
             - TecnocreacionesToolsBundle:ExtraAdmin
         calls:
             - [ setTranslationDomain, [admin]]
             
     sonata.admin.search.filter_block:
-        class: %tecnocreaciones_tools.search.config.class.filter_block_admin%
+        class: "%tecnocreaciones_tools.search.config.class.filter_block_admin%"
         tags:
             - { name: sonata.admin, manager_type: orm, group: "admin.group.search",label_catalogue: "admin", label: "admin.search.filter_block",trash: true }
         arguments:
             - ~
-            - %tecnocreaciones_tools.search.config.class.filter_block%
+            - "%tecnocreaciones_tools.search.config.class.filter_block%"
             - TecnocreacionesToolsBundle:ExtraAdmin
         calls:
             - [ setTranslationDomain, [admin]]
             
     sonata.admin.search.filter_added:
-        class: %tecnocreaciones_tools.search.config.class.filter_added_admin%
+        class: "%tecnocreaciones_tools.search.config.class.filter_added_admin%"
         tags:
             - { name: sonata.admin, manager_type: orm, group: "admin.group.search",label_catalogue: "admin", label: "admin.search.filter_added",trash: true }
         arguments:
             - ~
-            - %tecnocreaciones_tools.search.config.class.filter_added%
+            - "%tecnocreaciones_tools.search.config.class.filter_added%"
             - TecnocreacionesToolsBundle:ExtraAdmin
         calls:
             - [ setTranslationDomain, [admin]]

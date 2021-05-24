@@ -17,4 +17,4 @@ services:
     app.repository.search.filter_block:
         class: Tecnocreaciones\Bundle\ToolsBundle\Model\Search\FilterBlockRepository
         tags:
-            - { name: app.repository, class: %tecnocreaciones_tools.search.config.class.filter_block% }
+            - { name: app.repository, class: "%tecnocreaciones_tools.search.config.class.filter_block%" }
