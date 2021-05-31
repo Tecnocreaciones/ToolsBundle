@@ -11,8 +11,11 @@ services:
             - { "debug": "%kernel.debug%", "documents_path": "%kernel.root_dir%/../var/documents","env": "%kernel.environment%" }
     tecnoready.document_manager:
         class: Tecnoready\Common\Service\ObjectManager\DocumentManager\DocumentManager
-    tecnoready.history_manager:
+    Tecnoready\Common\Service\ObjectManager\HistoryManager\HistoryManager:
         class: Tecnoready\Common\Service\ObjectManager\HistoryManager\HistoryManager
+    tecnoready.history_manager:
+        alias: 'Tecnoready\Common\Service\ObjectManager\HistoryManager\HistoryManager'
+        public: true
     tecnoready.note_manager:
         class: Tecnoready\Common\Service\ObjectManager\NoteManager\NoteManager
     Tecnoready\Common\Service\ObjectManager\ObjectDataManager:

@@ -1,8 +1,11 @@
 services:
-    tecno.service.time_ago:
+    Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService
         arguments:
             - '@translator'
+    tecno.service.time_ago:
+        alias: 'Tecnocreaciones\Bundle\ToolsBundle\Service\TimeAgoService'
+        public: true
     tecno.service.fixtures_dumper:
         class: Tecnocreaciones\Bundle\ToolsBundle\Service\FixturesDumperService
         calls:
