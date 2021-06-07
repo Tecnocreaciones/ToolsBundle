@@ -79,11 +79,14 @@ trait TraitEntityRepository
      */
     public function getUser()
     {
-        if (!$this->container->has('security.context')) {
-            throw new \LogicException('The SecurityBundle is not registered in your application.');
+        if (!$this->container->has('security.context') && !$this->container->has('security.token_storage')) {
+            throw new \LogicException('The SecurityBundle is not registered in your application. Try running "composer require symfony/security-bundle".');
         }
-
-        if (null === $token = $this->container->get('security.context')->getToken()) {
+        $id = "security.context";
+        if($this->container->has('security.token_storage')){
+            $id = "security.token_storage";
+        }
+        if (null === $token = $this->container->get($id)->getToken()) {
             return null;
         }
 
