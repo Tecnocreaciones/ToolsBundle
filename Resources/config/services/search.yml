@@ -7,6 +7,8 @@ services:
             - [ setFilterBlockRepository, ['@app.repository.search.filter_block']]
             - [ setTwig, ['@twig']]
             - [ addGroupFilter, ['@tecnocreaciones_tools.search.standard']]
+    Tecnocreaciones\Bundle\ToolsBundle\Service\SearchService:
+        alias: tecnocreaciones_tools.search
     tools.search.twig.extension:
         class: Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension\SearchExtension
         tags:

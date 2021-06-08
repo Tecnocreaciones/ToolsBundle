@@ -302,6 +302,9 @@ abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2
      * @return type
      */
     public function find($className, $id) {
+        if(is_object($className)){
+            $className = \Doctrine\Common\Util\ClassUtils::getRealClass(get_class($className));
+        }
         return $this->getDoctrine()->getManager()->find($className, $id);
     }
 
