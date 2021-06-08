@@ -288,6 +288,7 @@ abstract class BaseWebUserContext extends MinkContext
        },15,function() use ($text){
            echo sprintf("No se encontro el texto '%s'",$text);
        });
+       $this->iWaitForSeconds(1);
    }
 
    /**

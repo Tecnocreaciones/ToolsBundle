@@ -26,6 +26,7 @@ de forma muy facil, un Role Voter para evaluar expresiones regulares en los role
             configuration_group_class: Tecnocreaciones\Bundle\ToolsBundle\Entity\Configuration\BaseGroup
             configuration_manager_class: Tecnocreaciones\Bundle\ToolsBundle\Model\Configuration\ConfigurationManager
             configuration_name_service: tec.configuration
+            cache: configuration.cache.disk
         widget:
             enable: false
             debug: false

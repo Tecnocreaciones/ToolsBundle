@@ -19,6 +19,8 @@ services:
         class: Tecnoready\Common\Service\ConfigurationService\Cache\DiskStore
         arguments:
             - { "debug": "%kernel.debug%", "cache_dir": "%kernel.cache_dir%","password": "%configuration.cache.disk.password%" }
+    configuration.cache.none:
+        class: Tecnoready\Common\Service\ConfigurationService\Cache\NoneStored
     configuration.transformer.integer:
         public: false
         class: Tecnoready\Common\Service\ConfigurationService\DataTransformer\IntegerDataTransformer
