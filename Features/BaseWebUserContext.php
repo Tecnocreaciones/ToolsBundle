@@ -312,6 +312,8 @@ abstract class BaseWebUserContext extends MinkContext
    }
    
    /**
+    * Espera que aparezca un elemento en la pagina
+    * Ejemplo: And I wait for "#card-net-uno"
     * @When I wait for :cssSelector
     * @param $cssSelector
     * @throws \Exception
