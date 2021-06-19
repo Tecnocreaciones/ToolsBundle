@@ -28,12 +28,15 @@ class RolePatternVoter extends RoleVoter {
     private $prefixLength;
     private $pattern;
     private $roleHierarchy;
+    
+    private $cacheRoles;
 
     public function __construct(RoleHierarchyInterface $roleHierarchy, $prefix = 'ROLE_APP_') {
         $this->roleHierarchy = $roleHierarchy;
         $this->rolePrefix = $prefix;
         $this->prefixLength = strlen($prefix);
         $this->pattern = sprintf('/^%s([A-Z])\w+\*/',$this->rolePrefix);
+        $this->cacheRoles = [];
         parent::__construct($prefix);
     }
 
@@ -41,7 +44,10 @@ class RolePatternVoter extends RoleVoter {
      * {@inheritdoc}
      */
     protected function extractRoles(TokenInterface $token) {
-        return $this->roleHierarchy->getReachableRoles($token->getRoles());
+        if(!isset($this->cacheRoles[$token->getUsername()])){
+            $this->cacheRoles[$token->getUsername()] = $this->roleHierarchy->getReachableRoles($token->getRoles());
+        }
+        return $this->cacheRoles[$token->getUsername()];
     }
     
     public function vote(TokenInterface $token, $object, array $attributes) {
