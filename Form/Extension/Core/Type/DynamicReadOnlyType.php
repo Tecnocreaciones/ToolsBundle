@@ -22,7 +22,7 @@ class DynamicReadOnlyType extends HiddenType
             "data" => null,
         ]);
         $resolver->setDefined(["type_content","req_params"]);
-        $resolver->setAllowedValues("type_content", ["image","text","html","card"]);
+        $resolver->setAllowedValues("type_content", ["image","text","html","card","redirect_to_url"]);
         $resolver->setAllowedTypes("req_params", "array");
         $resolver->setRequired(["data","type_content"]);
     }
