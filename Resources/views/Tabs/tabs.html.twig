@@ -229,7 +229,7 @@
         document.addEventListener("DOMContentLoaded", function (event) {
             initTabs();
         });
-        if(document.readyState == "complete"){
+        if(document.readyState == "complete" || document.readyState == "interactive"){
             $(initTabs);
         }
     </script>
