@@ -1,0 +1,8 @@
+tab.notes: "Notes"
+tab.history: "History"
+tab.documents: "Documents"
+tab.error.loading.content: "There was an error loading the content, please try again later."
+Public notes: "Public notes"
+public_notes.help: (These notes can be observed in documents, profiles, summaries and other)
+Private Notes: "Private notes"
+private_notes.help: (These notes are for internal use, they cannot be viewed elsewhere)

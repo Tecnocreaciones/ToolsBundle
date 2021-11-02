@@ -46,10 +46,10 @@ tab.notes: "Notas"
 tab.history: "Historial"
 tab.documents: "Documentos"
 tab.error.loading.content: "Ocurrio un error cargando el contenido, intente mas tarde."
-Public notes: Notas publicas
-public_notes.help: (Estas notas podran ser observadas en documentos, perfiles, resumenes y otros)
+Public notes: Notas públicas
+public_notes.help: (Estas notas pueden ser observadas en documentos, perfiles, resumenes y otros)
 Private Notes: Notas privadas
-private_notes.help: (Estas notas son de uso interno, no podrán ser visualizadas en otra parte.)
+private_notes.help: (Estas notas son de uso interno, no podrán ser visualizadas en otra parte)
 button.notes.update: "Actualizar"
 button.notes.cancel: "Cancelar"
 button.notes.save: "Guardar"
