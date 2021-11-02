@@ -63,7 +63,7 @@ tab.documents.documents: "Documentos"
 tab.documents.size: "Tamaño"
 tab.documents.date: "Fecha"
 tab.documents.empty_documents_uploaded: "No hay documentos cargados."
-tab.documents.question.delete: "¿Desea eliminar el archivo? "
+tab.documents.question.delete: "¿Desea eliminar el archivo?"
 tab.documents.comments: "Comentarios (opcional)"
 
 widget_box:
