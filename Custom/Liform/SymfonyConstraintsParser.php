@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Positive;
 use Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Constraints as Constraints;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -132,6 +133,11 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
             Regex::class => [
                 "mapped" => Constraints\Regex::class,
                 "properties" => ["message","pattern"],
+                "trans_properties" => ["message"],
+            ],
+            Positive::class => [
+                "mapped" => Constraints\Positive::class,
+                "properties" => ["message"],
                 "trans_properties" => ["message"],
             ],
             Length::class => [
