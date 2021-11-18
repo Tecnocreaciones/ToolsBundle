@@ -15,9 +15,15 @@ class DynamicFileType extends FileType
     const MODE_FILE = "FILE";
     const MODE_IMAGEN = "IMAGEN";
     
+    const CROP_IMAGEN_RECTANGLE = "RECTANGLE";
+    const CROP_IMAGEN_OVAL = "OVAL";
+    
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            "crop_imagen_mode" => self::CROP_IMAGEN_RECTANGLE,
+        ]);
         $resolver->setRequired(["mode"]);
     }
 }
