@@ -86,10 +86,23 @@ trait CommonFunctionsTrait
      */
     protected function addCommonConfigOptions(FormInterface $form, array $schema)
     {
-        $options = ["mode","crop_imagen_mode","placeholder"];
-        foreach ($options as $option) {
-            if ($form->getConfig()->hasOption($option)) {
-                $schema[$option] = $form->getConfig()->getOption($option);
+        $options = ["mode","crop_imagen_mode","placeholder" => function($value){
+            if(!is_string($value)){
+                $value = null;
+            }
+            return $value;
+        }];
+        foreach ($options as $key => $option) {
+            if(is_callable($option)){
+                //
+            }else{
+                $key = $option;
+                $option = function($value){
+                    return $value;
+                };
+            }
+            if ($form->getConfig()->hasOption($key)) {
+                $schema[$key] = $option($form->getConfig()->getOption($key));
             }
         }
         return $schema;
