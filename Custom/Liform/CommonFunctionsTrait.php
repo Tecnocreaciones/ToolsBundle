@@ -105,6 +105,15 @@ trait CommonFunctionsTrait
                 $schema[$key] = $option($form->getConfig()->getOption($key));
             }
         }
+        
+        if ($liform = $form->getConfig()->getOption('liform')) {
+            if (isset($liform['values']) && ($list = $liform['values']) && is_array($list)) {
+                foreach ($list as $key => $value) {
+                    $schema[$key] = $value;
+                }
+            }
+        }
+        
         return $schema;
     }
 

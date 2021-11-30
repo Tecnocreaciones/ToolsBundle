@@ -22,7 +22,8 @@ class DynamicFileType extends FileType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            "crop_imagen_mode" => self::CROP_IMAGEN_RECTANGLE,
+            "crop_imagen_mode" => null,
+//            "crop_imagen_mode" => self::CROP_IMAGEN_RECTANGLE,
         ]);
         $resolver->setRequired(["mode"]);
     }
