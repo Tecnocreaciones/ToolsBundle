@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Form\FormView;
 
 /**
  * Funciones comunes
@@ -20,6 +21,10 @@ trait CommonFunctionsTrait
      * @var ValidatorInterface
      */
     private $validator;
+    
+    /**
+     * @var FormView
+     */
     protected $formView;
 
     protected function initCommonCustom(FormInterface $form)
@@ -38,7 +43,7 @@ trait CommonFunctionsTrait
         $schema = $this->addConstraints($form, $schema, $formRoot);
         $schema = $this->addDateParams($form, $schema);
         $schema = $this->addCommonConfigOptions($form, $schema);
-        $schema = $this->addFromAttr($form, $schema);
+        $schema = $this->addFromAttr($form, $schema,$formView);
 
         return $schema;
     }
@@ -49,9 +54,13 @@ trait CommonFunctionsTrait
      * @param array $schema
      * @return type
      */
-    protected function addFromAttr(FormInterface $form, array $schema)
+    protected function addFromAttr(FormInterface $form, array $schema,FormView $formView = null)
     {
         if ($attr = $form->getConfig()->getOption('attr')) {
+            if($formView && isset($formView->vars["attr"]) && is_array($formView->vars["attr"]) && count($formView->vars["attr"]) > 0){
+                $attr = $formView->vars["attr"];
+                $schema["attr"] = $attr;
+            }
             $options = [
                 "help_auto_hide", "icon"
             ];
