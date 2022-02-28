@@ -23,7 +23,9 @@ class ReadOnlyTransformer extends AbstractTransformer
         $this->initCommonCustom($form);
         $formView = $this->formView;
         
-        $schema = [];
+        $schema = [
+            "type" => "string",
+        ];
 //        if ($formView->vars['multiple']) {
 //            $schema = $this->transformMultiple($form, $choices);
 //        } else {
