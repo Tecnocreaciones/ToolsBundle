@@ -31,27 +31,8 @@ class StringTransformer extends AbstractStringTransformer
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $schema = $this->addMaxLength($form, $schema);
         $schema = $this->addMinLength($form, $schema);
-        $schema = $this->addHelp($form, $schema);
         $schema = $this->addEmptyData($form, $schema);
         $schema = $this->addCommonCustom($form, $schema);
-
-        return $schema;
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param array         $schema
-     *
-     * @return array
-     */
-    protected function addHelp(FormInterface $form, array $schema)
-    {
-        $translationDomain = $form->getConfig()->getOption('translation_domain');
-        if ($help = $form->getConfig()->getOption('help')) {
-            if (!empty($help)) {
-                $schema['help'] = $this->translator->trans($help, $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
-            }
-        }
 
         return $schema;
     }

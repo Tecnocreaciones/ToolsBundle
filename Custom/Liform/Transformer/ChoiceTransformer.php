@@ -57,7 +57,6 @@ class ChoiceTransformer extends AbstractTransformer
 
         $this->addWidget($form, $schema, false);
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
-        $schema = $this->addHelp($form, $schema);
         $schema = $this->addCommonCustom($form, $schema);
         $schema = $this->addEmptyData($form,$formView,$schema);
         
@@ -101,24 +100,7 @@ class ChoiceTransformer extends AbstractTransformer
         return $schema;
     }
 
-    /**
-     * Añadir help
-     *  
-     * @author Máximo Sojo <maxsojo13@gmail.com>
-     * @param  FormInterface $form
-     * @param  array         $schema
-     */
-    protected function addHelp(FormInterface $form, array $schema)
-    {
-        $translationDomain = $form->getConfig()->getOption('translation_domain');
-        if ($attr = $form->getConfig()->getOption('attr')) {
-            if (isset($attr['help'])) {
-                $schema['attr']['help'] = $this->translator->trans($attr['help'], [], $translationDomain);
-            }
-        }
-
-        return $schema;
-    }
+    
 
     /**
      * @param FormInterface $form

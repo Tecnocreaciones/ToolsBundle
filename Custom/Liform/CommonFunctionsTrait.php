@@ -44,6 +44,7 @@ trait CommonFunctionsTrait
         $schema = $this->addDateParams($form, $schema);
         $schema = $this->addCommonConfigOptions($form, $schema);
         $schema = $this->addFromAttr($form, $schema,$formView);
+        $schema = $this->addHelp($form, $schema);
 
         return $schema;
     }
@@ -58,8 +59,8 @@ trait CommonFunctionsTrait
     {
         if ($attr = $form->getConfig()->getOption('attr')) {
             if($formView && isset($formView->vars["attr"]) && is_array($formView->vars["attr"]) && count($formView->vars["attr"]) > 0){
-                $attr = $formView->vars["attr"];
-                $schema["attr"] = $attr;
+                $attr2 = $formView->vars["attr"];
+                $schema["attr"] = array_merge($attr2,$attr);
             }
             $options = [
                 "help_auto_hide", "icon"
@@ -72,6 +73,25 @@ trait CommonFunctionsTrait
             }
             if (count($schema['attr']) == 0) {
                 unset($schema['attr']);
+            }
+        }
+
+        return $schema;
+    }
+    
+    /**
+     * Añadir help
+     *  
+     * @author Máximo Sojo <maxsojo13@gmail.com>
+     * @param  FormInterface $form
+     * @param  array         $schema
+     */
+    protected function addHelp(FormInterface $form, array $schema)
+    {
+        $translationDomain = $form->getConfig()->getOption('translation_domain');
+        if ($attr = $form->getConfig()->getOption('attr')) {
+            if (isset($attr['help'])) {
+                $schema['attr']['help'] = $this->translator->trans($attr['help'], $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
             }
         }
 
