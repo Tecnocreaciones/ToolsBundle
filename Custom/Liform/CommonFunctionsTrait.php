@@ -45,6 +45,12 @@ trait CommonFunctionsTrait
         $schema = $this->addCommonConfigOptions($form, $schema);
         $schema = $this->addFromAttr($form, $schema,$formView);
         $schema = $this->addHelp($form, $schema);
+        
+        if ($liform = $form->getConfig()->getOption('liform')) {
+            if (isset($liform['type']) && $type = $liform['type']) {
+                $schema['type'] = $type;
+            }
+        }
 
         return $schema;
     }
