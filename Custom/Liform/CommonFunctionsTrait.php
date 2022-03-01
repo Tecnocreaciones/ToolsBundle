@@ -66,6 +66,8 @@ trait CommonFunctionsTrait
         if ($attr = $form->getConfig()->getOption('attr')) {
             if($formView && isset($formView->vars["attr"]) && is_array($formView->vars["attr"]) && count($formView->vars["attr"]) > 0){
                 $attr2 = $formView->vars["attr"];
+//                var_dump($attr2);
+//                var_dump($attr);
                 $schema["attr"] = array_merge($attr2,$attr);
             }
             $options = [
@@ -96,9 +98,13 @@ trait CommonFunctionsTrait
     {
         $translationDomain = $form->getConfig()->getOption('translation_domain');
         if ($attr = $form->getConfig()->getOption('attr')) {
+            $translationDomain = isset($attr["help_translation_domain"]) ? $attr["help_translation_domain"] : $translationDomain;
             if (isset($attr['help'])) {
-                $schema['attr']['help'] = $this->translator->trans($attr['help'], $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
+                $schema['attr']['help'] = $attr['help'];
             }
+        }
+        if(isset($schema["attr"]) && isset($schema['attr']['help'])){
+            $schema['attr']['help'] = $this->translator->trans($schema['attr']['help'], $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
         }
 
         return $schema;
