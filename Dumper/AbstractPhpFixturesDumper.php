@@ -40,7 +40,7 @@ abstract class AbstractPhpFixturesDumper
      */
     public function configureOptions(\Symfony\Component\OptionsResolver\OptionsResolver $resolver)
     {
-        $rootDir = dirname($this->container->getParameter("kernel.root_dir"));
+        $rootDir = dirname($this->container->getParameter("kernel.project_dir"));
         $ds = DIRECTORY_SEPARATOR;
         $resolver->setDefaults(array(
             'rootDir' => $rootDir,

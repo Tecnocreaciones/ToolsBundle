@@ -53,7 +53,7 @@ abstract class BaseOAuth2Context implements Context
     protected $kernel;
     
     /**
-     * Localizador de archivos en %kernel.root_dir%/Resources
+     * Localizador de archivos en %kernel.project_dir%/Resources
      * @var FileLocator
      */
     protected $fileLocator;

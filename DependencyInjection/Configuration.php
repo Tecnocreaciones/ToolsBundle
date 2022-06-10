@@ -17,8 +17,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('tecnocreaciones_tools');
+        $treeBuilder = new TreeBuilder('tecnocreaciones_tools');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('tecnocreaciones_tools', 'array');
+        }
         
         $rootNode
                 ->children()
@@ -119,7 +125,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('main_icon')->defaultNull()->end()
                             ->scalarNode('prefix_icon')->defaultNull()->end()
                             ->booleanNode('page_header')->defaultFalse()->end()
-                            ->scalarNode('breadcrumb_template')->defaultValue("%kernel.root_dir%/../vendor/tecnoready/common/Resources/views/Breadcrumb/breadcrumb.twig")->cannotBeEmpty()->end()
+                            ->scalarNode('breadcrumb_template')->defaultValue("%kernel.project_dir%/../vendor/tecnoready/common/Resources/views/Breadcrumb/breadcrumb.twig")->cannotBeEmpty()->end()
 //                            ->scalarNode('breadcrumb_template')->defaultValue('/Users/inhack20/www/mpandco/pandco_app_client/vendor/tecnoready/common/Resources/views/Breadcrumb/breadcrumb.twig')->cannotBeEmpty()->end()
                             ->scalarNode('page_header_template')->defaultValue('TecnocreacionesToolsBundle:Twig:page_header.html.twig')->cannotBeEmpty()->end()
                         ->end()

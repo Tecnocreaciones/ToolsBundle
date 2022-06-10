@@ -3,12 +3,12 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Zend\Json\Json;
 use Zend\Json\Expr;
-
 use Assetic\AssetManager;
 use Assetic\Asset\FileAsset;
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class CodeMirrorExtension extends \Twig_Extension
+class CodeMirrorExtension extends AbstractExtension
 {
     /**
      * @var \Tecnocreaciones\Bundle\ToolsBundle\Asset\AssetManager
@@ -25,11 +25,11 @@ class CodeMirrorExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('code_mirror_parameters_render',array($this, 'parametersRender'), array('is_safe' => array('html'))),
-            new Twig_SimpleFunction('code_mirror_is_first_call',array($this, 'isFirstCall')),
-            new Twig_SimpleFunction('code_mirror_get_js_mode',array($this, 'code_mirror_get_js_mode')),
-            new Twig_SimpleFunction('code_mirror_get_css_theme',array($this, 'code_mirror_get_css_theme')),
-            new Twig_SimpleFunction('code_mirror_get_lib',array($this, 'code_mirror_get_lib')),
+            new TwigFunction('code_mirror_parameters_render',array($this, 'parametersRender'), array('is_safe' => array('html'))),
+            new TwigFunction('code_mirror_is_first_call',array($this, 'isFirstCall')),
+            new TwigFunction('code_mirror_get_js_mode',array($this, 'code_mirror_get_js_mode')),
+            new TwigFunction('code_mirror_get_css_theme',array($this, 'code_mirror_get_css_theme')),
+            new TwigFunction('code_mirror_get_lib',array($this, 'code_mirror_get_lib')),
         );
     }
 

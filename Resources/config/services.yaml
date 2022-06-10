@@ -13,7 +13,7 @@ services:
     Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager:
         autowire: true
         arguments:
-            - { "public_dir": "%kernel.root_dir%/../public" }
+            - { "public_dir": "%kernel.project_dir%/../public" }
     Tecnocreaciones\Bundle\ToolsBundle\Controller\Select2EntityController:
         autowire: true
         tags: ['controller.service_arguments']

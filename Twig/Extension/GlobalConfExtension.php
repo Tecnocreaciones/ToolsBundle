@@ -12,7 +12,7 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Extension de twig que provee herramientas globales
@@ -37,8 +37,8 @@ class GlobalConfExtension extends AbstractExtension implements \Symfony\Componen
     
     public function getFunctions() 
     {
-        $functions[] = new Twig_SimpleFunction('getAppConfig', array($this, 'getAppConfig'));
-        $functions[] = new Twig_SimpleFunction('get_value_parameter', array($this, 'getValueParameter'));
+        $functions[] = new TwigFunction('getAppConfig', array($this, 'getAppConfig'));
+        $functions[] = new TwigFunction('get_value_parameter', array($this, 'getValueParameter'));
         return $functions;
     }
 

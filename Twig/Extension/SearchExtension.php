@@ -11,14 +11,15 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
-use Twig_SimpleFunction;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Extension para imprimir area de filtro
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class SearchExtension extends \Twig_Extension 
+class SearchExtension extends AbstractExtension
 {
     /**
      * @var \Tecnocreaciones\Bundle\ToolsBundle\Service\SearchService
@@ -30,7 +31,7 @@ class SearchExtension extends \Twig_Extension
     public function getFunctions() 
     {
         return array(
-            new Twig_SimpleFunction('renderFilterArea', array($this, 'renderFilterArea'),array('is_safe' => array('html'))),
+            new TwigFunction('renderFilterArea', array($this, 'renderFilterArea'),array('is_safe' => array('html'))),
         );
     }
     /**
