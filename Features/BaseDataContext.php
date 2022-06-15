@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 //Version vieja PHPUnit\Framework\Assert
-if(!class_exists("PHPUnit\Framework\Assert") &&
+/*if(!class_exists("PHPUnit\Framework\Assert") &&
         !class_exists("PHPUnit\Exception") && (php_sapi_name() === 'cli' || $_ENV["APP_ENV"] === "test")){
     $base = realpath(__DIR__."/../../../");
     $pathPhpunit = $base."/bin/.phpunit";
@@ -45,20 +45,21 @@ if(class_exists("PHPUnit_Framework_Exception")){
 }else if(class_exists("PHPUnit\Framework\Exception")){
     $reflection = new \ReflectionClass("PHPUnit\Framework\Exception");
     require_once dirname($reflection->getFileName()) . '/Assert/Functions.php';
-}
+}*/
+use Behat\Behat\Context\Context;
 
 /**
  * Base de contexto para generar data
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-abstract class BaseDataContext extends RawMinkContext implements \Behat\Symfony2Extension\Context\KernelAwareContext {
-
-    use \Behat\Symfony2Extension\Context\KernelDictionary;
-
-    use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
-    
+abstract class BaseDataContext implements Context
+{
+    //use \Behat\Symfony2Extension\Context\KernelDictionary;
+    use \Symfony\Component\DependencyInjection\ContainerAwareTrait;    
     use TraitContext;
+
+    protected $kernel;
 
     /**
      *

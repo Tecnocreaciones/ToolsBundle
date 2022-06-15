@@ -234,7 +234,7 @@ abstract class BaseOAuth2Context implements Context
     public function theResponseStatusCodeIs($httpStatus)
     {
         if ((string) $this->response->getStatusCode() !== (string) $httpStatus) {
-//            $this->echoLastResponse();
+            //$this->echoLastResponse();
             throw new \Exception(sprintf("HTTP code does not match %s (actual: %s)\n\n %s", $httpStatus, $this->response->getStatusCode(), $this->echoLastResponse()));
         }
     }
@@ -464,6 +464,7 @@ abstract class BaseOAuth2Context implements Context
      */
     public function iRequest($fullUrl, array $parameters = null, array $files = null,array $options = [])
     {
+        $client = $this->dataContext->getClient();
         $this->dataContext->setScenarioParameter("%lastUrlRequest%",$fullUrl);
 
         $resolver = new OptionsResolver();
@@ -477,22 +478,26 @@ abstract class BaseOAuth2Context implements Context
         if ($parameters === null) {
             $parameters = $this->dataContext->getRequestBody();
         }
+
         if ($files === null) {
             $files = $this->requestFiles;
         }
+
         if ($parameters === null) {
             $parameters = [];
         }
+
         if ($files === null) {
             $files = [];
         }
+
         $server = $this->requestHeaders;
         if(!is_array($server)){
             $server = [];
         }
         
-        $this->dataContext->getClient()->request($method, $url, $parameters, $files,$server);
-        $this->response = $this->dataContext->getClient()->getResponse();
+        $client->request($method, $url, $parameters, $files, $server);
+        $this->response = $client->getResponse();
         $_server = $this->response->headers->get("_server");//Headers especiales
         if($_server !== null){
             echo sprintf("Response headers: %s",$_server);

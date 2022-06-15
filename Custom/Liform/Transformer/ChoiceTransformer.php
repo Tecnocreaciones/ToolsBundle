@@ -30,22 +30,26 @@ class ChoiceTransformer extends AbstractTransformer
     {
         $this->initCommonCustom($form);
         $formView = $this->formView;
+
+        $translationDomain = $form->getConfig()->getOption('translation_domain');
+        $emptyData = $form->getConfig()->getOption('empty_data');
+
         $choices = [];
+        $currentValue = isset($formView->vars["value"]) ? $formView->vars["value"] : null;
+        if(empty($currentValue)){
+            $currentValue = $emptyData;
+        }
+
         foreach ($formView->vars['choices'] as $choiceView) {
             if ($choiceView instanceof ChoiceGroupView) {
                 foreach ($choiceView->choices as $choiceItem) {
-                    $choices[] = [
-                        "id" => $choiceItem->value,
-                        "label" => $this->translator->trans($choiceItem->label),
-//                        "disabled" => $this->isDisabled($choiceItem->attr)
-                    ];
+                    if (!isset($choices[$choiceView->label])) {
+                        $choices[$choiceView->label] = [];
+                    }
+                    $choices[$choiceView->label][] = $this->buildChoice($choiceItem, $currentValue, $translationDomain);
                 }
             } else {
-                $choices[] = [
-                    "id" => $choiceView->value,
-                    "label" => $this->translator->trans($choiceView->label),
-//                    "disabled" => $this->isDisabled($choiceView->attr)
-                ];
+                $choices[] = $this->buildChoice($choiceView, $currentValue, $translationDomain);
             }
         }
 
@@ -57,10 +61,38 @@ class ChoiceTransformer extends AbstractTransformer
 
         $this->addWidget($form, $schema, false);
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
+        $schema = $this->addHelp($form, $schema);
         $schema = $this->addCommonCustom($form, $schema);
         $schema = $this->addEmptyData($form,$formView,$schema);
-        
+        $schema["selected"] = $currentValue;
+
         return $schema;
+    }
+
+    /**<
+     * Construye la opcion para json
+     * @param type $choiceView
+     * @param type $currentValue
+     * @param type $translationDomain
+     * @return type
+     */
+    private function buildChoice($choiceView, $currentValue, $translationDomain)
+    {
+        $selected = $currentValue != null && $currentValue === $choiceView->value;
+        $choice = [
+            "id" => $choiceView->value,
+            "label" => $this->translator->trans($choiceView->label, [], $translationDomain),
+            "data" => (string) $this->addData($choiceView->attr),
+            "selected" => $selected,
+            "disabled" => $this->isDisabled($choiceView->attr)
+        ];
+        if(isset($choiceView->attr["extra_json_keys"]) && is_array($choiceView->attr["extra_json_keys"])){
+            foreach ($choiceView->attr["extra_json_keys"] as $key => $value) {
+                $choice[$key] = $value;
+            }
+            unset($choiceView->attr["extra_json_keys"]);
+        }
+        return $choice;
     }
 
     private function transformSingle(FormInterface $form, $choices)
@@ -98,9 +130,7 @@ class ChoiceTransformer extends AbstractTransformer
         }
 
         return $schema;
-    }
-
-    
+    }    
 
     /**
      * @param FormInterface $form
@@ -134,5 +164,41 @@ class ChoiceTransformer extends AbstractTransformer
         }
         
         return $disabled;
+    }
+
+    /**
+     * Añadir data
+     *  
+     * @author Máximo Sojo <maxsojo13@gmail.com>
+     * @param  $attr
+     */
+    protected function addData($attr)
+    {
+        $data = null;
+        if ($attr && isset($attr["data"])) {
+            $data = $attr["data"];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Añadir help
+     *  
+     * @author Máximo Sojo <maxsojo13@gmail.com>
+     * @param  FormInterface $form
+     * @param  array         $schema
+     */
+    protected function addHelp(FormInterface $form, array $schema)
+    {
+        $translationDomain = $form->getConfig()->getOption('translation_domain');
+        if ($attr = $form->getConfig()->getOption('attr')) {
+            if (isset($attr['help'])) {
+                $translationDomain = isset($attr["help_translation_domain"]) ? $attr["help_translation_domain"] : $translationDomain;
+                $schema['attr']['help'] = $this->translator->trans($attr['help'], [], $translationDomain);
+            }
+        }
+
+        return $schema;
     }
 }

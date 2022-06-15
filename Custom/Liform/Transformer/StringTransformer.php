@@ -32,6 +32,7 @@ class StringTransformer extends AbstractStringTransformer
         $schema = $this->addMaxLength($form, $schema);
         $schema = $this->addMinLength($form, $schema);
         $schema = $this->addEmptyData($form, $schema);
+        $schema = $this->addData($form, $schema);
         $schema = $this->addCommonCustom($form, $schema);
 
         return $schema;
@@ -51,6 +52,22 @@ class StringTransformer extends AbstractStringTransformer
                 $emptyData = $emptyData($form);
             }
             $schema['empty_data'] = $emptyData;
+        }
+
+        return $schema;
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param array         $schema
+     *
+     * @return array
+     */
+    protected function addData(FormInterface $form, array $schema)
+    {
+        $schema['data'] = $form->getData() ?:"";
+        if ($data = $form->getConfig()->getOption('data')) {
+            $schema['data'] = $data;
         }
 
         return $schema;

@@ -48,7 +48,7 @@ class Factory implements RepositoryFactory
  
     public function getRepository(EntityManagerInterface $entityManager, $entityName)
     {
-        if(preg_match('/'. \Doctrine\Common\Persistence\Proxy::MARKER .'/',$entityName)){
+        if(preg_match('/'. \Doctrine\Persistence\Proxy::MARKER .'/',$entityName)){
             $entityName = \Doctrine\Common\Util\ClassUtils::getRealClass($entityName);
         }
         
