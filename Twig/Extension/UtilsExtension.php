@@ -16,6 +16,7 @@ use Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager;
 use Tecnoready\Common\Service\Block\WidgetManager;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\TwigFilter;
 
 /**
  * Funciones para construir breadcumb y page title con twig
@@ -89,7 +90,7 @@ class UtilsExtension extends AbstractExtension implements ContainerAwareInterfac
         $config = $this->config;
         $filters = [];
         if($config['tabs']['enable']  === true){
-            $filters[] = new \Twig_Filter('super_usort', array($this,'usortFilter'));
+            $filters[] = new TwigFilter('super_usort', array($this,'usortFilter'));
         }
         return $filters;
     }
@@ -297,7 +298,7 @@ class UtilsExtension extends AbstractExtension implements ContainerAwareInterfac
     public function renderTabs(\Tecnoready\Common\Model\Tab\Tab $tab,array $parameters = []) 
     {
         $parameters["tab"] = $tab;
-        return $this->container->get('templating')->render($this->config["tabs"]["template"], 
+        return $this->container->get('twig')->render($this->config["tabs"]["template"], 
             $parameters
         );
     }
