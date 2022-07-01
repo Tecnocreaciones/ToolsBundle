@@ -30,6 +30,11 @@ services:
         arguments: [ "@tecnoready.document_manager",{ "debug": '%kernel.debug%' } ]
         calls:
             - [ setAdapter, ["@app.service.exporter.adapter"]  ]
+    tecnocreaciones.tools_bundle.controller_tools:
+        public: true
+        class: Tecnocreaciones\Bundle\ToolsBundle\Controller\ToolsController
+        calls:
+            - [ setContainer, ['@service_container']  ]
 
 #    Manejador de plantillas     
     Tecnoready\Common\Service\Template\Engine\PhpSpreadsheetXLSXEngine:

@@ -11,7 +11,7 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Tecnoready\Common\Model\Tab\Tab;
 
@@ -20,7 +20,7 @@ use Tecnoready\Common\Model\Tab\Tab;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class ToolsController extends Controller
+class ToolsController extends AbstractController
 {
     public function introAction(Request $request)
     {
