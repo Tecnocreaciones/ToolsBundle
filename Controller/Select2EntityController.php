@@ -31,7 +31,7 @@ class Select2EntityController extends AbstractFOSRestController
             $this->createNotFoundException("El tipo de componente no puede estar vacio.");
         }
         
-        $classComponent = $this->parameterBag->get("tecnoready.swiftmailer_db.email_component_class");
+        $classComponent = $this->parameterBag->get("tecnoready.mailer_db.email_component_class");
         
         $alias = "e";
         $em = $this->getDoctrine()->getManagerForClass($classComponent);

@@ -216,13 +216,13 @@ class TecnocreacionesToolsExtension extends Extension
            $twigSwiftMailerDefinition = $container->getDefinition("Tecnoready\Common\Service\Email\TwigSwiftMailer");
            $optionsMailer = $config['database_spool']["options_mailer"];
            $twigSwiftMailerDefinition->replaceArgument(3, $optionsMailer);
-           $container->setParameter("tecnoready.swiftmailer_db.spool.entity_class", $config['database_spool']["entity_class"]);
-           $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
-           $container->setParameter("tecnoready.swiftmailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
-           $container->setParameter("tecnoready.swiftmailer_db.spool.email_queue_class", $config['database_spool']["email_queue_class"]);
-           $container->setParameter("tecnoready.swiftmailer_db.spool.email_template_class", $config['database_spool']["email_template_class"]);
-           $container->setParameter("tecnoready.swiftmailer_db.email_component_class", $config['database_spool']["email_component_class"]);
-           $container->setParameter("tecnoready.swiftmailer_db.email_repository_manager", $config['database_spool']["email_repository_manager"]);
+           $container->setParameter("tecnoready.mailer_db.spool.entity_class", $config['database_spool']["entity_class"]);
+           $container->setParameter("tecnoready.mailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
+           $container->setParameter("tecnoready.mailer_db.spool.keep_sent_messages", $config['database_spool']["keep_sent_messages"]);
+           $container->setParameter("tecnoready.mailer_db.spool.email_queue_class", $config['database_spool']["email_queue_class"]);
+           $container->setParameter("tecnoready.mailer_db.spool.email_template_class", $config['database_spool']["email_template_class"]);
+           $container->setParameter("tecnoready.mailer_db.email_component_class", $config['database_spool']["email_component_class"]);
+           $container->setParameter("tecnoready.mailer_db.email_repository_manager", $config['database_spool']["email_repository_manager"]);
         }
         
         $container->setParameter('tecnocreaciones_tools.service.tabs.enable',$config['tabs']['enable']);

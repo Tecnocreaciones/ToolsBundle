@@ -28,28 +28,32 @@
     </li>
     <li>
         <ul id="{{ tab.id }}" class="nav nav-tabs" style="margin: 0;">
-            {% for tabContent in tab.tabsContent if tabContent.type == constant("Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::TAB_CONTENT") %}
-                <li {% if tabContent.active %}class="active"{% endif%}>
-                    {% set tabTitle = tabContent.title|trans %}
-                    <a data-toggle="tab" href="#{{ tabContent.id }}" title="{{ tabTitle }}" {% if tabContent.route is not null %}tab-ajax="true" data-url="{{ url(tabContent.route,tabContent.routeParameters) }}"{% else %}tab-ajax="false"{% endif %}>
-                        {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}{{ tabTitle }}
-                    </a>
-                </li>
+            {% for tabContent in tab.tabsContent %}
+                {% if tabContent.type == constant("Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::TAB_CONTENT") %}
+                    <li {% if tabContent.active %}class="active"{% endif%}>
+                        {% set tabTitle = tabContent.title|trans %}
+                        <a data-toggle="tab" href="#{{ tabContent.id }}" title="{{ tabTitle }}" {% if tabContent.route is not null %}tab-ajax="true" data-url="{{ url(tabContent.route,tabContent.routeParameters) }}"{% else %}tab-ajax="false"{% endif %}>
+                            {% if tabContent.icon is not null %}<i class="{{ tabContent.icon }}"></i>&nbsp;{% endif %}{{ tabTitle }}
+                        </a>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
     </li>
 </ul>
 <div class="tab-content">
-    {% for tabContent in tab.tabsContent if tabContent.type == constant("Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::TAB_CONTENT") %}
-        <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%}" id="{{ tabContent.id }}">
-            {% for field, metadata in tabContent.fields %}
-                {% if metadata.type == "divider"%}
-                    {% include metadata.template %}
-                {% else %}
-                    {% include 'TecnocreacionesToolsBundle:EasyAdmin:field_show.html.twig' %}
-                {% endif %}
-            {% endfor %}
-        </div>
+    {% for tabContent in tab.tabsContent %}
+        {% if tabContent.type == constant("Tecnocreaciones\\Bundle\\ToolsBundle\\Model\\EasyAdmin\\Tabs\\Tab::TAB_CONTENT") %}
+            <div class="tab-pane animated fadeIn {% if tabContent.active %}active{% endif%}" id="{{ tabContent.id }}">
+                {% for field, metadata in tabContent.fields %}
+                    {% if metadata.type == "divider"%}
+                        {% include metadata.template %}
+                    {% else %}
+                        {% include '@TecnocreacionesTools/EasyAdmin/field_show.html.twig' %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
 <div id="lo-{{ tab.id }}" class="hide">

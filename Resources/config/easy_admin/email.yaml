@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         EmailTemplate:
-            class: "%tecnoready.swiftmailer_db.spool.email_template_class%"
+            class: "%tecnoready.mailer_db.spool.email_template_class%"
             role_prefix: ROLE_AREA_ADMIN_EMAIL_TEMPLATE
             list:
                 fields: 
@@ -14,10 +14,10 @@ easy_admin:
                     - {'property': 'id'}
                     - {'property': 'title'}
                     - {'property': 'subject'}
-                    - {'property': 'base','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'base' } } }
-                    - {'property': 'header','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'header' } } }
-                    - {'property': 'body','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'body' } } }
-                    - {'property': 'footer','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.swiftmailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'footer' } } }
+                    - {'property': 'base','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.mailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'base' } } }
+                    - {'property': 'header','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.mailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'header' } } }
+                    - {'property': 'body','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.mailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'body' } } }
+                    - {'property': 'footer','type':'Tetranz\Select2EntityBundle\Form\Type\Select2EntityType','type_options': {'class':'%tecnoready.mailer_db.email_component_class%','remote_route':'tecno_select_email_component','remote_params':{'type':'footer' } } }
                     - {'property': 'locale'}
                     - {'property': 'status','type': 'choice', 'type_options': { 'choices': 'Tecnoready\Common\Model\Email\ORM\ModelEmailTemplate::getStatusLabels' } }
             show:  
@@ -31,7 +31,7 @@ easy_admin:
                     - {'property': 'footer'}
                     - {'property': 'statusLabel','type': 'string', 'trans': true, 'domain': 'messages'}
         Component:
-            class: "%tecnoready.swiftmailer_db.email_component_class%"
+            class: "%tecnoready.mailer_db.email_component_class%"
             role_prefix: ROLE_AREA_ADMIN_EMAIL_COMPONENT
             list:
                 fields: 
