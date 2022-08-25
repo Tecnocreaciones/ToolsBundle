@@ -308,7 +308,7 @@ class TabsManager implements ConfigureInterface
 
         $form = $this->createForm(ExporterType::class, $choices);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "generated";
-        return $this->container->get('templating')->render($this->options["exporter"]["template"],
+        return $this->container->get('twig')->render($this->options["exporter"]["template"],
                         [
                             'chain' => $chain,
                             'entity' => $entity,
@@ -331,7 +331,7 @@ class TabsManager implements ConfigureInterface
         $chain = $this->getObjectDataManager()->exporter()->resolveChainModel();
         $form = $this->createForm(UploadType::class);
         $this->parametersToView["parameters_to_route"]["_conf"]["folder"] = "uploaded";
-        return $this->container->get('templating')->render($this->options["exporter"]["template_upload"],
+        return $this->container->get('twig')->render($this->options["exporter"]["template_upload"],
                         [
                             'chain' => $chain,
                             'entity' => $entity,

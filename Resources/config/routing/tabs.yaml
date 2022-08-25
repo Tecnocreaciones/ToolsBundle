@@ -12,28 +12,28 @@ tabs_save_current:
 tabs_object_manager_documents_upload:
     path: /tabs/object-manager/documents/upload
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:upload
+        _controller:  tecnocreaciones.tools_bundle.controller_document_manager::uploadAction
         _format: html
     requirements: { _method: POST }
     
 tabs_object_manager_documents_delete:
     path: /tabs/object-manager/documents/delete/{filename}
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:delete
+        _controller:  tecnocreaciones.tools_bundle.controller_document_manager::deleteAction
         _format: html
     requirements: { _method: GET }
     
 tabs_object_manager_documents_get:
     path: /tabs/object-manager/documents/get/{filename}
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/DocumentManager:get
+        _controller:  tecnocreaciones.tools_bundle.controller_document_manager::getAction
         _format: html
     requirements: { _method: GET }
     
 tabs_object_exporter_generate:
     path: /tabs/object-manager/exporter/generate
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:generate
+        _controller:  tecnocreaciones.tools_bundle.controller_exporter::generateAction
         _format: html
     requirements: { _method: POST }
     options:
@@ -42,14 +42,14 @@ tabs_object_exporter_generate:
 tabs_object_exporter_get:
     path: /tabs/object-manager/exporter/get/{filename}
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:get
+        _controller:  tecnocreaciones.tools_bundle.controller_exporter::getAction
         _format: html
     requirements: { _method: GET }
     
 tabs_object_exporter_delete:
     path: /tabs/object-manager/exporter/delete/{filename}
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:delete
+        _controller:  tecnocreaciones.tools_bundle.controller_exporter::deleteAction
         _format: html
     requirements: { _method: GET }
     options:
@@ -58,7 +58,7 @@ tabs_object_exporter_delete:
 tabs_object_exporter_download:
     path: /tabs/object-manager/exporter/download/{filename}
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:download
+        _controller:  tecnocreaciones.tools_bundle.controller_exporter::downloadAction
         _format: html
     requirements: { _method: GET }
     options:
@@ -67,7 +67,7 @@ tabs_object_exporter_download:
 tabs_object_exporter_upload:
     path: /tabs/object-manager/exporter/upload
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:upload
+        _controller:  tecnocreaciones.tools_bundle.controller_exporter::uploadAction
         _format: html
     requirements: { _method: POST }
     options:
@@ -76,7 +76,7 @@ tabs_object_exporter_upload:
 tabs_object_exporter_all:
     path: /tabs/object-manager/exporter/all
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/Exporter:all
+        _controller:  tecnocreaciones.tools_bundle.controller_exporter::allAction
         _format: html
     requirements: { _method: GET }
     options:
@@ -85,6 +85,6 @@ tabs_object_exporter_all:
 tabs_object_note_add:
     path: /tabs/object-manager/note/add
     defaults:
-        _controller:  TecnocreacionesToolsBundle:ObjectManager/NoteManager:add
+        _controller:  tecnocreaciones.tools_bundle.controller_note_manager::addAction
         _format: html
     requirements: { _method: POST }

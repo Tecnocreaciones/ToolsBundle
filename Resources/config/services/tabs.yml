@@ -35,6 +35,21 @@ services:
         class: Tecnocreaciones\Bundle\ToolsBundle\Controller\ToolsController
         calls:
             - [ setContainer, ['@service_container']  ]
+    tecnocreaciones.tools_bundle.controller_document_manager:
+        public: true
+        class: Tecnocreaciones\Bundle\ToolsBundle\Controller\ObjectManager\DocumentManagerController
+        calls:
+            - [ setContainer, ['@service_container']  ]
+    tecnocreaciones.tools_bundle.controller_exporter:
+        public: true
+        class: Tecnocreaciones\Bundle\ToolsBundle\Controller\ObjectManager\ExporterController
+        calls:
+            - [ setContainer, ['@service_container']  ]
+    tecnocreaciones.tools_bundle.controller_note_manager:
+        public: true
+        class: Tecnocreaciones\Bundle\ToolsBundle\Controller\ObjectManager\NoteManagerController
+        calls:
+            - [ setContainer, ['@service_container']  ]
 
 #    Manejador de plantillas     
     Tecnoready\Common\Service\Template\Engine\PhpSpreadsheetXLSXEngine:
