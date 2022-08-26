@@ -8,7 +8,7 @@ services:
     tecnoready.document_manager_disk_adapter:
         class: Tecnoready\Common\Service\ObjectManager\DocumentManager\Adapter\DiskAdapter
         arguments:
-            - { "debug": "%kernel.debug%", "documents_path": "%kernel.project_dir%/../var/documents","env": "%kernel.environment%" }
+            - { "debug": "%kernel.debug%", "documents_path": "%kernel.project_dir%/var/documents","env": "%kernel.environment%" }
     tecnoready.document_manager:
         class: Tecnoready\Common\Service\ObjectManager\DocumentManager\DocumentManager
     Tecnoready\Common\Service\ObjectManager\HistoryManager\HistoryManager:
