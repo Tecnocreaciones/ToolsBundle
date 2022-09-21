@@ -251,7 +251,6 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->booleanNode('enable')->defaultFalse()->end()
-                            ->scalarNode('transport')->defaultValue("swift_mailer")->end()
                             ->scalarNode('entity_class')->defaultNull()->end()
                             ->booleanNode('keep_sent_messages')->defaultTrue()->end()
                             ->scalarNode('email_queue_class')->defaultNull()->end()
