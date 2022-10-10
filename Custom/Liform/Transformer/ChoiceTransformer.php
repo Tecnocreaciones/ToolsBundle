@@ -35,10 +35,6 @@ class ChoiceTransformer extends AbstractTransformer
         $emptyData = $form->getConfig()->getOption('empty_data');
 
         $choices = [];
-        $currentValue = isset($formView->vars["value"]) ? $formView->vars["value"] : null;
-        if(empty($currentValue)){
-            $currentValue = $emptyData;
-        }
 
         foreach ($formView->vars['choices'] as $choiceView) {
             if ($choiceView instanceof ChoiceGroupView) {
@@ -46,10 +42,10 @@ class ChoiceTransformer extends AbstractTransformer
                     if (!isset($choices[$choiceView->label])) {
                         $choices[$choiceView->label] = [];
                     }
-                    $choices[$choiceView->label][] = $this->buildChoice($choiceItem, $currentValue, $translationDomain);
+                    $choices[$choiceView->label][] = $this->buildChoice($choiceItem, $translationDomain);
                 }
             } else {
-                $choices[] = $this->buildChoice($choiceView, $currentValue, $translationDomain);
+                $choices[] = $this->buildChoice($choiceView, $translationDomain);
             }
         }
 
@@ -64,7 +60,6 @@ class ChoiceTransformer extends AbstractTransformer
         $schema = $this->addHelp($form, $schema);
         $schema = $this->addCommonCustom($form, $schema);
         $schema = $this->addEmptyData($form,$formView,$schema);
-        $schema["selected"] = $currentValue;
 
         return $schema;
     }
@@ -76,14 +71,12 @@ class ChoiceTransformer extends AbstractTransformer
      * @param type $translationDomain
      * @return type
      */
-    private function buildChoice($choiceView, $currentValue, $translationDomain)
+    private function buildChoice($choiceView, $translationDomain)
     {
-        $selected = $currentValue != null && $currentValue === $choiceView->value;
         $choice = [
             "id" => $choiceView->value,
-            "label" => $this->translator->trans($choiceView->label, [], $translationDomain),
-            "data" => (string) $this->addData($choiceView->attr),
-            "selected" => $selected,
+            "text" => $this->translator->trans($choiceView->label, [], $translationDomain),
+            "_data" => $this->addData($choiceView->attr),
             "disabled" => $this->isDisabled($choiceView->attr)
         ];
         if(isset($choiceView->attr["extra_json_keys"]) && is_array($choiceView->attr["extra_json_keys"])){
@@ -143,7 +136,7 @@ class ChoiceTransformer extends AbstractTransformer
      	if (($emptyData = $form->getConfig()->getOption('empty_data')) && !empty($formView->vars["value"])) {
             $schema['empty_data'] = [
                 "id" => $formView->vars["value"],
-                "label" => (string)$emptyData,
+                "text" => (string)$emptyData,
             ];
         }
 
@@ -158,9 +151,9 @@ class ChoiceTransformer extends AbstractTransformer
      */
     protected function isDisabled($attr)
     {
-        $disabled = null;
+        $disabled = false;
         if ($attr && isset($attr["disabled"])) {
-            $disabled = $attr["disabled"];
+            $disabled = (bool)$attr["disabled"];
         }
         
         return $disabled;
@@ -176,7 +169,7 @@ class ChoiceTransformer extends AbstractTransformer
     {
         $data = null;
         if ($attr && isset($attr["data"])) {
-            $data = $attr["data"];
+            $data = (string) $attr["data"];
         }
 
         return $data;
