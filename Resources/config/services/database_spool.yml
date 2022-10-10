@@ -24,3 +24,12 @@ services:
     tecnoready.swiftmailer:
         alias: Tecnoready\Common\Service\Email\TwigSwiftMailer
         public: true
+
+    Tecnoready\Common\Service\Email\TwigSymfonyMailer:
+        public: false
+        arguments: ["@mailer","@twig","@tecnoready.mailer.adapter.orm","%tecnoready.mailer_db.spool.options%"]
+        calls:
+            - [ setContainer, ["@service_container"]  ]
+    tecnoready.symfonymailer:
+        alias: Tecnoready\Common\Service\Email\TwigSymfonyMailer
+        public: true
