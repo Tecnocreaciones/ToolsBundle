@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Tecnocreaciones\Bundle\ToolsBundle\ORM\Query\SearchQueryBuilder;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -46,7 +46,7 @@ class Select2EntityController extends AbstractFOSRestController
         $sqb = new SearchQueryBuilder($qb, $criteria, $alias);
         $sqb->addQueryField("query",["body","title"]);
         
-        $paginator = new Paginator(new DoctrineORMAdapter($qb));
+        $paginator = new Paginator(new QueryAdapter($qb));
         $view->setData($this->buildData($request, $paginator));
         return $this->handleView($view);
     }

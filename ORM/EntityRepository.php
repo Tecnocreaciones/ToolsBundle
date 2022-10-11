@@ -12,7 +12,7 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\ORM;
 
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

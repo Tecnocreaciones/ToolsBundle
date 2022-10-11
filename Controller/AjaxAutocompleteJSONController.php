@@ -106,7 +106,7 @@ class AjaxAutocompleteJSONController extends Controller
 //            ->setMaxResults($maxRows)
             ;
         $currentPage = $request->get("page",1);
-        $paginator = new \Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator(new \Pagerfanta\Adapter\DoctrineORMAdapter($queryBuilder));
+        $paginator = new \Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator(new \Pagerfanta\Doctrine\ORM\QueryAdapter($queryBuilder));
         $paginator
                 ->setMaxPerPage($maxRows)
                 ->setCurrentPage($currentPage)

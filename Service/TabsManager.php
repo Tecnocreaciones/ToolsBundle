@@ -19,7 +19,7 @@ use Tecnoready\Common\Util\StringUtil;
 // use Knp\Component\Pager\PaginatorInterface;
 // use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
 use Pagerfanta\Pagerfanta as Paginator;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 
 /**
  * Manejador de tabs

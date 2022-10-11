@@ -3,7 +3,7 @@
 namespace Tecnocreaciones\Bundle\ToolsBundle\ORM;
 
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -44,7 +44,7 @@ trait TraitEntityRepository
             }
         }
         
-        $pagerfanta = new Paginator(new DoctrineORMAdapter($queryBuilder));
+        $pagerfanta = new Paginator(new QueryAdapter($queryBuilder));
         $pagerfanta->setDefaultFormat($this->getFormatPaginator());
         $pagerfanta->setContainer($this->container);
         if($request){
