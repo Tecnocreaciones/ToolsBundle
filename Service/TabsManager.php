@@ -16,8 +16,8 @@ use Tecnoready\Common\Service\ObjectManager\ConfigureInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Tecnoready\Common\Util\StringUtil;
-use Knp\Component\Pager\PaginatorInterface;
-//use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
+// use Knp\Component\Pager\PaginatorInterface;
+// use Tecnocreaciones\Bundle\ToolsBundle\Model\Paginator\Paginator;
 use Pagerfanta\Pagerfanta as Paginator;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 
@@ -28,7 +28,6 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
  */
 class TabsManager implements ConfigureInterface
 {
-
     use \Symfony\Component\DependencyInjection\ContainerAwareTrait;
     use \Tecnoready\Common\Service\ObjectManager\TraitConfigure;
 
@@ -206,7 +205,8 @@ class TabsManager implements ConfigureInterface
         ]);
         $options = $resolver->resolve($options);
         if (!$this->paginator) {
-            throw new RuntimeException(sprintf("El servicio de paginador %s debe ser seteado.", PaginatorInterface::class));
+            throw new RuntimeException(sprintf("El servicio de paginador %s debe ser configurado y seteado.", "KnpPaginator"));
+            //throw new RuntimeException(sprintf("El servicio de paginador %s debe ser seteado.", PaginatorInterface::class));
         }
         $request = $this->requestStack->getCurrentRequest();
 
@@ -458,16 +458,4 @@ class TabsManager implements ConfigureInterface
     {
         return $this->container->get('router')->generate($route, $parameters, $referenceType);
     }
-
-    /**
-     * @required
-     * @param PaginatorInterface $paginatorInterface
-     * @return $this
-     */
-    public function setPaginatorInterface(PaginatorInterface $paginatorInterface)
-    {
-        $this->paginator = $paginatorInterface;
-        return $this;
-    }
-
 }
