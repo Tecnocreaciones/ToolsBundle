@@ -16,6 +16,7 @@ class DynamicReadOnlyType extends HiddenType
 {
 
     const TYPE_CONTENT_IMAGE = "image";
+    const TYPE_CONTENT_ICON = "icon";
     const TYPE_CONTENT_TEXT = "text";
     const TYPE_CONTENT_HTML = "html";
     const TYPE_CONTENT_CARD = "card";
@@ -31,7 +32,7 @@ class DynamicReadOnlyType extends HiddenType
             "data" => null,
         ]);
         $resolver->setDefined(["type_content", "req_params"]);
-        $resolver->setAllowedValues("type_content", ["image", "text", "html", "card", "redirect_to_url", "title"]);
+        $resolver->setAllowedValues("type_content", ["image", "text", "html", "card", "redirect_to_url", "title","icon"]);
         $resolver->setAllowedTypes("req_params", "array");
         $resolver->setRequired(["data", "type_content"]);
     }

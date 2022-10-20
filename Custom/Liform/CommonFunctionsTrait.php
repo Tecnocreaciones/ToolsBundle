@@ -104,7 +104,13 @@ trait CommonFunctionsTrait
             }
         }
         if(isset($schema["attr"]) && isset($schema['attr']['help'])){
-            $schema['attr']['help'] = $this->translator->trans($schema['attr']['help'], $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
+            $schema["help"] = $this->translator->trans($schema['attr']['help'], $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
+            unset($schema['attr']['help']);
+        }
+        if(isset($schema["description"])){
+            $schema["help"]  = $schema["description"];
+            $schema["help"] = $this->translator->trans($schema["help"], $form->getConfig()->getOption("help_translation_parameters"), $translationDomain);
+            unset($schema["description"]);
         }
 
         return $schema;
