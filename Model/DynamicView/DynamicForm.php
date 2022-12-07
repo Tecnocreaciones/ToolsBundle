@@ -23,6 +23,15 @@ class DynamicForm
     private $title;
     
     /**
+     * Pasos que tiene el formulario
+     * @var string
+     * @JMS\SerializedName("steps")
+     * @JMS\Expose
+     * @JMS\Type("integer")
+     */
+    private $steps;
+    
+    /**
      * Formulario a serializar
      * @var FormInterface 
      * @JMS\SerializedName("form")
@@ -55,7 +64,17 @@ class DynamicForm
         $this->title = $title;
         return $this;
     }
+    
+    public function getSteps() {
+        return $this->steps;
+    }
 
+    public function setSteps($steps) {
+        $this->steps = $steps;
+        return $this;
+    }
+
+    
     public function setForm(FormInterface $form)
     {
         $this->form = $form;

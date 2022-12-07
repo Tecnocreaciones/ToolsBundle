@@ -71,7 +71,7 @@ trait CommonFunctionsTrait
                 $schema["attr"] = array_merge($attr2,$attr);
             }
             $options = [
-                "help_auto_hide", "icon","steps",
+                "help_auto_hide", "icon","steps","text_transform",
             ];
             foreach ($options as $option) {
                 if (isset($attr[$option])) {

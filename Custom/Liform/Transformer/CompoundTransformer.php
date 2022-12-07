@@ -53,7 +53,10 @@ class CompoundTransformer extends AbstractCompoundTransformer
             }
         }
 //            var_dump($dataClass);
-//        var_dump($form->getConfig()->getOption("validation_groups"));
+        if($form->isRoot()){
+            $steps = $form->getConfig()->getOption("steps");
+            $schema["steps"] = $steps;
+        }
 //        var_dump($form->isRoot());
 //        var_dump($form->getName());
         foreach ($form->all() as $name => $field) {
