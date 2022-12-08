@@ -15,13 +15,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class DynamicReadOnlyType extends HiddenType
 {
 
+    /**
+     * Tipo de contenido imagen (url, base64)
+     */
     const TYPE_CONTENT_IMAGE = "image";
     const TYPE_CONTENT_ICON = "icon";
+    /**
+     * Tipo de contenido texto plano en entry de solo lectura
+     */
     const TYPE_CONTENT_TEXT = "text";
+    /**
+     * Tipo de contenido html en label
+     */
     const TYPE_CONTENT_HTML = "html";
     const TYPE_CONTENT_CARD = "card";
+    /**
+     * Tipo de contenido redirección a url (para abrir el navegador)
+     */
     const TYPE_CONTENT_REDIRECT_TO_URL = "redirect_to_url";
+    /**
+     * Tipo de contenido titulo (Separador de formularios)
+     */
     const TYPE_CONTENT_TITLE = "title";
+    
+    /**
+     * Tipo de contenido label que al tocarlo carga una URI dentro de la app
+     */
+    const TYPE_CONTENT_URL = "url";
 
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -32,7 +52,15 @@ class DynamicReadOnlyType extends HiddenType
             "data" => null,
         ]);
         $resolver->setDefined(["type_content", "req_params"]);
-        $resolver->setAllowedValues("type_content", ["image", "text", "html", "card", "redirect_to_url", "title","icon"]);
+        $resolver->setAllowedValues("type_content", [
+            self::TYPE_CONTENT_IMAGE, 
+            self::TYPE_CONTENT_TEXT,
+            self::TYPE_CONTENT_HTML, 
+            self::TYPE_CONTENT_CARD, 
+            self::TYPE_CONTENT_REDIRECT_TO_URL, 
+            self::TYPE_CONTENT_TITLE,
+            self::TYPE_CONTENT_URL
+        ]);
         $resolver->setAllowedTypes("req_params", "array");
         $resolver->setRequired(["data", "type_content"]);
     }
