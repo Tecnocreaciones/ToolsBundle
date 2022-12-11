@@ -130,11 +130,12 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
                 "properties" => ["message"],
                 "trans_properties" => ["message"],
             ],
-            Regex::class => [
-                "mapped" => Constraints\Regex::class,
-                "properties" => ["message","pattern"],
-                "trans_properties" => ["message"],
-            ],
+            //Ignoramos esta validación porque en c# no hace match la expresión regular como en php, cambia el formato
+//            Regex::class => [
+//                "mapped" => Constraints\Regex::class,
+//                "properties" => ["message","pattern"],
+//                "trans_properties" => ["message"],
+//            ],
             Positive::class => [
                 "mapped" => Constraints\Positive::class,
                 "properties" => ["message"],
