@@ -50,6 +50,12 @@ services:
         tags:
             - { name: liform.transformer, form_type: readonly, widget: readonly }
 
+    liform.transformer.hidden:
+        class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\HiddenTransformer
+        autowire: true
+        tags:
+            - { name: liform.transformer, form_type: hidden, widget: hidden }
+
     liform.transformer.tetranz_select2entity:
         class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\Select2EntityTransformer
         autowire: true
