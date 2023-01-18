@@ -627,7 +627,8 @@ abstract class BaseDataContext implements Context
      * Executa un comando
      * @Given a execute command to :command
      */
-    public function aExecuteCommandTo($command) {
+    public function aExecuteCommandTo($command)
+    {
         $this->restartKernel();
         $kernel = $this->getKernel();
 
@@ -643,7 +644,6 @@ abstract class BaseDataContext implements Context
                 $commandsParams["command"] = $value;
             } else {
                 $e2 = explode("=", $value);
-//                var_dump($e2);
                 if (count($e2) == 1) {
                     $commandsParams[$e2[0]] = true;
                 } else if (count($e2) == 2) {
@@ -654,12 +654,13 @@ abstract class BaseDataContext implements Context
         foreach ($commandsParams as $key => $value) {
             $commandsParams[$key] = $value;
         }
+
+        $output = null;
         $input = new \Symfony\Component\Console\Input\ArrayInput($commandsParams);
         if ($output === null) {
             $output = new \Symfony\Component\Console\Output\ConsoleOutput();
         }
         $application->run($input, $output);
-//         $content = $output->fetch();
     }
     
     /**
