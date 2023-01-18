@@ -54,6 +54,25 @@ trait CommonFunctionsTrait
 
         return $schema;
     }
+    
+    /**
+     * @param FormInterface $form
+     * @param array         $schema
+     *
+     * @return array
+     */
+    protected function addLabel(FormInterface $form, array $schema)
+    {
+        $translationDomain = $form->getConfig()->getOption('translation_domain');
+        $translationParameters = $form->getConfig()->getOption('label_translation_parameters');
+//        $translationParameters = isset($attr["label_translation_parameters"]) ? $attr["label_translation_parameters"] : [];
+        if ($label = $form->getConfig()->getOption('label')) {
+            $schema['title'] = $this->translator->trans($label, $translationParameters, $translationDomain);
+        } else {
+            $schema['title'] = $this->translator->trans($form->getName(), $translationParameters, $translationDomain);
+        }
+        return $schema;
+    }
 
     /**
      * Añade opciones de configuracion extra en el parametro "attr" que es dinamico
