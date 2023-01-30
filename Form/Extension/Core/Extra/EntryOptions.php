@@ -9,6 +9,9 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Form\Extension\Core\Extra;
  */
 class EntryOptions {
     
+    /**  Maxima longitud del campo "max_length" numero entero */
+    const TEXT_MAX_LENGTH = "max_length";
+    
     /**  Inicio: "text_transform" */
     const TEXT_TRANSFORM_NONE = 0;
     const TEXT_TRANSFORM_DEFAULT = 1;
