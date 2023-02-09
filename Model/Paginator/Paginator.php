@@ -15,6 +15,7 @@ use Pagerfanta\Pagerfanta as BasePagerfanta;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Pagerfanta modificado para serializarlo
@@ -48,8 +49,13 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
      */
     const FORMAT_ARRAY_DATA_TABLES = 'dataTables';
     
+    /**
+     * Formato de select2 (https://select2.org/data-sources/ajax)
+     */
+    const FORMAT_ARRAY_SELECT2 = 'select2';
+    
     private $formatArray = array(
-        self::FORMAT_ARRAY_DEFAULT,self::FORMAT_ARRAY_DATA_TABLES,self::FORMAT_ARRAY_STANDARD
+        self::FORMAT_ARRAY_DEFAULT,self::FORMAT_ARRAY_DATA_TABLES,self::FORMAT_ARRAY_STANDARD,self::FORMAT_ARRAY_SELECT2
     );
             
     /**
@@ -58,7 +64,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
      * @param array $parameters
      * @return type
      */
-    function formatToArrayDefault($route = null,array $parameters = array()) {
+    function formatToArrayDefault($route = null,array $parameters = array(),array $options = []) {
         $links = array(
             'self'  => array('href' => ''),
             'first' => array('href' => ''),
@@ -94,7 +100,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
      * @param array $parameters
      * @return type
      */
-    function formatToArrayStandard($route = null,array $parameters = array()) {
+    function formatToArrayStandard($route = null,array $parameters = array(),array $options = []) {
         $links = array(
             'self'  => array('href' => ''),
             'first' => array('href' => ''),
@@ -128,7 +134,7 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
      * @param array $parameters
      * @return type
      */
-    function formatToArrayDataTables($route = null,array $parameters = array()) {
+    function formatToArrayDataTables($route = null,array $parameters = array(),array $options = []) {
         $results = $this->getCurrentPageResults()->getArrayCopy();
         $data = array(
             'draw' => $this->draw,
@@ -140,6 +146,42 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
         return $data;
     }
     
+    function formatToArraySelect2($route = null,array $parameters = array(),array $options = []) {
+        $links = array(
+            'self'  => array('href' => ''),
+            'first' => array('href' => ''),
+            'last'  => array('href' => ''),
+            'next'  => array('href' => ''),
+            'previous'  => array('href' => ''),
+        );
+        $paginator = array(
+                        'more' => $this->hasNextPage(),
+                        'currentPage' => $this->getCurrentPage(),
+                        'maxPerPage' => $this->getMaxPerPage(),
+                        'totalPages' => $this->getNbPages(),
+                        'totalResults' => $this->getNbResults(),
+                    );
+        
+        $pageResult = $this->getCurrentPageResults();
+        if(is_array($pageResult)){
+            $results = $pageResult;
+        }else{
+            $results = $this->getCurrentPageResults()->getArrayCopy();
+        }
+        $r = $results;
+        if(!empty($options["to_object_callback"])){
+            $r = [];
+            foreach ($results as $result) {
+                $r[] = $options["to_object_callback"]($result);
+            }
+        }
+        return array(
+            'links' => $this->getLinks($route,$parameters),
+            'pagination' => $paginator,
+            'results' => $r,
+        );
+    }
+    
     /**
      * Convierte los resultados de la pagina actual en array
      * @param type $route
@@ -147,13 +189,18 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
      * @param type $format
      * @return type
      */
-    function toArray($route = null,array $parameters = array(),$format = null) {
+    function toArray($route = null,array $parameters = [],$format = null,array $options = []) {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            "to_object_callback"  => null,
+        ]);
+        $options = $resolver->resolve($options);
         if($format === null){
             $format = $this->defaultFormat;
         }
         if(in_array($format, $this->formatArray)){
             $method = 'formatToArray'.ucfirst($format);
-            return $this->$method($route,$parameters);
+            return $this->$method($route,$parameters,$options);
         }
     }
     
