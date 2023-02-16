@@ -28,4 +28,11 @@ class EntryOptions {
     const KEYBOARD_TEXT = "Text";
     const KEYBOARD_URL = "Url";
     /**  Fin: "keyboard" */
+    
+    /**  Inicio: "suggestion_box_placement" para Select2EntityType */
+    const SUGGESTION_BOX_PLACEMENT_AUTO = 0;//Place dropdown based on Y Position of the input field
+    const SUGGESTION_BOX_PLACEMENT_BOTTOM = 1;//Place dropdown at the Bottom of the input field.
+    const SUGGESTION_BOX_PLACEMENT_TOP = 2;//Place dropdown at the Top of the input field.
+    const SUGGESTION_BOX_PLACEMENT_NONE = 3;//DropDown has not shown
+    /**  Fin: "keyboard" */
 }
