@@ -253,6 +253,18 @@ trait CommonFunctionsTrait
      */
     protected function addData(FormInterface $form, array $schema)
     {
+        $schema['data'] = null;
+        
+        if (isset($this->formView->vars["value"]) && ($value = $this->formView->vars["value"]) != null) {
+            if (is_array($value)) {
+                foreach ($value as $key => $v) {
+                    $value = $key;
+                    break;
+                }
+            }
+            $schema['data'] = $value;
+        }
+        
         if ($data = $form->getConfig()->getOption('data')) {
             $schema['data'] = $data;
         }
