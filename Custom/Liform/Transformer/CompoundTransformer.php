@@ -9,13 +9,15 @@ use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Limenius\Liform\Transformer\CompoundTransformer as AbstractCompoundTransformer;
 use Exception;
+use Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\CommonFunctionsTrait;
 
 /**
  * @author Nacho Martín <nacho@limenius.com>
  */
 class CompoundTransformer extends AbstractCompoundTransformer
 {
-
+    use CommonFunctionsTrait;
+    
     /**
      * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
@@ -56,6 +58,7 @@ class CompoundTransformer extends AbstractCompoundTransformer
         if($form->isRoot()){
             $steps = $form->getConfig()->getOption("steps");
             $schema["steps"] = $steps;
+            $schema = $this->addFromAttr($form, $schema);
         }
 //        var_dump($form->isRoot());
 //        var_dump($form->getName());

@@ -37,7 +37,7 @@ trait CommonFunctionsTrait
         $formView = $this->formView;
 //        var_dump($formView->vars);
         $formRoot = $form->getRoot();
-
+        
         $schema["full_name"] = $formView->vars["full_name"];
 //        $schema["full_name"] = $formView->vars["name"];
         $schema = $this->addConstraints($form, $schema, $formRoot);
@@ -97,6 +97,12 @@ trait CommonFunctionsTrait
                     $schema[$option] = $schema['attr'][$option];
                     unset($schema['attr'][$option]);
                 }
+            }
+            if(isset($attr["extras"])){
+                foreach ($attr["extras"] as $key => $extra) {
+                    $schema[$key] = $extra;
+                }
+                unset($schema['attr']["extras"]);
             }
             if (count($schema['attr']) == 0) {
                 unset($schema['attr']);
