@@ -37,7 +37,7 @@ trait CommonFunctionsTrait
         $formView = $this->formView;
 //        var_dump($formView->vars);
         $formRoot = $form->getRoot();
-
+        
         $schema["full_name"] = $formView->vars["full_name"];
 //        $schema["full_name"] = $formView->vars["name"];
         $schema = $this->addConstraints($form, $schema, $formRoot);
@@ -97,6 +97,12 @@ trait CommonFunctionsTrait
                     $schema[$option] = $schema['attr'][$option];
                     unset($schema['attr'][$option]);
                 }
+            }
+            if(isset($attr["extras"])){
+                foreach ($attr["extras"] as $key => $extra) {
+                    $schema[$key] = $extra;
+                }
+                unset($schema['attr']["extras"]);
             }
             if (count($schema['attr']) == 0) {
                 unset($schema['attr']);
@@ -253,6 +259,18 @@ trait CommonFunctionsTrait
      */
     protected function addData(FormInterface $form, array $schema)
     {
+        $schema['data'] = null;
+        
+        if (isset($this->formView->vars["value"]) && ($value = $this->formView->vars["value"]) != null) {
+            if (is_array($value)) {
+                foreach ($value as $key => $v) {
+                    $value = $key;
+                    break;
+                }
+            }
+            $schema['data'] = $value;
+        }
+        
         if ($data = $form->getConfig()->getOption('data')) {
             $schema['data'] = $data;
         }
@@ -328,6 +346,28 @@ trait CommonFunctionsTrait
     {
         $this->validator = $validator;
         return $this;
+    }
+    
+    /**
+     * @param FormInterface $form
+     * @param array         $schema
+     *
+     * @return array
+     */
+    protected function addDescription(FormInterface $form, array $schema)
+    {
+        $formConfig = $form->getConfig();
+        $translationDomain = $form->getConfig()->getOption('translation_domain');
+        if ($help = $formConfig->getOption('help', '')) {
+            $schema['description'] = $this->translator->trans($help,[],$translationDomain);
+        }
+
+        if ($liform = $formConfig->getOption('liform')) {
+            if (isset($liform['description']) && $description = $liform['description']) {
+                $schema['description'] = $this->translator->trans($description,[],$translationDomain);
+            }
+        }
+        return $schema;
     }
 
 }

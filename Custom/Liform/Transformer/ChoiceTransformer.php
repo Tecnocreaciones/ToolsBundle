@@ -60,6 +60,7 @@ class ChoiceTransformer extends AbstractTransformer
         $schema = $this->addCommonCustom($form, $schema);
         $schema = $this->addHelp($form, $schema);
         $schema = $this->addEmptyData($form,$formView,$schema);
+        $schema = $this->addData($form,$schema);
 
         return $schema;
     }
@@ -76,7 +77,7 @@ class ChoiceTransformer extends AbstractTransformer
         $choice = [
             "id" => $choiceView->value,
             "text" => $this->translator->trans($choiceView->label, [], $translationDomain),
-            "_data" => $this->addData($choiceView->attr),
+            "_data" => $this->resolveData($choiceView->attr),
             "disabled" => $this->isDisabled($choiceView->attr)
         ];
         if(isset($choiceView->attr["extra_json_keys"]) && is_array($choiceView->attr["extra_json_keys"])){
@@ -165,7 +166,7 @@ class ChoiceTransformer extends AbstractTransformer
      * @author Máximo Sojo <maxsojo13@gmail.com>
      * @param  $attr
      */
-    protected function addData($attr)
+    protected function resolveData($attr)
     {
         $data = null;
         if ($attr && isset($attr["data"])) {
