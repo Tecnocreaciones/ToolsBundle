@@ -170,7 +170,8 @@ class ChoiceTransformer extends AbstractTransformer
     {
         $data = null;
         if ($attr && isset($attr["data"])) {
-            $data = (string) $attr["data"];
+            //Fix: no se porque estaba una conversion a string cuando esto es un array normalmente
+            $data = $attr["data"];
         }
 
         return $data;
