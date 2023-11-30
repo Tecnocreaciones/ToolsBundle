@@ -159,7 +159,7 @@ trait CommonFunctionsTrait
      */
     protected function addCommonConfigOptions(FormInterface $form, array $schema)
     {
-        $options = ["mode","crop_imagen_mode","placeholder" => function($value){
+        $options = ["mode","crop_imagen_mode","placeholder", "file_type", "picker_title" => function($value){
             if(!is_string($value)){
                 $value = null;
             }

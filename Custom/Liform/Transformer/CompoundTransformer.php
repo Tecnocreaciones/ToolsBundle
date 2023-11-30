@@ -58,8 +58,15 @@ class CompoundTransformer extends AbstractCompoundTransformer
         if($form->isRoot()){
             $steps = $form->getConfig()->getOption("steps");
             $schema["steps"] = $steps;
+            $extras = $form->getConfig()->getOption("extra_options");
+            if(is_array($extras) && count($extras) > 0){
+                $schema["extra_options"] = $extras;
+            }
+            $schema = $this->addFromAttr($form, $schema);
+        } else {
             $schema = $this->addFromAttr($form, $schema);
         }
+
 //        var_dump($form->isRoot());
 //        var_dump($form->getName());
         foreach ($form->all() as $name => $field) {
