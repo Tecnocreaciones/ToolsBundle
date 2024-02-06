@@ -159,12 +159,22 @@ trait CommonFunctionsTrait
      */
     protected function addCommonConfigOptions(FormInterface $form, array $schema)
     {
-        $options = ["mode","crop_imagen_mode","placeholder", "file_type", "picker_title" => function($value){
-            if(!is_string($value)){
-                $value = null;
+        $options = ["mode","crop_imagen_mode",
+            "placeholder" => function($value){
+                //Fix: DateType retornaba un array cuando se serializaba con year,month y day
+                if(is_array($value)){
+                    $value = null;
+                }
+                return $value;
+            }, 
+            "file_type", 
+            "picker_title" => function($value){
+                if(!is_string($value)){
+                    $value = null;
+                }
+                return $value;
             }
-            return $value;
-        }];
+        ];
         foreach ($options as $key => $option) {
             if(is_callable($option)){
                 //
