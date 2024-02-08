@@ -8,5 +8,5 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform;
  */
 interface ConstraintsParserInterface
 {
-    public function parse($constraint);
+    public function parse(\Symfony\Component\Validator\Constraint $constraint);
 }

@@ -6,12 +6,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Positive;
 use Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Constraints as Constraints;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Convierte las validaciones de symfony en validaciones estandar
@@ -37,7 +40,7 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
     
-    public function parse($constraint)
+    public function parse(Constraint $constraint)
     {
         $parsed = null;
         $info = $this->getMappedInfo();
@@ -47,7 +50,7 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
             $reflection = new \ReflectionClass($mappedInfo["mapped"]);
             $parsed = $reflection->newInstanceArgs();
             $this->mapProperties($constraint, $parsed,$mappedInfo["properties"]);
-            $this->transProperties($mappedInfo,$parsed);
+            $this->transProperties($mappedInfo,$parsed,$constraint);
         }
         
         if($parsed === null){
@@ -76,13 +79,19 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
      * @param array $mappedInfo
      * @param \Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Constraints\Constraint $destination
      */
-    private function transProperties(array $mappedInfo,Constraints\Constraint $destination)
+    private function transProperties(array $mappedInfo,Constraints\Constraint $destination,Constraint $constraint)
     {
         $domain = "validators";
         if(isset($mappedInfo["trans_properties"])){
             foreach ($mappedInfo["trans_properties"] as $propertyPath) {
                 $value = $this->propertyAccessor->getValue($destination, $propertyPath);
-                $this->propertyAccessor->setValue($destination, $propertyPath, $this->trans($value,[],$domain));
+                $params = [];
+                if(isset($mappedInfo["trans_params"])){
+                    if(is_callable($mappedInfo["trans_params"])){
+                        $params = $mappedInfo["trans_params"]($constraint);
+                    }
+                }
+                $this->propertyAccessor->setValue($destination, $propertyPath, $this->trans($value,$params,$domain));
             }
         }
         if(isset($mappedInfo["trans_callback"])){
@@ -140,6 +149,28 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
                 "mapped" => Constraints\Positive::class,
                 "properties" => ["message"],
                 "trans_properties" => ["message"],
+            ],
+            LessThanOrEqual::class => [
+                "mapped" => Constraints\LessThanOrEqual::class,
+                "properties" => ["message","value"],
+                "trans_properties" => ["message"],
+                "trans_params" => function(Constraint $constraint){
+                    $params = [
+                        "{{ compared_value }}" => $constraint->value,
+                    ];
+                    return $params;
+                },
+            ],
+            GreaterThanOrEqual::class => [
+                "mapped" => Constraints\GreaterThanOrEqual::class,
+                "properties" => ["message","value"],
+                "trans_properties" => ["message"],
+                "trans_params" => function(Constraint $constraint){
+                    $params = [
+                        "{{ compared_value }}" => $constraint->value,
+                    ];
+                    return $params;
+                },
             ],
             Length::class => [
                 "mapped" => Constraints\Length::class,
