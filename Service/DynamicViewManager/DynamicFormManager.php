@@ -4,6 +4,7 @@ namespace Tecnocreaciones\Bundle\ToolsBundle\Service\DynamicViewManager;
 
 use Tecnocreaciones\Bundle\ToolsBundle\Model\DynamicView\DynamicForm;
 use Limenius\Liform\Liform;
+use Tecnoready\Common\Model\ShowBuilder\FormWidget;
 
 /**
  * Constructor de vista de formulario dinamico
@@ -55,6 +56,17 @@ class DynamicFormManager
 //        ];
 //        return $d;
 //    }
+    
+    /**
+     * Form widget para show dinamico
+     * @return FormWidget
+     */
+    public function getShowFormWidget() {
+        $content = $this->dynamicForm->end();
+        $formWidget = new FormWidget();
+        $formWidget->setContent($content);
+        return $formWidget;
+    }
     
     /**
      * @required
