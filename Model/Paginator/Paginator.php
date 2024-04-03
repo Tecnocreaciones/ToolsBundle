@@ -260,11 +260,10 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
      */
     function setRequest(\Symfony\Component\HttpFoundation\Request $request) {
         $this->request = $request;
-        
         if(self::FORMAT_ARRAY_DATA_TABLES == $this->defaultFormat){
             //Ejemplo start(20) / length(10) = 2
             $start = (int)$request->get("start",0);//Elemento inicio
-            $length = (int)$request->get("length",10);//Cantidad de elementos por pagina
+            $length = (int)$request->get("length",20);//Cantidad de elementos por pagina
             $this->draw = $request->get("draw",  $this->draw) + 1;//No cache
             
             if($start > 0){
@@ -274,21 +273,22 @@ class Paginator extends BasePagerfanta implements ContainerAwareInterface
                 $page = 1;
             }
             if(!is_int($length)){
-                $length = 10;
+                $length = 20;
             }
             if(!is_int($page)){
                 $page = 1;
             }
             $this->setMaxPerPage($length);
             $this->setCurrentPage($page);
-        }else if(self::FORMAT_ARRAY_STANDARD == $this->defaultFormat){
+        }else if(self::FORMAT_ARRAY_STANDARD == $this->defaultFormat || self::FORMAT_ARRAY_SELECT2 == $this->defaultFormat){
             $page = (int)$request->get("page",1);//Elemento inicio
-            $maxPerPage = (int)$request->get("maxPerPage",10);//Elemento inicio
+            $maxPerPage = (int)$request->get("maxPerPage",20);//Elemento inicio
             $this->setMaxPerPage($maxPerPage);
             $totalPages = $this->getNbPages();
-            if($page > $this->getNbPages()){
-                $page = $totalPages;
-            }
+            //Fix: esto hace que nunca se llegue al final de la pagina
+//            if($page > $this->getNbPages()){
+//                $page = $totalPages;
+//            }
             $this->setCurrentPage($page);
         }
     }
