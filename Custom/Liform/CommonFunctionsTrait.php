@@ -159,13 +159,15 @@ trait CommonFunctionsTrait
      */
     protected function addCommonConfigOptions(FormInterface $form, array $schema)
     {
+        $translationDomain = $form->getConfig()->getOption('translation_domain');
+        $translator = $this->translator;
         $options = ["mode","crop_imagen_mode",
-            "placeholder" => function($value){
+            "placeholder" => function($value)use($translationDomain,$translator){
                 //Fix: DateType retornaba un array cuando se serializaba con year,month y day
                 if(is_array($value)){
                     $value = null;
                 }
-                return $value;
+                return (empty($value) ? $value : $translator->trans($value,[],$translationDomain));
             }, 
             "file_type", 
             "picker_title" => function($value){
