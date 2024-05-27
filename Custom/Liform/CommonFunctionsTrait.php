@@ -239,7 +239,7 @@ trait CommonFunctionsTrait
         } else {
             $groups = $this->getValidationGroups($form);
 
-            if (!$groups || !$this->validator->hasMetadataFor($data)) {
+            if (!$groups || !$this->validator || !$this->validator->hasMetadataFor($data)) {
                 return $schema;
             }
 

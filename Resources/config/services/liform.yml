@@ -27,6 +27,7 @@ services:
         autowire: true
         tags:
             - { name: liform.transformer, form_type: submit, widget: submit }
+            - { name: liform.transformer, form_type: button, widget: button }
     liform.transformer.string:
         class: Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Transformer\StringTransformer
         autowire: true
