@@ -61,7 +61,7 @@ trait CommonFunctionsTrait
      *
      * @return array
      */
-    protected function addLabel(FormInterface $form, array $schema)
+    protected function addLabel(FormInterface $form, array $schema): array
     {
         $translationDomain = $form->getConfig()->getOption('translation_domain');
         $translationParameters = $form->getConfig()->getOption('label_translation_parameters');
@@ -366,7 +366,7 @@ trait CommonFunctionsTrait
      *
      * @return array
      */
-    protected function addDescription(FormInterface $form, array $schema)
+    protected function addDescription(FormInterface $form, array $schema): array
     {
         $formConfig = $form->getConfig();
         $translationDomain = $form->getConfig()->getOption('translation_domain');
