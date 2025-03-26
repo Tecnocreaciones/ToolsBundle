@@ -21,6 +21,7 @@ class DynamicSubmitType extends SubmitType
         $resolver->setDefaults([
             "text_color" => null,//Color hexadecimal de la letra
             "background_color" => null,//Color hexadecimal del fondo
+            "required" => false, // No es requerido
         ]);
         $resolver->setDefault("render_in","form_top");
         $resolver->setAllowedValues("render_in", ["form_top","form_bottom"]);
