@@ -24,7 +24,7 @@ class BooleanTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function transform(FormInterface $form, array $extensions = [], $widget = null)
+    public function transform(FormInterface $form, array $extensions = [], $widget = null): array
     {
         $this->initCommonCustom($form);
         $schema = ['type' => 'boolean'];

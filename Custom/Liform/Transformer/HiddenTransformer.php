@@ -18,7 +18,7 @@ class HiddenTransformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function transform(FormInterface $form, array $extensions = [], $widget = null)
+    public function transform(FormInterface $form, array $extensions = [], $widget = null): array
     {
         $this->initCommonCustom($form);
         $formView = $this->formView;
@@ -28,6 +28,8 @@ class HiddenTransformer extends AbstractTransformer
         ];
 
         $this->addWidget($form, $schema, false);
+
+        $schema = $this->addData($form, $schema);
         $schema = $this->addCommonSpecs($form, $schema, $extensions, $widget);
         $schema = $this->addCommonCustom($form, $schema);
         
