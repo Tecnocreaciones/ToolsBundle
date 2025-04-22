@@ -50,6 +50,7 @@ class DynamicReadOnlyType extends HiddenType
             "req_params" => [],
             "remote_path" => null,
             "data" => null,
+            "placeholder" => null,
         ]);
         $resolver->setDefined(["type_content", "req_params"]);
         $resolver->setAllowedValues("type_content", [
