@@ -9,7 +9,8 @@ use Tecnocreaciones\Bundle\ToolsBundle\Custom\Liform\Constraints as Constraints;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
+use Symfony\Component\Validator\Constraint;
+use Tecnocreaciones\Bundle\ToolsBundle\Validator\Constraints\CustomRegex;
 /**
  * Convierte las validaciones de symfony en validaciones estandar
  *
@@ -120,6 +121,44 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
                 "mapped" => Constraints\NotNull::class,
                 "properties" => ["message"],
                 "trans_properties" => ["message"],
+            ],
+            Email::class => [
+                "mapped" => Constraints\Email::class,
+                "properties" => ["message"],
+                "trans_properties" => ["message"],
+            ],
+            //Ignoramos esta validación porque en c# no hace match la expresión regular como en php, cambia el formato
+            CustomRegex::class => [
+                "mapped" => Constraints\CustomRegex::class,
+                "properties" => ["message","pattern","sharpPattern"],
+                "trans_properties" => ["message"],
+            ],
+            Positive::class => [
+                "mapped" => Constraints\Positive::class,
+                "properties" => ["message"],
+                "trans_properties" => ["message"],
+            ],
+            LessThanOrEqual::class => [
+                "mapped" => Constraints\LessThanOrEqual::class,
+                "properties" => ["message","value"],
+                "trans_properties" => ["message"],
+                "trans_params" => function(Constraint $constraint){
+                    $params = [
+                        "{{ compared_value }}" => $constraint->value,
+                    ];
+                    return $params;
+                },
+            ],
+            GreaterThanOrEqual::class => [
+                "mapped" => Constraints\GreaterThanOrEqual::class,
+                "properties" => ["message","value"],
+                "trans_properties" => ["message"],
+                "trans_params" => function(Constraint $constraint){
+                    $params = [
+                        "{{ compared_value }}" => $constraint->value,
+                    ];
+                    return $params;
+                },
             ],
             Length::class => [
                 "mapped" => Constraints\Length::class,
