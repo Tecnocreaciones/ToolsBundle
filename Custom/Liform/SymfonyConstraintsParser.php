@@ -15,6 +15,7 @@ use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
+use Tecnocreaciones\Bundle\ToolsBundle\Validator\Constraints\CustomRegex;
 
 /**
  * Convierte las validaciones de symfony en validaciones estandar
@@ -140,11 +141,11 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
                 "trans_properties" => ["message"],
             ],
             //Ignoramos esta validación porque en c# no hace match la expresión regular como en php, cambia el formato
-//            Regex::class => [
-//                "mapped" => Constraints\Regex::class,
-//                "properties" => ["message","pattern"],
-//                "trans_properties" => ["message"],
-//            ],
+            CustomRegex::class => [
+                "mapped" => Constraints\CustomRegex::class,
+                "properties" => ["message","pattern","sharpPattern"],
+                "trans_properties" => ["message"],
+            ],
             Positive::class => [
                 "mapped" => Constraints\Positive::class,
                 "properties" => ["message"],
