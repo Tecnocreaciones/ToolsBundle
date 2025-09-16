@@ -11,4 +11,9 @@ use Symfony\Component\Validator\Constraints\Regex;
  */
 class CustomRegex extends Regex {
     public $sharpPattern;
+
+    public function validatedBy(): string
+    {
+        return \Symfony\Component\Validator\Constraints\RegexValidator::class;
+    }
 }
