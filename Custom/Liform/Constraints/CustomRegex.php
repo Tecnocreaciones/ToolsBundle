@@ -14,4 +14,8 @@ class CustomRegex extends Constraint
     public $pattern;
     
     public $sharpPattern;
+
+    public $autoReplace = false;
+
+    public $validateOnRealTime = false;
 }

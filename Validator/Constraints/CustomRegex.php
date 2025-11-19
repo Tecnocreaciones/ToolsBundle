@@ -12,6 +12,10 @@ use Symfony\Component\Validator\Constraints\Regex;
 class CustomRegex extends Regex {
     public $sharpPattern;
 
+    public $autoReplace = false;
+
+    public $validateOnRealTime = false;
+
     public function validatedBy(): string
     {
         return \Symfony\Component\Validator\Constraints\RegexValidator::class;

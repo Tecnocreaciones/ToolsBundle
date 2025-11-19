@@ -143,7 +143,7 @@ class SymfonyConstraintsParser implements ConstraintsParserInterface
             //Ignoramos esta validación porque en c# no hace match la expresión regular como en php, cambia el formato
             CustomRegex::class => [
                 "mapped" => Constraints\CustomRegex::class,
-                "properties" => ["message","pattern","sharpPattern"],
+                "properties" => ["message","pattern","sharpPattern","autoReplace","validateOnRealTime"],
                 "trans_properties" => ["message"],
             ],
             Positive::class => [
