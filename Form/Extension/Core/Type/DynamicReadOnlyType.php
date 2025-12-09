@@ -48,6 +48,16 @@ class DynamicReadOnlyType extends HiddenType
      */
     const TYPE_CONTENT_BADGE = "badge";
 
+    /**
+     * Tipo de contenido header (Separador de formularios)
+     */
+    const TYPE_CONTENT_HEADER = "header";
+
+    /**
+     * Tipo de contenido bottom note (Separador de formularios)
+     */
+    const TYPE_CONTENT_NOTE = "note";
+
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -67,6 +77,8 @@ class DynamicReadOnlyType extends HiddenType
             self::TYPE_CONTENT_TITLE,
             self::TYPE_CONTENT_URL,
             self::TYPE_CONTENT_BADGE,
+            self::TYPE_CONTENT_HEADER,
+            self::TYPE_CONTENT_NOTE,
         ]);
         $resolver->setAllowedTypes("req_params", "array");
         $resolver->setRequired(["data", "type_content"]);
