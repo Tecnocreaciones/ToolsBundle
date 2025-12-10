@@ -89,6 +89,10 @@ class CompoundTransformer extends AbstractCompoundTransformer
             if (isset($properties[$name]["constraints"]) && count($properties[$name]["constraints"]) > 0) {
                 $constraints = [];
                 foreach ($properties[$name]["constraints"] as $constraint) {
+                    if (is_array($constraint)) {
+                        $constraints[] = $constraint;
+                        continue;
+                    }
                     $parsed = $this->constraintsParsers->parse($constraint);
                     if($parsed){
                         $constraints[] = $parsed;
