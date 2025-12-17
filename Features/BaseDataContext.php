@@ -635,24 +635,73 @@ abstract class BaseDataContext implements Context
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
         $application->setAutoExit(false);
 
-        $exploded = explode(" ", $command);
+        $parts = preg_split('/\s+/', trim($command));
 
-        $commandsParams = [
-        ];
-        foreach ($exploded as $value) {
-            if (!isset($commandsParams["command"])) {
-                $commandsParams["command"] = $value;
-            } else {
-                $e2 = explode("=", $value);
-                if (count($e2) == 1) {
-                    $commandsParams[$e2[0]] = true;
-                } else if (count($e2) == 2) {
-                    $commandsParams[$e2[0]] = $e2[1];
-                }
+        $commandsParams = [];
+        foreach ($parts as $part) {
+            if ($part === '') {
+                continue;
             }
-        }
-        foreach ($commandsParams as $key => $value) {
-            $commandsParams[$key] = $value;
+            if (!isset($commandsParams['command'])) {
+                $commandsParams['command'] = $part;
+                continue;
+            }
+
+            // long options: --option or --option=value
+            if (strpos($part, '--') === 0) {
+                $pair = explode('=', substr($part, 2), 2);
+                $name = $pair[0];
+                $value = $pair[1] ?? true;
+                $key = '--' . $name;
+
+                if ($name === 'group') {
+                    // ensure array for fixtures groups
+                    if (!isset($commandsParams[$key])) {
+                        $commandsParams[$key] = [];
+                    } elseif (!is_array($commandsParams[$key])) {
+                        $commandsParams[$key] = [$commandsParams[$key]];
+                    }
+                    $values = $value === true ? [] : explode(',', (string) $value);
+                    foreach ($values as $val) {
+                        if ($val === '') {
+                            continue;
+                        }
+                        $commandsParams[$key][] = $val;
+                    }
+                    continue;
+                }
+
+                if (isset($commandsParams[$key])) {
+                    if (!is_array($commandsParams[$key])) {
+                        $commandsParams[$key] = [$commandsParams[$key]];
+                    }
+                    $commandsParams[$key][] = $value;
+                } else {
+                    $commandsParams[$key] = $value;
+                }
+                continue;
+            }
+
+            // short options: -n or -e=prod
+            if (strpos($part, '-') === 0) {
+                $pair = explode('=', substr($part, 1), 2);
+                $name = $pair[0];
+                $value = $pair[1] ?? true;
+                $key = '-' . $name;
+
+                if (isset($commandsParams[$key])) {
+                    if (!is_array($commandsParams[$key])) {
+                        $commandsParams[$key] = [$commandsParams[$key]];
+                    }
+                    $commandsParams[$key][] = $value;
+                } else {
+                    $commandsParams[$key] = $value;
+                }
+                continue;
+            }
+
+            // positional arguments
+            $commandsParams[] = $part;
         }
 
         $output = null;
