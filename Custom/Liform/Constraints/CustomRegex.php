@@ -17,5 +17,5 @@ class CustomRegex extends Constraint
 
     public $autoReplace = false;
 
-    public $validateOnRealTime = false;
+    public $validateOnRealTimeSeconds = 1.5;
 }

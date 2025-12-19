@@ -14,7 +14,7 @@ class CustomRegex extends Regex {
 
     public $autoReplace = false;
 
-    public $validateOnRealTime = false;
+    public $validateOnRealTimeSeconds = 1.5;
 
     public function validatedBy(): string
     {
