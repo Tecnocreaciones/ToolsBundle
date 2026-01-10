@@ -58,6 +58,11 @@ class DynamicReadOnlyType extends HiddenType
      */
     const TYPE_CONTENT_NOTE = "note";
 
+    /**
+     * Tipo de contenido centrado (separador de formularios)
+     */
+    const CENTER_TEXT_FORM = "center_text_form";
+
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -79,6 +84,7 @@ class DynamicReadOnlyType extends HiddenType
             self::TYPE_CONTENT_BADGE,
             self::TYPE_CONTENT_HEADER,
             self::TYPE_CONTENT_NOTE,
+            self::CENTER_TEXT_FORM,
         ]);
         $resolver->setAllowedTypes("req_params", "array");
         $resolver->setRequired(["data", "type_content"]);
