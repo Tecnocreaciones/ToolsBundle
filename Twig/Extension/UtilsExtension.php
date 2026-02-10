@@ -11,8 +11,11 @@
 
 namespace Tecnocreaciones\Bundle\ToolsBundle\Twig\Extension;
 
+if (!class_exists('Twig_Extension') && class_exists('Twig\Extension\AbstractExtension')) {
+    class_alias('Twig\Extension\AbstractExtension', 'Twig_Extension');
+}
+
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Twig_Extension;
 use Tecnocreaciones\Bundle\ToolsBundle\Service\ImageManager;
 use Tecnoready\Common\Service\Block\WidgetManager;
 use Twig\TwigFunction;
@@ -22,7 +25,7 @@ use Twig\TwigFunction;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class UtilsExtension extends Twig_Extension implements ContainerAwareInterface
+class UtilsExtension extends \Twig_Extension implements ContainerAwareInterface
 {
     /**
      * Manejador de widgets
