@@ -17,13 +17,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        if (method_exists(TreeBuilder::class, 'getRootNode')) {
-            $treeBuilder = new TreeBuilder('tecnocreaciones_tools');
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            $treeBuilder = new TreeBuilder();
-            $rootNode = $treeBuilder->root('tecnocreaciones_tools');
-        }
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('tecnocreaciones_tools');
         
         $rootNode
                 ->children()
