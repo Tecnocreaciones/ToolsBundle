@@ -212,6 +212,22 @@ class TecnocreacionesToolsExtension extends Extension
         }
         
         if($config['database_spool']['enable'] === true){
+           $orchestratorConfig = $config['database_spool']['orchestrator'];
+           $orchestratorProviders = [];
+           if (!empty($orchestratorConfig['providers']) && \is_array($orchestratorConfig['providers'])) {
+               foreach ($orchestratorConfig['providers'] as $name => $provider) {
+                   if (!\is_array($provider) || empty($provider['dsn'])) {
+                       continue;
+                   }
+                   $orchestratorProviders[(string) $name] = [
+                       'dsn' => (string) $provider['dsn'],
+                       'max_emails' => isset($provider['max_emails']) ? (int) $provider['max_emails'] : 0,
+                   ];
+               }
+           }
+           $container->setParameter('tecnoready.mailer.orchestrator.providers', $orchestratorProviders);
+           $container->setParameter('tecnoready.mailer.orchestrator.failures_before_switch', (int) ($orchestratorConfig['failures_before_switch'] ?? 2));
+
            $loaderYml->load('services/database_spool.yml');
            $container->setParameter("tecnoready.mailer_db.spool.options", $config['database_spool']["options_mailer"]);
            $container->setParameter("tecnoready.mailer_db.spool.entity_class", $config['database_spool']["entity_class"]);

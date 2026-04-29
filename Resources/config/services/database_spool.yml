@@ -27,9 +27,20 @@ services:
 
     Tecnoready\Common\Service\Email\TwigSymfonyMailer:
         public: false
-        arguments: ["@mailer","@twig","@tecnoready.mailer.adapter.orm","%tecnoready.mailer_db.spool.options%"]
+        arguments:
+            - '@mailer'
+            - '@twig'
+            - '@tecnoready.mailer.adapter.orm'
+            - '%tecnoready.mailer_db.spool.options%'
+            - '@Tecnoready\Common\Service\Email\EmailProviderOrchestrator'
         calls:
             - [ setContainer, ["@service_container"]  ]
     tecnoready.symfonymailer:
         alias: Tecnoready\Common\Service\Email\TwigSymfonyMailer
         public: true
+
+    Tecnoready\Common\Service\Email\EmailProviderOrchestrator:
+        public: true
+        arguments:
+            $providers: '%tecnoready.mailer.orchestrator.providers%'
+            $failuresBeforeSwitch: '%tecnoready.mailer.orchestrator.failures_before_switch%'
