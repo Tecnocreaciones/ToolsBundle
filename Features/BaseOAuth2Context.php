@@ -505,10 +505,12 @@ abstract class BaseOAuth2Context implements Context
         if($options["clear_request"] === true){
             $this->initRequest();
         }
-        $contentType = (string) $this->response->headers->get('Content-type');
-        if ($this->response->getStatusCode() != 404 && !empty($contentType) && $contentType !== 'application/json') {
-            throw new \Exception(sprintf("Content-type must be application/json received '%s' \n%s", $contentType, $this->echoLastResponse()));
+        
+        $contentTypes = explode(';',(string) $this->response->headers->get('Content-type'));
+        if ($this->response->getStatusCode() != 404 && !empty($contentTypes) && !in_array('application/json', $contentTypes)) {
+            throw new Exception(sprintf("Content-type must be application/json received '%s' \n%s", $contentTypes, $this->echoLastResponse()));
         }
+
         $content = $this->response->getContent();
         $this->data = [];
         if ($content) {
